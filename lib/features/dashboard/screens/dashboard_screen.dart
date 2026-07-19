@@ -1,10 +1,11 @@
 
 import 'package:flutter/material.dart';
-
+import '../widgets/dashboard_header.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/quick_action_button.dart';
 import '../widgets/section_title.dart';
 import '../widgets/transaction_tile.dart';
+import '../widgets/weekly_spending_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -77,7 +78,7 @@ final List<Map<String, dynamic>> transactions = [
                           ],
                         ),
                         const Spacer(),
-                        const BalanceCard(balance: "₹1,24,560.45"),
+                        const BalanceCard(balance: "₹10,24,560.45"),
                       ],
                     ),
                   ),
@@ -114,7 +115,12 @@ final List<Map<String, dynamic>> transactions = [
                     },
                   ),
                   const SizedBox(height:28),
-                  const SectionTitle(title:"Recent Transactions"),
+
+const WeeklySpendingChart(),
+
+const SizedBox(height:28),
+
+const SectionTitle(title:"Recent Transactions"),
                   const SizedBox(height:12),
                   ListView.separated(
                     shrinkWrap:true,
