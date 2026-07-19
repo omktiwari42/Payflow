@@ -41,7 +41,7 @@ final List<Map<String, dynamic>> transactions = [
         slivers: [
           SliverAppBar(
             pinned: true,
-            expandedHeight: 280,
+            expandedHeight: 340,
             elevation: 0,
             backgroundColor: const Color(0xff2563EB),
             flexibleSpace: FlexibleSpaceBar(
