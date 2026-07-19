@@ -120,13 +120,10 @@ class _LoginScreenState extends State<LoginScreen>
       _isLoading = false;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Login API will be connected in next lesson.",
-        ),
-      ),
-    );
+   Navigator.pushReplacementNamed(
+  context,
+  '/dashboard',
+);
   }
 
   @override
