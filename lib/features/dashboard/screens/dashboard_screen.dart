@@ -15,6 +15,7 @@ import '../widgets/budget_tracker_card.dart';
 import '../widgets/financial_goals_card.dart';
 import '../widgets/investment_portfolio_card.dart';
 import '../widgets/ai_finance_assistant_card.dart';
+import '../widgets/cash_flow_timeline_card.dart';
 import '../widgets/smart_insights_card.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -166,6 +167,9 @@ const SmartInsightsCard(),
 
 const SizedBox(height: 28),
 
+const CashFlowTimelineCard(),
+
+const SizedBox(height: 28),
 
 const WeeklySpendingChart(),
 
