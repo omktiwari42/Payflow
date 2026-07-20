@@ -13,6 +13,7 @@ import '../widgets/bills_due_card.dart';
 import '../widgets/spending_categories_card.dart';
 import '../widgets/budget_tracker_card.dart';
 import '../widgets/financial_goals_card.dart';
+import '../widgets/investment_portfolio_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -146,7 +147,12 @@ const SizedBox(height: 28),
 const BudgetTrackerCard(),
 
 const SizedBox(height: 28),
+
 const FinancialGoalsCard(),
+
+const SizedBox(height: 28),
+
+const InvestmentPortfolioCard(),
 
 const SizedBox(height: 28),
 
