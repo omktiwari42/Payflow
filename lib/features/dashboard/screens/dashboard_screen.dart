@@ -6,6 +6,7 @@ import '../widgets/quick_action_button.dart';
 import '../widgets/section_title.dart';
 import '../widgets/transaction_tile.dart';
 import '../widgets/weekly_spending_chart.dart';
+import '../widgets/card_carousel.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -114,13 +115,17 @@ final List<Map<String, dynamic>> transactions = [
                       );
                     },
                   ),
-                  const SizedBox(height:28),
+                 const SizedBox(height: 28),
+
+const CardCarousel(),
+
+const SizedBox(height: 28),
 
 const WeeklySpendingChart(),
 
-const SizedBox(height:28),
+const SizedBox(height: 28),
 
-const SectionTitle(title:"Recent Transactions"),
+const SectionTitle(title: "Recent Transactions"),
                   const SizedBox(height:12),
                   ListView.separated(
                     shrinkWrap:true,
