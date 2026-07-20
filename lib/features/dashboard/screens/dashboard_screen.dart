@@ -8,6 +8,7 @@ import '../widgets/transaction_tile.dart';
 import '../widgets/weekly_spending_chart.dart';
 import '../widgets/card_carousel.dart';
 import '../widgets/income_expense_card.dart';
+import '../widgets/recent_payments.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -123,6 +124,10 @@ const CardCarousel(),
 const SizedBox(height: 28),
 
 const IncomeExpenseCard(),
+
+const SizedBox(height: 28),
+
+const RecentPayments(),
 
 const SizedBox(height: 28),
 
