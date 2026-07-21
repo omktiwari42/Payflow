@@ -21,6 +21,7 @@ import '../widgets/notification_center_card.dart';
 import '../widgets/global_search_card.dart';
 import '../widgets/smart_wallet_card.dart';
 import '../widgets/multi_currency_card.dart';
+import '../widgets/rewards_cashback_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -190,6 +191,12 @@ const SizedBox(height: 28),
 const MultiCurrencyCard(),
 
 const SizedBox(height: 28),
+
+
+const RewardsCashbackCard(),
+
+const SizedBox(height: 28),
+
 
 const WeeklySpendingChart(),
 
