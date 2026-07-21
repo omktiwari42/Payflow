@@ -45,16 +45,10 @@ class RecentPayments extends StatelessWidget {
           children: [
             const Text(
               "Recent Payments",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
             const Spacer(),
-            TextButton(
-              onPressed: () {},
-              child: const Text("See All"),
-            ),
+            TextButton(onPressed: () {}, child: const Text("See All")),
           ],
         ),
 
@@ -65,7 +59,7 @@ class RecentPayments extends StatelessWidget {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: contacts.length + 1,
-            separatorBuilder: (_, __) => const SizedBox(width: 16),
+            separatorBuilder: (_, _) => const SizedBox(width: 16),
             itemBuilder: (context, index) {
               if (index == contacts.length) {
                 return InkWell(
@@ -79,9 +73,7 @@ class RecentPayments extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(36),
-                          border: Border.all(
-                            color: Colors.grey.shade300,
-                          ),
+                          border: Border.all(color: Colors.grey.shade300),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withValues(alpha: 0.05),
@@ -101,9 +93,7 @@ class RecentPayments extends StatelessWidget {
 
                       const Text(
                         "Add",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.w600),
                       ),
                     ],
                   ),
@@ -111,7 +101,7 @@ class RecentPayments extends StatelessWidget {
               }
 
               final person = contacts[index];
-                            return InkWell(
+              return InkWell(
                 borderRadius: BorderRadius.circular(50),
                 onTap: () {},
                 child: SizedBox(
@@ -126,8 +116,9 @@ class RecentPayments extends StatelessWidget {
                             width: 72,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: (person["color"] as Color)
-                                  .withValues(alpha: 0.12),
+                              color: (person["color"] as Color).withValues(
+                                alpha: 0.12,
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black.withValues(alpha: 0.05),

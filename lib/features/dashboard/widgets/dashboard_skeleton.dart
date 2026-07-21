@@ -34,7 +34,7 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
   }) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, __) {
+      builder: (_, _) {
         return Container(
           width: width,
           height: height,
@@ -60,7 +60,7 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.04),
+            color: Colors.black.withValues(alpha: .04),
             blurRadius: 10,
             offset: const Offset(0, 6),
           ),
@@ -68,11 +68,7 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
       ),
       child: Row(
         children: [
-          skeleton(
-            width: 56,
-            height: 56,
-            radius: BorderRadius.circular(28),
-          ),
+          skeleton(width: 56, height: 56, radius: BorderRadius.circular(28)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -91,7 +87,7 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
               const SizedBox(height: 8),
               skeleton(width: 60, height: 22),
             ],
-          )
+          ),
         ],
       ),
     );
@@ -109,27 +105,18 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
 
           const SizedBox(height: 24),
 
-          skeleton(
-            height: 215,
-            radius: BorderRadius.circular(28),
-          ),
+          skeleton(height: 215, radius: BorderRadius.circular(28)),
 
           const SizedBox(height: 24),
 
           Row(
             children: [
               Expanded(
-                child: skeleton(
-                  height: 140,
-                  radius: BorderRadius.circular(22),
-                ),
+                child: skeleton(height: 140, radius: BorderRadius.circular(22)),
               ),
               const SizedBox(width: 16),
               Expanded(
-                child: skeleton(
-                  height: 140,
-                  radius: BorderRadius.circular(22),
-                ),
+                child: skeleton(height: 140, radius: BorderRadius.circular(22)),
               ),
             ],
           ),

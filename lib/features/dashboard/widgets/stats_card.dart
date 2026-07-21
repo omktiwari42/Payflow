@@ -25,12 +25,10 @@ class StatsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: const Color(0xFFF1F5F9),
-        ),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -45,14 +43,10 @@ class StatsCard extends StatelessWidget {
                 width: 52,
                 height: 52,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(.12),
+                  color: color.withValues(alpha: .12),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 26,
-                ),
+                child: Icon(icon, color: color, size: 26),
               ),
 
               const Spacer(),
@@ -65,8 +59,8 @@ class StatsCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isIncrease
-                        ? Colors.green.withOpacity(.12)
-                        : Colors.red.withOpacity(.12),
+                        ? Colors.green.withValues(alpha: .12)
+                        : Colors.red.withValues(alpha: .12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
@@ -77,17 +71,13 @@ class StatsCard extends StatelessWidget {
                             ? Icons.trending_up_rounded
                             : Icons.trending_down_rounded,
                         size: 14,
-                        color: isIncrease
-                            ? Colors.green
-                            : Colors.red,
+                        color: isIncrease ? Colors.green : Colors.red,
                       ),
                       const SizedBox(width: 4),
                       Text(
                         percentage!,
                         style: TextStyle(
-                          color: isIncrease
-                              ? Colors.green
-                              : Colors.red,
+                          color: isIncrease ? Colors.green : Colors.red,
                           fontWeight: FontWeight.bold,
                           fontSize: 11,
                         ),
@@ -129,20 +119,14 @@ class StatsCard extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
 
               const SizedBox(width: 6),
 
               const Text(
                 "Live Data",
-                style: TextStyle(
-                  color: Color(0xFF9CA3AF),
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Color(0xFF9CA3AF), fontSize: 12),
               ),
 
               const Spacer(),

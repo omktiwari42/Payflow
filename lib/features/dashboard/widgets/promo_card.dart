@@ -13,15 +13,11 @@ class PromoCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF6D28D9),
-            Color(0xFF4F46E5),
-            Color(0xFF2563EB),
-          ],
+          colors: [Color(0xFF6D28D9), Color(0xFF4F46E5), Color(0xFF2563EB)],
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.blue.withOpacity(.25),
+            color: Colors.blue.withValues(alpha: .25),
             blurRadius: 22,
             offset: const Offset(0, 10),
           ),
@@ -39,7 +35,7 @@ class PromoCard extends StatelessWidget {
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.15),
+                    color: Colors.white.withValues(alpha: .15),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: const Text(
@@ -85,9 +81,7 @@ class PromoCard extends StatelessWidget {
                     icon: const Icon(Icons.workspace_premium),
                     label: const Text(
                       "Upgrade Now",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
@@ -109,7 +103,7 @@ class PromoCard extends StatelessWidget {
             width: 95,
             height: 95,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.15),
+              color: Colors.white.withValues(alpha: .15),
               shape: BoxShape.circle,
             ),
             child: const Icon(

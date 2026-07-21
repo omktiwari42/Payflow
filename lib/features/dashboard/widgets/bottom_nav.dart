@@ -26,12 +26,10 @@ class StatsCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: const Color(0xFFF1F5F9),
-        ),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
@@ -46,14 +44,10 @@ class StatsCard extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(.12),
+                  color: color.withValues(alpha: .12),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 26,
-                ),
+                child: Icon(icon, color: color, size: 26),
               ),
 
               const Spacer(),
@@ -66,20 +60,17 @@ class StatsCard extends StatelessWidget {
                   ),
                   decoration: BoxDecoration(
                     color: isPositive
-                        ? Colors.green.withOpacity(.12)
-                        : Colors.red.withOpacity(.12),
+                        ? Colors.green.withValues(alpha: .12)
+                        : Colors.red.withValues(alpha: .12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        isPositive
-                            ? Icons.trending_up
-                            : Icons.trending_down,
+                        isPositive ? Icons.trending_up : Icons.trending_down,
                         size: 14,
-                        color:
-                            isPositive ? Colors.green : Colors.red,
+                        color: isPositive ? Colors.green : Colors.red,
                       ),
                       const SizedBox(width: 3),
                       Text(
@@ -87,9 +78,7 @@ class StatsCard extends StatelessWidget {
                         style: TextStyle(
                           fontSize: 11,
                           fontWeight: FontWeight.w600,
-                          color: isPositive
-                              ? Colors.green
-                              : Colors.red,
+                          color: isPositive ? Colors.green : Colors.red,
                         ),
                       ),
                     ],
@@ -130,20 +119,14 @@ class StatsCard extends StatelessWidget {
               Container(
                 width: 8,
                 height: 8,
-                decoration: BoxDecoration(
-                  color: color,
-                  shape: BoxShape.circle,
-                ),
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle),
               ),
 
               const SizedBox(width: 6),
 
               const Text(
                 "Updated just now",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.grey, fontSize: 12),
               ),
             ],
           ),

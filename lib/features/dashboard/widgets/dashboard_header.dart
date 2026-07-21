@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class DashboardHeader extends StatelessWidget {
   final String name;
 
-  const DashboardHeader({
-    super.key,
-    required this.name,
-  });
+  const DashboardHeader({super.key, required this.name});
 
   String getGreeting() {
     final hour = DateTime.now().hour;
@@ -30,17 +27,10 @@ class DashboardHeader extends StatelessWidget {
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(18),
             gradient: const LinearGradient(
-              colors: [
-                Color(0xff2563EB),
-                Color(0xff4F46E5),
-              ],
+              colors: [Color(0xff2563EB), Color(0xff4F46E5)],
             ),
           ),
-          child: const Icon(
-            Icons.person,
-            color: Colors.white,
-            size: 30,
-          ),
+          child: const Icon(Icons.person, color: Colors.white, size: 30),
         ),
 
         const SizedBox(width: 16),
@@ -51,10 +41,7 @@ class DashboardHeader extends StatelessWidget {
             children: [
               Text(
                 getGreeting(),
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
 
               const SizedBox(height: 4),
@@ -78,7 +65,7 @@ class DashboardHeader extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.05),
+                color: Colors.black.withValues(alpha: .05),
                 blurRadius: 10,
               ),
             ],
@@ -86,10 +73,7 @@ class DashboardHeader extends StatelessWidget {
           child: Stack(
             children: [
               const Center(
-                child: Icon(
-                  Icons.notifications_none_rounded,
-                  size: 26,
-                ),
+                child: Icon(Icons.notifications_none_rounded, size: 26),
               ),
               Positioned(
                 right: 10,
@@ -102,10 +86,10 @@ class DashboardHeader extends StatelessWidget {
                     shape: BoxShape.circle,
                   ),
                 ),
-              )
+              ),
             ],
           ),
-        )
+        ),
       ],
     );
   }

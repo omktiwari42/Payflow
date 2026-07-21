@@ -4,34 +4,16 @@ class WeeklySpendingChart extends StatefulWidget {
   const WeeklySpendingChart({super.key});
 
   @override
-  State<WeeklySpendingChart> createState() =>
-      _WeeklySpendingChartState();
+  State<WeeklySpendingChart> createState() => _WeeklySpendingChartState();
 }
 
-class _WeeklySpendingChartState
-    extends State<WeeklySpendingChart>
+class _WeeklySpendingChartState extends State<WeeklySpendingChart>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
-  final List<double> values = [
-    45,
-    80,
-    60,
-    110,
-    150,
-    125,
-    90,
-  ];
+  final List<double> values = [45, 80, 60, 110, 150, 125, 90];
 
-  final List<String> days = [
-    "M",
-    "T",
-    "W",
-    "T",
-    "F",
-    "S",
-    "S",
-  ];
+  final List<String> days = ["M", "T", "W", "T", "F", "S", "S"];
 
   @override
   void initState() {
@@ -51,38 +33,31 @@ class _WeeklySpendingChartState
 
   @override
   Widget build(BuildContext context) {
-    final maxValue =
-        values.reduce((a, b) => a > b ? a : b);
+    final maxValue = values.reduce((a, b) => a > b ? a : b);
 
     return Container(
       padding: const EdgeInsets.all(22),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(26),
-        border: Border.all(
-          color: const Color(0xFFF1F5F9),
-        ),
+        border: Border.all(color: const Color(0xFFF1F5F9)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.05),
+            color: Colors.black.withValues(alpha: .05),
             blurRadius: 18,
             offset: const Offset(0, 8),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
               const Expanded(
                 child: Text(
                   "Weekly Spending",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
 
@@ -92,18 +67,13 @@ class _WeeklySpendingChartState
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: Colors.green.withOpacity(.12),
-                  borderRadius:
-                      BorderRadius.circular(20),
+                  color: Colors.green.withValues(alpha: .12),
+                  borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.trending_up,
-                      color: Colors.green,
-                      size: 16,
-                    ),
+                    Icon(Icons.trending_up, color: Colors.green, size: 16),
                     SizedBox(width: 4),
                     Text(
                       "+18%",
@@ -123,10 +93,7 @@ class _WeeklySpendingChartState
 
           const Text(
             "₹12,450 spent this week",
-            style: TextStyle(
-              color: Colors.grey,
-              fontSize: 14,
-            ),
+            style: TextStyle(color: Colors.grey, fontSize: 14),
           ),
 
           const SizedBox(height: 30),
@@ -135,62 +102,42 @@ class _WeeklySpendingChartState
             height: 180,
             child: AnimatedBuilder(
               animation: _controller,
-              builder: (_, __) {
+              builder: (_, _) {
                 return Row(
-                  crossAxisAlignment:
-                      CrossAxisAlignment.end,
-                  mainAxisAlignment:
-                      MainAxisAlignment.spaceBetween,
-                  children: List.generate(
-                    values.length,
-                    (index) {
-                      final height =
-                          (values[index] / maxValue) *
-                              120 *
-                              _controller.value;
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List.generate(values.length, (index) {
+                    final height =
+                        (values[index] / maxValue) * 120 * _controller.value;
 
-                      return Column(
-                        mainAxisAlignment:
-                            MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            width: 34,
-                            height: height,
-                            decoration:
-                                BoxDecoration(
-                              borderRadius:
-                                  BorderRadius.circular(
-                                      14),
-                              gradient:
-                                  const LinearGradient(
-                                begin:
-                                    Alignment.topCenter,
-                                end: Alignment
-                                    .bottomCenter,
-                                colors: [
-                                  Color(0xFF60A5FA),
-                                  Color(0xFF2563EB),
-                                ],
-                              ),
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          width: 34,
+                          height: height,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14),
+                            gradient: const LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [Color(0xFF60A5FA), Color(0xFF2563EB)],
                             ),
                           ),
+                        ),
 
-                          const SizedBox(
-                              height: 12),
+                        const SizedBox(height: 12),
 
-                          Text(
-                            days[index],
-                            style:
-                                const TextStyle(
-                              fontWeight:
-                                  FontWeight.w600,
-                              color: Colors.grey,
-                            ),
+                        Text(
+                          days[index],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey,
                           ),
-                        ],
-                      );
-                    },
-                  ),
+                        ),
+                      ],
+                    );
+                  }),
                 );
               },
             ),
@@ -202,30 +149,20 @@ class _WeeklySpendingChartState
             children: [
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(
-                        0xFFF8FAFC),
-                    borderRadius:
-                        BorderRadius.circular(
-                            18),
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                   child: const Column(
                     children: [
-                      Text(
-                        "Highest",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Text("Highest", style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 6),
                       Text(
                         "₹3,120",
                         style: TextStyle(
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
@@ -237,30 +174,20 @@ class _WeeklySpendingChartState
 
               Expanded(
                 child: Container(
-                  padding:
-                      const EdgeInsets.all(14),
+                  padding: const EdgeInsets.all(14),
                   decoration: BoxDecoration(
-                    color: const Color(
-                        0xFFF8FAFC),
-                    borderRadius:
-                        BorderRadius.circular(
-                            18),
+                    color: const Color(0xFFF8FAFC),
+                    borderRadius: BorderRadius.circular(18),
                   ),
                   child: const Column(
                     children: [
-                      Text(
-                        "Average",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Text("Average", style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 6),
                       Text(
                         "₹1,780",
                         style: TextStyle(
                           fontSize: 18,
-                          fontWeight:
-                              FontWeight.bold,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],

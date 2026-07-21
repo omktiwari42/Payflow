@@ -56,16 +56,10 @@ class SpendingCategoriesCard extends StatelessWidget {
             children: [
               const Text(
                 "Spending Categories",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              TextButton(
-                onPressed: () {},
-                child: const Text("View All"),
-              ),
+              TextButton(onPressed: () {}, child: const Text("View All")),
             ],
           ),
 
@@ -75,9 +69,10 @@ class SpendingCategoriesCard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: categories.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 20),
+            separatorBuilder: (_, _) => const SizedBox(height: 20),
             itemBuilder: (context, index) {
-              final item = categories[index];              return Column(
+              final item = categories[index];
+              return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -86,8 +81,9 @@ class SpendingCategoriesCard extends StatelessWidget {
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: (item["color"] as Color)
-                              .withValues(alpha: 0.12),
+                          color: (item["color"] as Color).withValues(
+                            alpha: 0.12,
+                          ),
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Icon(
@@ -159,18 +155,12 @@ class SpendingCategoriesCard extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                Icon(
-                  Icons.insights_rounded,
-                  color: Color(0xff2563EB),
-                ),
+                Icon(Icons.insights_rounded, color: Color(0xff2563EB)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "Food and Shopping account for most of your spending this month. Consider setting a budget to improve your savings.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],

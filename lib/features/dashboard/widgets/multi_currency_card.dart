@@ -53,18 +53,13 @@ class MultiCurrencyCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Manage global currencies",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
               ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.public),
-              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.public)),
             ],
           ),
 
@@ -100,7 +95,7 @@ class MultiCurrencyCard extends StatelessWidget {
             rate: "₹101.52",
             color: Color(0xffF59E0B),
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -111,18 +106,12 @@ class MultiCurrencyCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.currency_exchange_rounded,
-                  color: Color(0xff8B5CF6),
-                ),
+                Icon(Icons.currency_exchange_rounded, color: Color(0xff8B5CF6)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "Live Exchange: 1 USD = ₹87.34 • 1 EUR = ₹101.52 • Rates updated 2 minutes ago.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -135,10 +124,7 @@ class MultiCurrencyCard extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xff8B5CF6),
-                  Color(0xff6D28D9),
-                ],
+                colors: [Color(0xff8B5CF6), Color(0xff6D28D9)],
               ),
               borderRadius: BorderRadius.circular(22),
             ),
@@ -161,9 +147,7 @@ class MultiCurrencyCard extends StatelessWidget {
                     children: [
                       Text(
                         "Travel Mode",
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(color: Colors.white70),
                       ),
                       SizedBox(height: 6),
                       Text(
@@ -181,7 +165,72 @@ class MultiCurrencyCard extends StatelessWidget {
                 Switch(
                   value: true,
                   onChanged: null,
-                  activeColor: Colors.white,
+                  activeThumbColor: Colors.white,
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 30),
+
+          const Text(
+            "Rewards & Insights",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 18),
+
+          Container(
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: const [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 8,
+                  offset: Offset(0, 3),
+                ),
+              ],
+            ),
+            child: const Column(
+              children: [
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    backgroundColor: Color(0xFFE8F5E9),
+                    child: Icon(Icons.stars, color: Colors.green),
+                  ),
+                  title: Text("Reward Points"),
+                  trailing: Text(
+                    "2,450",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    backgroundColor: Color(0xFFFFF3E0),
+                    child: Icon(Icons.savings, color: Colors.orange),
+                  ),
+                  title: Text("Cashback Earned"),
+                  trailing: Text(
+                    "₹3,280",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
+                ),
+                Divider(),
+                ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  leading: CircleAvatar(
+                    backgroundColor: Color(0xFFE3F2FD),
+                    child: Icon(Icons.flag, color: Colors.blue),
+                  ),
+                  title: Text("Savings Goal"),
+                  trailing: Text(
+                    "72%",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                  ),
                 ),
               ],
             ),
@@ -219,10 +268,7 @@ class _CurrencyTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Text(
-            flag,
-            style: const TextStyle(fontSize: 30),
-          ),
+          Text(flag, style: const TextStyle(fontSize: 30)),
 
           const SizedBox(width: 16),
 
@@ -238,12 +284,7 @@ class _CurrencyTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  name,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+                Text(name, style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
@@ -261,10 +302,7 @@ class _CurrencyTile extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 rate,
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: TextStyle(color: color, fontWeight: FontWeight.w600),
               ),
             ],
           ),

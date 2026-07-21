@@ -51,16 +51,10 @@ class BillsDueCard extends StatelessWidget {
             children: [
               const Text(
                 "Bills Due",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              TextButton(
-                onPressed: () {},
-                child: const Text("View All"),
-              ),
+              TextButton(onPressed: () {}, child: const Text("View All")),
             ],
           ),
 
@@ -70,7 +64,7 @@ class BillsDueCard extends StatelessWidget {
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemCount: bills.length,
-            separatorBuilder: (_, __) => const Divider(height: 28),
+            separatorBuilder: (_, _) => const Divider(height: 28),
             itemBuilder: (context, index) {
               final bill = bills[index];
 
@@ -80,8 +74,7 @@ class BillsDueCard extends StatelessWidget {
                     width: 54,
                     height: 54,
                     decoration: BoxDecoration(
-                      color: (bill["color"] as Color)
-                          .withValues(alpha: 0.12),
+                      color: (bill["color"] as Color).withValues(alpha: 0.12),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Icon(
@@ -95,8 +88,7 @@ class BillsDueCard extends StatelessWidget {
 
                   Expanded(
                     child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           bill["title"] as String,
@@ -110,14 +102,12 @@ class BillsDueCard extends StatelessWidget {
 
                         Text(
                           bill["subtitle"] as String,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
+                          style: const TextStyle(color: Colors.grey),
                         ),
                       ],
                     ),
                   ),
-                                    Text(
+                  Text(
                     bill["amount"] as String,
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
@@ -168,10 +158,7 @@ class BillsDueCard extends StatelessWidget {
                   children: [
                     Text(
                       "Total Due",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                     SizedBox(height: 6),
                     Text(

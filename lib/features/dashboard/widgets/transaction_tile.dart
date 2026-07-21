@@ -30,12 +30,10 @@ class TransactionTile extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(22),
-            border: Border.all(
-              color: const Color(0xFFF1F5F9),
-            ),
+            border: Border.all(color: const Color(0xFFF1F5F9)),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(.05),
+                color: Colors.black.withValues(alpha: .05),
                 blurRadius: 18,
                 offset: const Offset(0, 8),
               ),
@@ -48,13 +46,9 @@ class TransactionTile extends StatelessWidget {
                 height: 58,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: color.withOpacity(.12),
+                  color: color.withValues(alpha: .12),
                 ),
-                child: Icon(
-                  icon,
-                  color: color,
-                  size: 28,
-                ),
+                child: Icon(icon, color: color, size: 28),
               ),
 
               const SizedBox(width: 16),
@@ -97,8 +91,7 @@ class TransactionTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.bold,
-                      color:
-                          isCredit ? Colors.green : Colors.red,
+                      color: isCredit ? Colors.green : Colors.red,
                     ),
                   ),
 
@@ -111,8 +104,8 @@ class TransactionTile extends StatelessWidget {
                     ),
                     decoration: BoxDecoration(
                       color: isCredit
-                          ? Colors.green.withOpacity(.12)
-                          : Colors.red.withOpacity(.10),
+                          ? Colors.green.withValues(alpha: .12)
+                          : Colors.red.withValues(alpha: .10),
                       borderRadius: BorderRadius.circular(30),
                     ),
                     child: Text(
@@ -120,8 +113,7 @@ class TransactionTile extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11,
                         fontWeight: FontWeight.w600,
-                        color:
-                            isCredit ? Colors.green : Colors.red,
+                        color: isCredit ? Colors.green : Colors.red,
                       ),
                     ),
                   ),
