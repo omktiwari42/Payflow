@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'transaction_receipt_screen.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
   final String receiverName;
@@ -110,7 +111,19 @@ class PaymentSuccessScreen extends StatelessWidget {
                 width: double.infinity,
                 height: 58,
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => TransactionReceiptScreen(
+                          receiverName: receiverName,
+                          amount: amount,
+                          upiId: "rahul@upi",
+                          transactionId: "#TXN94839284",
+                        ),
+                      ),
+                    );
+                  },
                   icon: const Icon(Icons.receipt_long),
                   label: const Text(
                     "Download Receipt",
