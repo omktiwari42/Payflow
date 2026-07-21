@@ -17,11 +17,11 @@ import '../widgets/investment_portfolio_card.dart';
 import '../widgets/ai_finance_assistant_card.dart';
 import '../widgets/cash_flow_timeline_card.dart';
 import '../widgets/smart_insights_card.dart';
-import '../widgets/notification_center_card.dart';
-import '../widgets/global_search_card.dart';
 import '../widgets/smart_wallet_card.dart';
 import '../widgets/multi_currency_card.dart';
 import '../widgets/rewards_cashback_card.dart';
+import 'package:mobile/core/widgets/animated_dashboard_card.dart';
+import 'package:mobile/core/widgets/animated_scale_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -132,73 +132,108 @@ final List<Map<String, dynamic>> transactions = [
                   ),
                  const SizedBox(height: 28),
 
-const CardCarousel(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 100),
+  child: const CardCarousel(),
+),
 
 const SizedBox(height: 28),
 
-const IncomeExpenseCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 200),
+  child: const IncomeExpenseCard(),
+),
 
 const SizedBox(height: 28),
 
-const RecentPayments(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 300),
+  child: const RecentPayments(),
+),
 
 const SizedBox(height: 28),
 
-const BillsDueCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 400),
+  child: const BillsDueCard(),
+),
 
 const SizedBox(height: 28),
 
-const SpendingCategoriesCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 500),
+  child: const SpendingCategoriesCard(),
+),
 
 const SizedBox(height: 28),
 
-const BudgetTrackerCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 600),
+  child: const BudgetTrackerCard(),
+),
 
 const SizedBox(height: 28),
 
-const FinancialGoalsCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 700),
+  child: const FinancialGoalsCard(),
+),
 
 const SizedBox(height: 28),
 
-const InvestmentPortfolioCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 800),
+  child: const InvestmentPortfolioCard(),
+),
 
 const SizedBox(height: 28),
 
-const AIFinanceAssistantCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 900),
+  child: const AIFinanceAssistantCard(),
+),
 
 const SizedBox(height: 28),
 
-const SmartInsightsCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1000),
+  child: const SmartInsightsCard(),
+),
 
 const SizedBox(height: 28),
 
-const CashFlowTimelineCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1100),
+  child: const CashFlowTimelineCard(),
+),
 
 const SizedBox(height: 28),
 
-const NotificationCenterCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1400),
+  child: const SmartWalletCard(),
+),
 
 const SizedBox(height: 28),
 
-const GlobalSearchCard(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1500),
+  child: const MultiCurrencyCard(),
+),
 
 const SizedBox(height: 28),
 
-const SmartWalletCard(),
-
-const SizedBox(height: 28),
-
-const MultiCurrencyCard(),
-
-const SizedBox(height: 28),
-
-
-const RewardsCashbackCard(),
-
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1600),
+  child: const RewardsCashbackCard(),
+),
 const SizedBox(height: 28),
 
 
-const WeeklySpendingChart(),
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 1700),
+  child: const WeeklySpendingChart(),
+),
 
 const SizedBox(height: 28),
 
@@ -211,55 +246,75 @@ const SectionTitle(title: "Recent Transactions"),
                     separatorBuilder:(_,__)=>const SizedBox(height:12),
                     itemBuilder:(context,index){
                       final t=transactions[index];
-                      return TransactionTile(
-                        title:t["title"] as String,
-                        subtitle:t["subtitle"] as String,
-                        amount:t["amount"] as String,
-                        icon:t["icon"] as IconData,
-                        color:t["color"] as Color,
+                    return AnimatedDashboardCard(
+                        delay: Duration(milliseconds: 1800 + (index * 100)),
+                        child: TransactionTile(
+                          title: t["title"] as String,
+                          subtitle: t["subtitle"] as String,
+                          amount: t["amount"] as String,
+                          icon: t["icon"] as IconData,
+                          color: t["color"] as Color,
+                        ),
                       );
                     },
                   ),
-                  const SizedBox(height:32),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(24),
-                      gradient: const LinearGradient(colors:[Color(0xff4F46E5),Color(0xff2563EB)]),
-                    ),
-                    child: const Row(
-                      children:[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children:[
-                              Text("PayFlow Premium",style:TextStyle(color:Colors.white,fontSize:20,fontWeight:FontWeight.bold)),
-                              SizedBox(height:8),
-                              Text("Earn cashback, rewards and exclusive offers.",style:TextStyle(color:Colors.white70)),
-                            ],
-                          ),
-                        ),
-                        Icon(Icons.workspace_premium,color:Colors.amber,size:56),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height:100),
+                  const SizedBox(height: 32),
+
+AnimatedDashboardCard(
+  delay: const Duration(milliseconds: 2200),
+  child: Container(
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(24),
+      gradient: const LinearGradient(
+        colors: [
+          Color(0xff4F46E5),
+          Color(0xff2563EB),
+        ],
+      ),
+    ),
+    child: const Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "PayFlow Premium",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                "Earn cashback, rewards and exclusive offers.",
+                style: TextStyle(
+                  color: Colors.white70,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Icon(
+          Icons.workspace_premium,
+          color: Colors.amber,
+          size: 56,
+        ),
+      ],
+    ),
+  ),
+),
+
+const SizedBox(height: 100),
                 ],
               ),
             ),
           )
         ],
       ),
-      bottomNavigationBar: NavigationBar(
-        selectedIndex:selectedIndex,
-        onDestinationSelected:(i)=>setState(()=>selectedIndex=i),
-        destinations: const [
-          NavigationDestination(icon:Icon(Icons.home_outlined),selectedIcon:Icon(Icons.home),label:"Home"),
-          NavigationDestination(icon:Icon(Icons.wallet_outlined),selectedIcon:Icon(Icons.wallet),label:"Wallet"),
-          NavigationDestination(icon:Icon(Icons.qr_code_scanner_outlined),selectedIcon:Icon(Icons.qr_code_scanner),label:"Scan"),
-          NavigationDestination(icon:Icon(Icons.person_outline),selectedIcon:Icon(Icons.person),label:"Profile"),
-        ],
-      ),
+           
     );
   }
 }
