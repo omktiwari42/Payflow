@@ -19,6 +19,7 @@ import '../widgets/cash_flow_timeline_card.dart';
 import '../widgets/smart_insights_card.dart';
 import '../widgets/notification_center_card.dart';
 import '../widgets/global_search_card.dart';
+import '../widgets/smart_wallet_card.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -181,6 +182,9 @@ const GlobalSearchCard(),
 
 const SizedBox(height: 28),
 
+const SmartWalletCard(),
+
+const SizedBox(height: 28),
 
 const WeeklySpendingChart(),
 
