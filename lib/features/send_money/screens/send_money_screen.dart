@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'payment_confirmation_screen.dart';
 
 class SendMoneyScreen extends StatefulWidget {
   const SendMoneyScreen({super.key});
@@ -255,7 +256,18 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                     borderRadius: BorderRadius.circular(18),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => PaymentConfirmationScreen(
+                        receiverName: "Rahul Sharma",
+                        upiId: "rahul@upi",
+                        amount: amount,
+                      ),
+                    ),
+                  );
+                },
                 child: const Text(
                   "Continue",
                   style: TextStyle(fontSize: 18, color: Colors.white),
