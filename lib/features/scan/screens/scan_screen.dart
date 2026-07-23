@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 
+import '../../send_money/screens/send_money_screen.dart';
+import '../utils/upi_parser.dart';
 import '../widgets/scan_action_button.dart';
 import '../widgets/scanner_overlay.dart';
 
@@ -46,7 +48,7 @@ class _ScanScreenState extends State<ScanScreen> {
     });
   }
 
-  Future<void> _showResult(String value) async {
+  Future<void> _showRawResult(String value) async {
     await showDialog(
       context: context,
       builder: (_) => AlertDialog(
@@ -63,8 +65,30 @@ class _ScanScreenState extends State<ScanScreen> {
     );
 
     _isScanned = false;
-
     await controller.start();
+  }
+
+  Future<void> _handleScan(String value) async {
+    final data = UpiParser.parse(value);
+
+    if (data["isUpi"] == true) {
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => SendMoneyScreen(
+            recipientName: data["name"],
+            upiId: data["upiId"],
+            amount: data["amount"],
+          ),
+        ),
+      );
+
+      _isScanned = false;
+      await controller.start();
+      return;
+    }
+
+    await _showRawResult(value);
   }
 
   @override
@@ -72,8 +96,8 @@ class _ScanScreenState extends State<ScanScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        elevation: 0,
         backgroundColor: Colors.black,
+        elevation: 0,
         centerTitle: true,
         title: const Text(
           "Scan QR Code",
@@ -90,9 +114,7 @@ class _ScanScreenState extends State<ScanScreen> {
             onDetect: (capture) async {
               if (_isScanned) return;
 
-              final Barcode? barcode = capture.barcodes.isNotEmpty
-                  ? capture.barcodes.first
-                  : null;
+              final barcode = capture.barcodes.firstOrNull;
 
               if (barcode == null) return;
 
@@ -106,7 +128,7 @@ class _ScanScreenState extends State<ScanScreen> {
 
               if (!mounted) return;
 
-              await _showResult(value);
+              await _handleScan(value);
             },
           ),
 
@@ -136,7 +158,7 @@ class _ScanScreenState extends State<ScanScreen> {
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Gallery scan coming soon."),
+                        content: Text("Gallery scan will be added soon."),
                       ),
                     );
                   },
