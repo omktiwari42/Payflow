@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'support_success_screen.dart';
 
 class CreateTicketScreen extends StatefulWidget {
   const CreateTicketScreen({super.key});
@@ -144,7 +145,24 @@ class _CreateTicketScreenState extends State<CreateTicketScreen> {
           const SizedBox(height: 25),
 
           OutlinedButton.icon(
-            onPressed: () {},
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text("Support ticket submitted successfully!"),
+                ),
+              );
+
+              Future.delayed(const Duration(milliseconds: 500), () {
+                if (!context.mounted) return;
+
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SupportSuccessScreen(),
+                  ),
+                );
+              });
+            },
             icon: const Icon(Icons.upload_file),
             label: const Text("Attach Screenshot"),
             style: OutlinedButton.styleFrom(

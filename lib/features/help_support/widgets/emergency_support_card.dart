@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/report_fraud_screen.dart';
 
 class EmergencySupportCard extends StatelessWidget {
   const EmergencySupportCard({super.key});
@@ -38,7 +39,12 @@ class EmergencySupportCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: OutlinedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ReportFraudScreen()),
+                );
+              },
               icon: const Icon(
                 Icons.report_problem_outlined,
                 color: Colors.red,

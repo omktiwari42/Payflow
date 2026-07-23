@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/ticket_details_screen.dart';
 
 class TicketCard extends StatelessWidget {
   const TicketCard({super.key});
@@ -97,7 +98,14 @@ class TicketCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const TicketDetailsScreen(),
+                  ),
+                );
+              },
               style: ElevatedButton.styleFrom(
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(vertical: 15),

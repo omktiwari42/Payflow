@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-
+import 'contact_us_screen.dart';
+import 'create_ticket_screen.dart';
+import 'live_chat_screen.dart';
 import '../widgets/contact_support_card.dart';
 import '../widgets/emergency_support_card.dart';
 import '../widgets/faq_preview_card.dart';
@@ -53,26 +55,58 @@ class HelpSupportScreen extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.fromLTRB(20, 18, 20, 24),
               sliver: SliverGrid(
-                delegate: SliverChildListDelegate(const [
+                delegate: SliverChildListDelegate([
                   QuickSupportCard(
                     title: "Live Chat",
                     icon: Icons.chat_bubble_outline,
                     color: Colors.blue,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const LiveChatScreen(),
+                        ),
+                      );
+                    },
                   ),
                   QuickSupportCard(
                     title: "Call",
                     icon: Icons.call,
                     color: Colors.green,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ContactUsScreen(),
+                        ),
+                      );
+                    },
                   ),
                   QuickSupportCard(
                     title: "Email",
                     icon: Icons.email_outlined,
                     color: Colors.orange,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ContactUsScreen(),
+                        ),
+                      );
+                    },
                   ),
                   QuickSupportCard(
                     title: "Raise Ticket",
                     icon: Icons.support_agent,
                     color: Colors.purple,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CreateTicketScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ]),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -83,7 +117,6 @@ class HelpSupportScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),

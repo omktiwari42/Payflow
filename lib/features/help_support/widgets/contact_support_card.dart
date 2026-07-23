@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../screens/contact_us_screen.dart';
+import '../screens/live_chat_screen.dart';
 
 class ContactSupportCard extends StatelessWidget {
   const ContactSupportCard({super.key});
@@ -51,7 +53,10 @@ class ContactSupportCard extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton.icon(
               onPressed: () {
-                // TODO: Navigate to Live Chat Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const LiveChatScreen()),
+                );
               },
               icon: const Icon(
                 Icons.chat_bubble_outline,

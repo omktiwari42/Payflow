@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../screens/faq_screen.dart';
 
 class FAQPreviewCard extends StatelessWidget {
   const FAQPreviewCard({super.key});
@@ -43,7 +44,15 @@ class FAQPreviewCard extends StatelessWidget {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const Spacer(),
-              TextButton(onPressed: () {}, child: const Text("View All")),
+              TextButton(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const FAQScreen()),
+                  );
+                },
+                child: const Text("View All"),
+              ),
             ],
           ),
 
