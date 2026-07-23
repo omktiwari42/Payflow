@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../widgets/empty_search_widget.dart';
 import '../widgets/filter_chip_widget.dart';
 import '../widgets/popular_service_card.dart';
 import '../widgets/recent_search_card.dart';
@@ -121,15 +121,13 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const SizedBox(height: 16),
 
-          if (filteredRecent.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Center(
-                child: Text(
-                  "No recent searches found.",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
+          if (filteredServices.isEmpty && query.isNotEmpty)
+            EmptySearchWidget(
+              query: _controller.text,
+              onClear: () {
+                _controller.clear();
+                setState(() {});
+              },
             )
           else
             ...filteredRecent.map(
