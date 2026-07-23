@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../help_support/screens/help_support_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -68,7 +69,7 @@ class ProfileScreen extends StatelessWidget {
                 const SizedBox(height: 6),
                 Text(
                   "om@payflow.com",
-                  style: TextStyle(color: Colors.white.withOpacity(.9)),
+                  style: TextStyle(color: Colors.white.withValues(alpha: .9)),
                 ),
               ],
             ),
@@ -113,13 +114,27 @@ class ProfileScreen extends StatelessWidget {
             () {},
           ),
 
+          _tile(
+            Icons.support_agent,
+            "Help & Support",
+            "FAQs • Live Chat • Support Tickets",
+            () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const HelpSupportScreen()),
+              );
+            },
+          ),
+
           const SizedBox(height: 25),
 
           SizedBox(
             width: double.infinity,
             height: 58,
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                // TODO: Implement Logout
+              },
               icon: const Icon(Icons.logout),
               label: const Text("Logout", style: TextStyle(fontSize: 18)),
               style: ElevatedButton.styleFrom(

@@ -107,7 +107,7 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
           const SizedBox(height: 12),
 
           DropdownButtonFormField<String>(
-            value: selectedMethod,
+            initialValue: selectedMethod,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,

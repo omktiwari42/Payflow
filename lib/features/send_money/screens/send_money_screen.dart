@@ -126,7 +126,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
               child: ListView.separated(
                 scrollDirection: Axis.horizontal,
                 itemCount: contacts.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 14),
+                separatorBuilder: (_, _) => const SizedBox(width: 14),
                 itemBuilder: (context, index) {
                   return Column(
                     children: [

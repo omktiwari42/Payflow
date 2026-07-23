@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../widgets/dashboard_header.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/quick_action_button.dart';
 import '../widgets/section_title.dart';
@@ -20,7 +19,6 @@ import '../widgets/smart_wallet_card.dart';
 import '../widgets/multi_currency_card.dart';
 import '../widgets/rewards_cashback_card.dart';
 import 'package:mobile/core/widgets/animated_dashboard_card.dart';
-import 'package:mobile/core/widgets/animated_scale_button.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});

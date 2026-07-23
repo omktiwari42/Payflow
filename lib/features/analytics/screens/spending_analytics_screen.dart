@@ -144,7 +144,7 @@ class SpendingAnalyticsScreen extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: color.withOpacity(.15),
+          backgroundColor: color.withValues(alpha: .15),
           child: Icon(icon, color: color),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),

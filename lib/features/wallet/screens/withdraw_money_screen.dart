@@ -107,7 +107,7 @@ class _WithdrawMoneyScreenState extends State<WithdrawMoneyScreen> {
           const SizedBox(height: 12),
 
           DropdownButtonFormField<String>(
-            value: selectedBank,
+            initialValue: selectedBank,
             decoration: InputDecoration(
               filled: true,
               fillColor: Colors.white,

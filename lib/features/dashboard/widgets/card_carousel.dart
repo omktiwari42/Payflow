@@ -8,7 +8,7 @@ class CardCarousel extends StatefulWidget {
 }
 
 class _CardCarouselState extends State<CardCarousel> {
-  final PageController _controller = PageController(viewportFraction: 0.9);
+  final PageController _controller = PageController(viewportFraction: 0.92);
 
   double currentPage = 0;
 
@@ -74,17 +74,20 @@ class _CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 235,
+          height: 260,
           child: PageView.builder(
             controller: _controller,
             itemCount: cards.length,
             itemBuilder: (context, index) {
               final card = cards[index];
 
-              final scale =
-                  (1 - (currentPage - index).abs() * 0.08).clamp(0.9, 1.0);
+              final scale = (1 - (currentPage - index).abs() * 0.08).clamp(
+                0.9,
+                1.0,
+              );
 
               return Transform.scale(
                 scale: scale,
@@ -154,11 +157,11 @@ class _CardCarouselState extends State<CardCarousel> {
                         ),
 
                         const Spacer(),
-                                                Text(
+                        Text(
                           card["number"],
                           style: const TextStyle(
                             color: Colors.white,
-                            fontSize: 22,
+                            fontSize: 19,
                             fontWeight: FontWeight.w600,
                             letterSpacing: 2,
                           ),
@@ -237,7 +240,7 @@ class _CardCarouselState extends State<CardCarousel> {
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 16,
+                                      fontSize: 14,
                                     ),
                                   ),
                                 ],
@@ -255,27 +258,22 @@ class _CardCarouselState extends State<CardCarousel> {
         ),
 
         const SizedBox(height: 18),
-                Row(
+        Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            cards.length,
-            (index) {
-              final bool active = currentPage.round() == index;
+          children: List.generate(cards.length, (index) {
+            final bool active = currentPage.round() == index;
 
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                width: active ? 24 : 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: active
-                      ? const Color(0xff2563EB)
-                      : Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              );
-            },
-          ),
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              margin: const EdgeInsets.symmetric(horizontal: 4),
+              width: active ? 24 : 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: active ? const Color(0xff2563EB) : Colors.grey.shade400,
+                borderRadius: BorderRadius.circular(20),
+              ),
+            );
+          }),
         ),
       ],
     );

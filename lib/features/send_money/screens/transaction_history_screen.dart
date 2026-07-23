@@ -107,7 +107,7 @@ class TransactionHistoryScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 26,
-                    backgroundColor: (tx["color"] as Color).withOpacity(0.15),
+                    backgroundColor: (tx["color"] as Color).withValues(alpha: 0.15),
                     child: Icon(
                       tx["icon"] as IconData,
                       color: tx["color"] as Color,

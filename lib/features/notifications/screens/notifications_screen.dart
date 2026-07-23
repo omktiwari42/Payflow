@@ -89,8 +89,8 @@ class NotificationsScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 24,
-                  backgroundColor: (notification["color"] as Color).withOpacity(
-                    .15,
+                  backgroundColor: (notification["color"] as Color).withValues(
+                    alpha: .15,
                   ),
                   child: Icon(
                     notification["icon"] as IconData,

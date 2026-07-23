@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+
+import '../widgets/support_header.dart';
+import '../widgets/quick_support_card.dart';
+import '../widgets/help_category_card.dart';
+import '../widgets/ticket_card.dart';
+import '../widgets/faq_preview_card.dart';
+import '../widgets/emergency_support_card.dart';
+import '../widgets/contact_support_card.dart';
+
+class HelpSupportScreen extends StatelessWidget {
+  const HelpSupportScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xffF4F7FC),
+      body: SafeArea(
+        child: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(child: SupportHeader()),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: "Search help articles...",
+                    prefixIcon: const Icon(Icons.search),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(18),
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "Quick Support",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            SliverPadding(
+              padding: const EdgeInsets.all(20),
+              sliver: SliverGrid(
+                delegate: SliverChildListDelegate([
+                  const QuickSupportCard(
+                    title: "Live Chat",
+                    icon: Icons.chat_bubble_outline,
+                    color: Colors.blue,
+                  ),
+                  const QuickSupportCard(
+                    title: "Call",
+                    icon: Icons.call,
+                    color: Colors.green,
+                  ),
+                  const QuickSupportCard(
+                    title: "Email",
+                    icon: Icons.email_outlined,
+                    color: Colors.orange,
+                  ),
+                  const QuickSupportCard(
+                    title: "Raise Ticket",
+                    icon: Icons.support_agent,
+                    color: Colors.purple,
+                  ),
+                ]),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 16,
+                  crossAxisSpacing: 16,
+                  childAspectRatio: 1.25,
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  "Popular Topics",
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 120,
+                child: ListView(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.all(20),
+                  children: const [
+                    HelpCategoryCard(title: "Payments", icon: Icons.payments),
+                    SizedBox(width: 14),
+                    HelpCategoryCard(
+                      title: "Wallet",
+                      icon: Icons.account_balance_wallet,
+                    ),
+                    SizedBox(width: 14),
+                    HelpCategoryCard(title: "Cards", icon: Icons.credit_card),
+                    SizedBox(width: 14),
+                    HelpCategoryCard(title: "Security", icon: Icons.shield),
+                    SizedBox(width: 14),
+                    HelpCategoryCard(title: "KYC", icon: Icons.verified_user),
+                  ],
+                ),
+              ),
+            ),
+
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: TicketCard(),
+              ),
+            ),
+
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                child: FAQPreviewCard(),
+              ),
+            ),
+
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: EmergencySupportCard(),
+              ),
+            ),
+
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(20, 20, 20, 40),
+                child: ContactSupportCard(),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

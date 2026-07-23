@@ -68,7 +68,7 @@ class BankAccountsScreen extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 28,
-                  backgroundColor: (bank["color"] as Color).withOpacity(0.15),
+                  backgroundColor: (bank["color"] as Color).withValues(alpha: 0.15),
                   child: Icon(
                     Icons.account_balance,
                     color: bank["color"] as Color,
