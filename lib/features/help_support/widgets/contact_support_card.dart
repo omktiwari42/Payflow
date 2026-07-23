@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../screens/contact_us_screen.dart';
 import '../screens/live_chat_screen.dart';
 
@@ -87,7 +88,10 @@ class ContactSupportCard extends StatelessWidget {
             width: double.infinity,
             child: OutlinedButton.icon(
               onPressed: () {
-                // TODO: Navigate to Contact Us Screen
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (_) => const ContactUsScreen()),
+                );
               },
               icon: const Icon(Icons.email_outlined, color: Colors.white),
               label: const Text(

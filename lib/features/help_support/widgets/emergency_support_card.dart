@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../screens/report_fraud_screen.dart';
 
 class EmergencySupportCard extends StatelessWidget {
@@ -71,7 +72,13 @@ class EmergencySupportCard extends StatelessWidget {
           SizedBox(
             width: double.infinity,
             child: ElevatedButton.icon(
-              onPressed: () {},
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Block Card feature will be available soon."),
+                  ),
+                );
+              },
               icon: const Icon(Icons.lock_outline, color: Colors.white),
               label: const Text(
                 "Block Card",
