@@ -12,11 +12,9 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController =
-      TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
-  final TextEditingController _passwordController =
-      TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   final FocusNode _emailFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
@@ -44,15 +42,13 @@ class _LoginScreenState extends State<LoginScreen>
       curve: Curves.easeOut,
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, .25),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _animationController,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, .25), end: Offset.zero).animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: Curves.easeOutCubic,
+          ),
+        );
 
     _animationController.forward();
   }
@@ -75,9 +71,7 @@ class _LoginScreenState extends State<LoginScreen>
       return "Email is required";
     }
 
-    final emailRegex = RegExp(
-      r'^[^@]+@[^@]+\.[^@]+$',
-    );
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
 
     if (!emailRegex.hasMatch(value.trim())) {
       return "Enter a valid email";
@@ -109,9 +103,7 @@ class _LoginScreenState extends State<LoginScreen>
       _isLoading = true;
     });
 
-    await Future.delayed(
-      const Duration(seconds: 2),
-    );
+    await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
@@ -119,10 +111,7 @@ class _LoginScreenState extends State<LoginScreen>
       _isLoading = false;
     });
 
-   Navigator.pushReplacementNamed(
-  context,
-  '/dashboard',
-);
+    Navigator.pushReplacementNamed(context, '/dashboard');
   }
 
   @override
@@ -140,11 +129,7 @@ class _LoginScreenState extends State<LoginScreen>
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [
-              Color(0xff2563EB),
-              Color(0xff1D4ED8),
-              Color(0xff0F172A),
-            ],
+            colors: [Color(0xff2563EB), Color(0xff1D4ED8), Color(0xff0F172A)],
           ),
         ),
         child: SafeArea(
@@ -156,9 +141,7 @@ class _LoginScreenState extends State<LoginScreen>
                 child: SlideTransition(
                   position: _slideAnimation,
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(
-                      maxWidth: 430,
-                    ),
+                    constraints: const BoxConstraints(maxWidth: 430),
                     child: Container(
                       padding: const EdgeInsets.all(28),
                       decoration: BoxDecoration(
@@ -178,8 +161,7 @@ class _LoginScreenState extends State<LoginScreen>
                       child: Form(
                         key: _formKey,
                         child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.stretch,
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             _buildHeader(),
 
@@ -190,8 +172,7 @@ class _LoginScreenState extends State<LoginScreen>
                               hintText: "Enter your email",
                               labelText: "Email",
                               prefixIcon: Icons.email_outlined,
-                              keyboardType:
-                                  TextInputType.emailAddress,
+                              keyboardType: TextInputType.emailAddress,
                               validator: _validateEmail,
                               focusNode: _emailFocus,
                               nextFocusNode: _passwordFocus,
@@ -205,10 +186,9 @@ class _LoginScreenState extends State<LoginScreen>
                               isPassword: true,
                               validator: _validatePassword,
                               focusNode: _passwordFocus,
-                              textInputAction:
-                                  TextInputAction.done,
+                              textInputAction: TextInputAction.done,
                             ),
-                                                        const SizedBox(height: 8),
+                            const SizedBox(height: 8),
 
                             Row(
                               children: [
@@ -251,19 +231,16 @@ class _LoginScreenState extends State<LoginScreen>
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
                                   backgroundColor: Colors.white,
-                                  foregroundColor:
-                                      theme.colorScheme.primary,
+                                  foregroundColor: theme.colorScheme.primary,
                                   shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        BorderRadius.circular(18),
+                                    borderRadius: BorderRadius.circular(18),
                                   ),
                                 ),
                                 child: _isLoading
                                     ? const SizedBox(
                                         width: 24,
                                         height: 24,
-                                        child:
-                                            CircularProgressIndicator(
+                                        child: CircularProgressIndicator(
                                           strokeWidth: 3,
                                         ),
                                       )
@@ -284,8 +261,7 @@ class _LoginScreenState extends State<LoginScreen>
                               children: const [
                                 Expanded(child: Divider()),
                                 Padding(
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 12),
+                                  padding: EdgeInsets.symmetric(horizontal: 12),
                                   child: Text(
                                     "OR",
                                     style: TextStyle(
@@ -299,7 +275,7 @@ class _LoginScreenState extends State<LoginScreen>
                             ),
 
                             const SizedBox(height: 25),
-                                                        Row(
+                            Row(
                               children: [
                                 Expanded(
                                   child: OutlinedButton.icon(
@@ -319,11 +295,12 @@ class _LoginScreenState extends State<LoginScreen>
                                     style: OutlinedButton.styleFrom(
                                       minimumSize: const Size.fromHeight(55),
                                       side: BorderSide(
-                                        color: Colors.white.withValues(alpha: .5),
+                                        color: Colors.white.withValues(
+                                          alpha: .5,
+                                        ),
                                       ),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
                                     ),
                                   ),
@@ -348,11 +325,12 @@ class _LoginScreenState extends State<LoginScreen>
                                     style: OutlinedButton.styleFrom(
                                       minimumSize: const Size.fromHeight(55),
                                       side: BorderSide(
-                                        color: Colors.white.withValues(alpha: .5),
+                                        color: Colors.white.withValues(
+                                          alpha: .5,
+                                        ),
                                       ),
                                       shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(16),
+                                        borderRadius: BorderRadius.circular(16),
                                       ),
                                     ),
                                   ),
@@ -367,9 +345,7 @@ class _LoginScreenState extends State<LoginScreen>
                               children: [
                                 const Text(
                                   "Don't have an account?",
-                                  style: TextStyle(
-                                    color: Colors.white70,
-                                  ),
+                                  style: TextStyle(color: Colors.white70),
                                 ),
                                 TextButton(
                                   onPressed: () {},
@@ -424,10 +400,7 @@ class _LoginScreenState extends State<LoginScreen>
         const Text(
           "Sign in to continue to PayFlow",
           textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.white70,
-            fontSize: 16,
-          ),
+          style: TextStyle(color: Colors.white70, fontSize: 16),
         ),
       ],
     );

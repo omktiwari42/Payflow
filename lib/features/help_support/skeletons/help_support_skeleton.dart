@@ -38,7 +38,7 @@ class HelpSupportSkeleton extends StatelessWidget {
                   crossAxisSpacing: 16,
                   childAspectRatio: 1.2,
                 ),
-                itemBuilder: (_, __) => _box(height: 120),
+                itemBuilder: (_, _) => _box(height: 120),
               ),
 
               const SizedBox(height: 25),
@@ -48,8 +48,8 @@ class HelpSupportSkeleton extends StatelessWidget {
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: 5,
-                  separatorBuilder: (_, __) => const SizedBox(width: 12),
-                  itemBuilder: (_, __) => _box(width: 110, height: 110),
+                  separatorBuilder: (_, _) => const SizedBox(width: 12),
+                  itemBuilder: (_, _) => _box(width: 110, height: 110),
                 ),
               ),
 
