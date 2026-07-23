@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import 'add_money_screen.dart';
 import '../services/wallet_service.dart';
 
 class WalletScreen extends StatefulWidget {
@@ -86,7 +86,18 @@ class _WalletScreenState extends State<WalletScreen> {
               children: [
                 Expanded(
                   child: FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final updated = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const AddMoneyScreen(),
+                        ),
+                      );
+
+                      if (updated == true) {
+                        setState(() {});
+                      }
+                    },
                     icon: const Icon(Icons.add),
                     label: const Text("Add Money"),
                   ),
