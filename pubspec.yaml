@@ -20,6 +20,9 @@ dependencies:
   # QR Scanner
   mobile_scanner: ^5.2.3
 
+  # Pick images from gallery
+  image_picker: ^1.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
