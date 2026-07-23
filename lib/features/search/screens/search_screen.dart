@@ -50,10 +50,26 @@ class _SearchScreenState extends State<SearchScreen> {
 
   String selectedFilter = "All";
 
-  final filters = ["All", "Transactions", "Contacts", "Bills", "Services"];
+  final List<String> filters = [
+    "All",
+    "Transactions",
+    "Contacts",
+    "Bills",
+    "Services",
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final query = _controller.text.toLowerCase();
+
+    final filteredRecent = recentSearches
+        .where((item) => item.toLowerCase().contains(query))
+        .toList();
+
+    final filteredServices = popularServices.where((service) {
+      return service["title"].toString().toLowerCase().contains(query);
+    }).toList();
+
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FB),
       appBar: AppBar(
@@ -67,7 +83,12 @@ class _SearchScreenState extends State<SearchScreen> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          SearchBarWidget(controller: _controller),
+          SearchBarWidget(
+            controller: _controller,
+            onChanged: (_) {
+              setState(() {});
+            },
+          ),
 
           const SizedBox(height: 20),
 
@@ -100,7 +121,26 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const SizedBox(height: 16),
 
-          ...recentSearches.map((e) => RecentSearchCard(title: e)),
+          if (filteredRecent.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 20),
+              child: Center(
+                child: Text(
+                  "No recent searches found.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            )
+          else
+            ...filteredRecent.map(
+              (item) => RecentSearchCard(
+                title: item,
+                onTap: () {
+                  _controller.text = item;
+                  setState(() {});
+                },
+              ),
+            ),
 
           const SizedBox(height: 30),
 
@@ -111,26 +151,42 @@ class _SearchScreenState extends State<SearchScreen> {
 
           const SizedBox(height: 18),
 
-          GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            itemCount: popularServices.length,
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 1.25,
-              crossAxisSpacing: 15,
-              mainAxisSpacing: 15,
-            ),
-            itemBuilder: (context, index) {
-              final item = popularServices[index];
+          if (filteredServices.isEmpty)
+            const Padding(
+              padding: EdgeInsets.symmetric(vertical: 30),
+              child: Center(
+                child: Text(
+                  "No services found.",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            )
+          else
+            GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: filteredServices.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 1.25,
+                crossAxisSpacing: 15,
+                mainAxisSpacing: 15,
+              ),
+              itemBuilder: (context, index) {
+                final item = filteredServices[index];
 
-              return PopularServiceCard(
-                title: item["title"],
-                icon: item["icon"],
-                color: item["color"],
-              );
-            },
-          ),
+                return PopularServiceCard(
+                  title: item["title"],
+                  icon: item["icon"],
+                  color: item["color"],
+                  onTap: () {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("${item["title"]} selected")),
+                    );
+                  },
+                );
+              },
+            ),
         ],
       ),
     );
