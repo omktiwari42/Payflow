@@ -12,10 +12,23 @@ class ScanScreen extends StatefulWidget {
 }
 
 class _ScanScreenState extends State<ScanScreen> {
-  final MobileScannerController controller = MobileScannerController();
+  late final MobileScannerController controller;
 
-  bool _isScanned = false;
   bool _flashOn = false;
+  bool _isScanned = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    controller = MobileScannerController(
+      facing: CameraFacing.back,
+      detectionSpeed: DetectionSpeed.normal,
+      detectionTimeoutMs: 800,
+      returnImage: false,
+      formats: const [BarcodeFormat.qrCode],
+    );
+  }
 
   @override
   void dispose() {
@@ -23,35 +36,35 @@ class _ScanScreenState extends State<ScanScreen> {
     super.dispose();
   }
 
-  void _showResult(String value) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Text("QR Code Detected"),
-        content: SelectableText(value),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(context);
-
-              _isScanned = false;
-
-              await controller.start();
-            },
-            child: const Text("Scan Again"),
-          ),
-        ],
-      ),
-    );
-  }
-
   Future<void> _toggleFlash() async {
     await controller.toggleTorch();
+
+    if (!mounted) return;
 
     setState(() {
       _flashOn = !_flashOn;
     });
+  }
+
+  Future<void> _showResult(String value) async {
+    await showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        title: const Text("QR Code Detected"),
+        content: SelectableText(value),
+        actions: [
+          FilledButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text("OK"),
+          ),
+        ],
+      ),
+    );
+
+    _isScanned = false;
+
+    await controller.start();
   }
 
   @override
@@ -59,8 +72,8 @@ class _ScanScreenState extends State<ScanScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: Colors.black,
         elevation: 0,
+        backgroundColor: Colors.black,
         centerTitle: true,
         title: const Text(
           "Scan QR Code",
@@ -69,17 +82,23 @@ class _ScanScreenState extends State<ScanScreen> {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Stack(
+        fit: StackFit.expand,
         children: [
           MobileScanner(
             controller: controller,
+            fit: BoxFit.cover,
             onDetect: (capture) async {
               if (_isScanned) return;
 
-              final barcode = capture.barcodes.first;
+              final Barcode? barcode = capture.barcodes.isNotEmpty
+                  ? capture.barcodes.first
+                  : null;
+
+              if (barcode == null) return;
 
               final value = barcode.rawValue;
 
-              if (value == null) return;
+              if (value == null || value.isEmpty) return;
 
               _isScanned = true;
 
@@ -87,12 +106,12 @@ class _ScanScreenState extends State<ScanScreen> {
 
               if (!mounted) return;
 
-              _showResult(value);
+              await _showResult(value);
             },
           ),
 
           IgnorePointer(
-            child: Container(color: Colors.black.withValues(alpha: 0.35)),
+            child: Container(color: Colors.black.withOpacity(0.35)),
           ),
 
           const Center(child: ScannerOverlay()),
@@ -105,23 +124,25 @@ class _ScanScreenState extends State<ScanScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ScanActionButton(
-                  icon: _flashOn ? Icons.flash_off : Icons.flash_on,
+                  icon: _flashOn
+                      ? Icons.flash_off_rounded
+                      : Icons.flash_on_rounded,
                   label: "Flash",
                   onTap: _toggleFlash,
                 ),
                 ScanActionButton(
-                  icon: Icons.photo_library,
+                  icon: Icons.photo_library_rounded,
                   label: "Gallery",
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
                       const SnackBar(
-                        content: Text("Gallery scanning coming soon."),
+                        content: Text("Gallery scan coming soon."),
                       ),
                     );
                   },
                 ),
                 ScanActionButton(
-                  icon: Icons.history,
+                  icon: Icons.history_rounded,
                   label: "History",
                   onTap: () {
                     ScaffoldMessenger.of(context).showSnackBar(
