@@ -17,7 +17,7 @@ class ContactUsScreen extends StatelessWidget {
       child: ListTile(
         leading: CircleAvatar(
           radius: 24,
-          backgroundColor: color.withOpacity(.12),
+          backgroundColor: color.withValues(alpha: .12),
           child: Icon(icon, color: color),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),

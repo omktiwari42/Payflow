@@ -80,7 +80,7 @@ class _AddBankAccountScreenState extends State<AddBankAccountScreen> {
           padding: const EdgeInsets.all(20),
           children: [
             DropdownButtonFormField<String>(
-              value: _selectedBank,
+              initialValue: _selectedBank,
               decoration: const InputDecoration(
                 labelText: "Bank",
                 border: OutlineInputBorder(),

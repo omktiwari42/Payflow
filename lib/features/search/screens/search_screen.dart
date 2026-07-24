@@ -97,7 +97,7 @@ class _SearchScreenState extends State<SearchScreen> {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: filters.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 10),
+              separatorBuilder: (_, _) => const SizedBox(width: 10),
               itemBuilder: (context, index) {
                 return FilterChipWidget(
                   title: filters[index],

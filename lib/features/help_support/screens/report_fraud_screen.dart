@@ -139,7 +139,7 @@ class _ReportFraudScreenState extends State<ReportFraudScreen> {
 
           SwitchListTile(
             value: freezeAccount,
-            activeColor: Colors.red,
+            activeThumbColor: Colors.red,
             contentPadding: EdgeInsets.zero,
             title: const Text(
               "Temporarily Freeze My Account",

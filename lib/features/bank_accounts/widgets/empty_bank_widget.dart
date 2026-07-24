@@ -19,7 +19,7 @@ class EmptyBankWidget extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Theme.of(
                   context,
-                ).colorScheme.primaryContainer.withOpacity(0.3),
+                ).colorScheme.primaryContainer.withValues(alpha: 0.3),
                 shape: BoxShape.circle,
               ),
               child: Icon(

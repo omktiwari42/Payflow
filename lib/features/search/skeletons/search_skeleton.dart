@@ -100,7 +100,7 @@ class SearchSkeleton extends StatelessWidget {
                 mainAxisSpacing: 14,
                 childAspectRatio: 1.2,
               ),
-              itemBuilder: (_, __) {
+              itemBuilder: (_, _) {
                 return Container(
                   decoration: BoxDecoration(
                     color: Colors.white,

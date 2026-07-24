@@ -50,13 +50,13 @@ class BankCardWidget extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(24),
           gradient: LinearGradient(
-            colors: [_cardColor(), _cardColor().withOpacity(.75)],
+            colors: [_cardColor(), _cardColor().withValues(alpha: .75)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
           boxShadow: [
             BoxShadow(
-              color: _cardColor().withOpacity(.35),
+              color: _cardColor().withValues(alpha: .35),
               blurRadius: 20,
               offset: const Offset(0, 10),
             ),
@@ -72,7 +72,7 @@ class BankCardWidget extends StatelessWidget {
                 height: 140,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withOpacity(.08),
+                  color: Colors.white.withValues(alpha: .08),
                 ),
               ),
             ),
@@ -168,7 +168,7 @@ class BankCardWidget extends StatelessWidget {
             if (card.isFrozen)
               Container(
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(.55),
+                  color: Colors.black.withValues(alpha: .55),
                   borderRadius: BorderRadius.circular(24),
                 ),
                 child: const Center(

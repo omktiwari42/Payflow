@@ -133,7 +133,7 @@ class _ScanScreenState extends State<ScanScreen> {
           ),
 
           IgnorePointer(
-            child: Container(color: Colors.black.withOpacity(0.35)),
+            child: Container(color: Colors.black.withValues(alpha: 0.35)),
           ),
 
           const Center(child: ScannerOverlay()),

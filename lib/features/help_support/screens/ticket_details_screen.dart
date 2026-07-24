@@ -191,7 +191,7 @@ class TicketDetailsScreen extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 22,
-            backgroundColor: color.withOpacity(.15),
+            backgroundColor: color.withValues(alpha: .15),
             child: Icon(icon, color: color),
           ),
           const SizedBox(width: 15),
