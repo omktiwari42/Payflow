@@ -1,25 +1,47 @@
-import '../models/bank_card_model.dart';
+import 'package:flutter/foundation.dart';
 
-class CardService {
+import '../models/card_model.dart';
+
+class CardService extends ChangeNotifier {
   CardService._();
 
   static final CardService instance = CardService._();
 
-  final List<BankCardModel> _cards = [];
+  final List<CardModel> _cards = [
+    const CardModel(
+      id: "1",
+      cardHolderName: "Om Kumar Tiwari",
+      cardNumber: "4532123412345678",
+      expiryDate: "12/29",
+      cvv: "123",
+      type: CardType.visa,
+      cardColor: "blue",
+      balance: 125430.50,
+      isDefault: true,
+    ),
+    const CardModel(
+      id: "2",
+      cardHolderName: "Om Kumar Tiwari",
+      cardNumber: "5423123412345678",
+      expiryDate: "08/28",
+      cvv: "456",
+      type: CardType.mastercard,
+      cardColor: "black",
+      balance: 82450.25,
+    ),
+  ];
 
-  List<BankCardModel> getCards() {
-    return List<BankCardModel>.from(_cards);
+  List<CardModel> get cards => List.unmodifiable(_cards);
+
+  CardModel? get defaultCard {
+    try {
+      return _cards.firstWhere((card) => card.isDefault);
+    } catch (_) {
+      return _cards.isNotEmpty ? _cards.first : null;
+    }
   }
 
-  void addCard(BankCardModel card) {
-    _cards.add(card);
-  }
-
-  void removeCard(String id) {
-    _cards.removeWhere((card) => card.id == id);
-  }
-
-  BankCardModel? getCard(String id) {
+  CardModel? getCard(String id) {
     try {
       return _cards.firstWhere((card) => card.id == id);
     } catch (_) {
@@ -27,74 +49,52 @@ class CardService {
     }
   }
 
-  void freezeCard(String id, bool freeze) {
+  void addCard(CardModel card) {
+    _cards.add(card);
+    notifyListeners();
+  }
+
+  void removeCard(String id) {
+    _cards.removeWhere((card) => card.id == id);
+    notifyListeners();
+  }
+
+  void setDefaultCard(String id) {
+    for (int i = 0; i < _cards.length; i++) {
+      _cards[i] = _cards[i].copyWith(isDefault: _cards[i].id == id);
+    }
+
+    notifyListeners();
+  }
+
+  void toggleFreeze(String id) {
     final index = _cards.indexWhere((card) => card.id == id);
 
     if (index == -1) return;
 
-    _cards[index] = _cards[index].copyWith(isFrozen: freeze);
+    final card = _cards[index];
+
+    _cards[index] = card.copyWith(isFrozen: !card.isFrozen);
+
+    notifyListeners();
   }
 
-  void setContactless(String id, bool enabled) {
+  void updateBalance(String id, double balance) {
     final index = _cards.indexWhere((card) => card.id == id);
 
     if (index == -1) return;
 
-    _cards[index] = _cards[index].copyWith(isContactlessEnabled: enabled);
-  }
+    _cards[index] = _cards[index].copyWith(balance: balance);
 
-  void setInternational(String id, bool enabled) {
-    final index = _cards.indexWhere((card) => card.id == id);
-
-    if (index == -1) return;
-
-    _cards[index] = _cards[index].copyWith(isInternationalEnabled: enabled);
-  }
-
-  void updateLimit(String id, double limit) {
-    final index = _cards.indexWhere((card) => card.id == id);
-
-    if (index == -1) return;
-
-    _cards[index] = _cards[index].copyWith(spendingLimit: limit);
-  }
-
-  void loadDummyCards() {
-    if (_cards.isNotEmpty) return;
-
-    _cards.addAll([
-      const BankCardModel(
-        id: "1",
-        cardHolderName: "Om Kumar Tiwari",
-        cardNumber: "4111111111111111",
-        expiryDate: "12/29",
-        cvv: "123",
-        type: CardType.visa,
-        cardColor: "blue",
-      ),
-      const BankCardModel(
-        id: "2",
-        cardHolderName: "Om Kumar Tiwari",
-        cardNumber: "5555555555554444",
-        expiryDate: "09/28",
-        cvv: "456",
-        type: CardType.mastercard,
-        cardColor: "black",
-        isInternationalEnabled: true,
-      ),
-      const BankCardModel(
-        id: "3",
-        cardHolderName: "Om Kumar Tiwari",
-        cardNumber: "6522334455667788",
-        expiryDate: "06/30",
-        cvv: "789",
-        type: CardType.rupay,
-        cardColor: "purple",
-      ),
-    ]);
+    notifyListeners();
   }
 
   void clearCards() {
     _cards.clear();
+    notifyListeners();
   }
+
+  bool get hasCards => _cards.isNotEmpty;
+
+  int get totalCards => _cards.length;
 }
