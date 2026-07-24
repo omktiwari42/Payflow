@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../../../core/widgets/custom_text_field.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -117,8 +118,6 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
