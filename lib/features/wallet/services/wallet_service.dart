@@ -7,7 +7,7 @@ class WalletService {
 
   WalletModel _wallet = const WalletModel(
     balance: 5000.00,
-    totalIncome: 100000.00,
+    totalIncome: 10000.00,
     totalExpense: 5000.00,
   );
 
