@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^1.0.8
-  intl: ^0.20.2
+  intl: ^0.20.3
 
   # Charts for Spending Analytics
   fl_chart: ^0.69.0
@@ -26,6 +26,8 @@ dependencies:
   flutter_secure_storage: ^10.3.1
   pinput: ^6.0.2
   flutter_animate: ^4.5.2
+  shimmer: ^3.0.0
+  connectivity_plus: ^7.3.1
 
 dev_dependencies:
   flutter_test:
