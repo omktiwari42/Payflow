@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/custom_text_field.dart';
+import '../services/auth_service.dart';
+import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -13,14 +15,10 @@ class _LoginScreenState extends State<LoginScreen>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
 
-  final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _phoneFocus = FocusNode();
 
-  final FocusNode _emailFocus = FocusNode();
-  final FocusNode _passwordFocus = FocusNode();
-
-  bool _rememberMe = false;
   bool _isLoading = false;
 
   late final AnimationController _animationController;
@@ -57,43 +55,26 @@ class _LoginScreenState extends State<LoginScreen>
   @override
   void dispose() {
     _animationController.dispose();
+    _phoneController.dispose();
 
-    _emailController.dispose();
-    _passwordController.dispose();
-
-    _emailFocus.dispose();
-    _passwordFocus.dispose();
+    _phoneFocus.dispose();
 
     super.dispose();
   }
 
-  String? _validateEmail(String? value) {
+  String? _validatePhone(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return "Email is required";
+      return "Phone number is required";
     }
 
-    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+$');
-
-    if (!emailRegex.hasMatch(value.trim())) {
-      return "Enter a valid email";
-    }
-
-    return null;
-  }
-
-  String? _validatePassword(String? value) {
-    if (value == null || value.isEmpty) {
-      return "Password is required";
-    }
-
-    if (value.length < 6) {
-      return "Minimum 6 characters";
+    if (!RegExp(r'^[6-9][0-9]{9}$').hasMatch(value.trim())) {
+      return "Enter a valid 10-digit phone number";
     }
 
     return null;
   }
 
-  Future<void> _login() async {
+  Future<void> _sendOtp() async {
     FocusScope.of(context).unfocus();
 
     if (!_formKey.currentState!.validate()) {
@@ -104,15 +85,36 @@ class _LoginScreenState extends State<LoginScreen>
       _isLoading = true;
     });
 
-    await Future.delayed(const Duration(seconds: 2));
+    try {
+      final success = await AuthService.instance.sendOtp(
+        _phoneController.text.trim(),
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _isLoading = false;
-    });
+      setState(() {
+        _isLoading = false;
+      });
 
-    Navigator.pushReplacementNamed(context, '/dashboard');
+      if (success) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => OtpScreen(phone: _phoneController.text.trim()),
+          ),
+        );
+      }
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    }
   }
 
   @override
@@ -167,66 +169,24 @@ class _LoginScreenState extends State<LoginScreen>
                             const SizedBox(height: 35),
 
                             CustomTextField(
-                              controller: _emailController,
-                              hintText: "Enter your email",
-                              labelText: "Email",
-                              prefixIcon: Icons.email_outlined,
-                              keyboardType: TextInputType.emailAddress,
-                              validator: _validateEmail,
-                              focusNode: _emailFocus,
-                              nextFocusNode: _passwordFocus,
-                            ),
-
-                            CustomTextField(
-                              controller: _passwordController,
-                              hintText: "Enter your password",
-                              labelText: "Password",
-                              prefixIcon: Icons.lock_outline,
-                              isPassword: true,
-                              validator: _validatePassword,
-                              focusNode: _passwordFocus,
+                              controller: _phoneController,
+                              hintText: "Enter your mobile number",
+                              labelText: "Phone Number",
+                              prefixIcon: Icons.phone_android,
+                              keyboardType: TextInputType.phone,
+                              validator: _validatePhone,
+                              focusNode: _phoneFocus,
                               textInputAction: TextInputAction.done,
                             ),
-                            const SizedBox(height: 8),
 
-                            Row(
-                              children: [
-                                Checkbox(
-                                  value: _rememberMe,
-                                  activeColor: theme.colorScheme.primary,
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _rememberMe = value ?? false;
-                                    });
-                                  },
-                                ),
-                                const Text(
-                                  "Remember me",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                                const Spacer(),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    "Forgot Password?",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                            const SizedBox(height: 8),
 
                             const SizedBox(height: 30),
 
                             SizedBox(
                               height: 58,
                               child: ElevatedButton(
-                                onPressed: _isLoading ? null : _login,
+                                onPressed: _isLoading ? null : _sendOtp,
                                 style: ElevatedButton.styleFrom(
                                   elevation: 0,
                                   backgroundColor: Colors.white,
@@ -244,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen>
                                         ),
                                       )
                                     : const Text(
-                                        "LOGIN",
+                                        "CONTINUE",
                                         style: TextStyle(
                                           fontSize: 17,
                                           fontWeight: FontWeight.bold,
@@ -254,108 +214,15 @@ class _LoginScreenState extends State<LoginScreen>
                               ),
                             ),
 
-                            const SizedBox(height: 30),
+                            const SizedBox(height: 24),
 
-                            Row(
-                              children: const [
-                                Expanded(child: Divider()),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 12),
-                                  child: Text(
-                                    "OR",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Expanded(child: Divider()),
-                              ],
-                            ),
-
-                            const SizedBox(height: 25),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.g_mobiledata,
-                                      color: Colors.white,
-                                      size: 28,
-                                    ),
-                                    label: const Text(
-                                      "Google",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      minimumSize: const Size.fromHeight(55),
-                                      side: BorderSide(
-                                        color: Colors.white.withValues(
-                                          alpha: .5,
-                                        ),
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-
-                                const SizedBox(width: 16),
-
-                                Expanded(
-                                  child: OutlinedButton.icon(
-                                    onPressed: () {},
-                                    icon: const Icon(
-                                      Icons.apple,
-                                      color: Colors.white,
-                                    ),
-                                    label: const Text(
-                                      "Apple",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                    style: OutlinedButton.styleFrom(
-                                      minimumSize: const Size.fromHeight(55),
-                                      side: BorderSide(
-                                        color: Colors.white.withValues(
-                                          alpha: .5,
-                                        ),
-                                      ),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 30),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Don't have an account?",
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                                TextButton(
-                                  onPressed: () {},
-                                  child: const Text(
-                                    "Sign Up",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              "By continuing you agree to PayFlow's Terms & Privacy Policy.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.white70,
+                                fontSize: 13,
+                              ),
                             ),
                           ],
                         ),
@@ -388,7 +255,7 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         const SizedBox(height: 22),
         const Text(
-          "Welcome Back",
+          "Welcome to PayFlow",
           style: TextStyle(
             fontSize: 30,
             fontWeight: FontWeight.bold,
@@ -397,7 +264,7 @@ class _LoginScreenState extends State<LoginScreen>
         ),
         const SizedBox(height: 8),
         const Text(
-          "Sign in to continue to PayFlow",
+          "Enter your mobile number to continue",
           textAlign: TextAlign.center,
           style: TextStyle(color: Colors.white70, fontSize: 16),
         ),

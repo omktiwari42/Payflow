@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/auth_service.dart';
+
 class CompleteProfileScreen extends StatefulWidget {
   final String phone;
 
@@ -34,17 +36,32 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
       _loading = true;
     });
 
-    // API call will be added next
+    try {
+      await AuthService.instance.completeProfile(
+        fullName: _nameController.text.trim(),
+        email: _emailController.text.trim(),
+      );
 
-    await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
 
-    if (!mounted) return;
+      Navigator.pushNamedAndRemoveUntil(
+        context,
+        "/dashboard",
+        (route) => false,
+      );
+    } catch (e) {
+      if (!mounted) return;
 
-    setState(() {
-      _loading = false;
-    });
-
-    Navigator.pushNamedAndRemoveUntil(context, "/dashboard", (route) => false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _loading = false;
+        });
+      }
+    }
   }
 
   @override
