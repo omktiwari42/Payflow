@@ -12,10 +12,7 @@ class AIFinanceAssistantCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xff1E293B),
-            Color(0xff0F172A),
-          ],
+          colors: [Color(0xff1E293B), Color(0xff0F172A)],
         ),
         boxShadow: [
           BoxShadow(
@@ -61,9 +58,7 @@ class AIFinanceAssistantCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Personalized money insights",
-                      style: TextStyle(
-                        color: Colors.white70,
-                      ),
+                      style: TextStyle(color: Colors.white70),
                     ),
                   ],
                 ),
@@ -93,11 +88,7 @@ class AIFinanceAssistantCard extends StatelessWidget {
 
           const Text(
             "You spent 18% less on food this week and saved ₹2,450 compared to your weekly average.",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              height: 1.5,
-            ),
+            style: TextStyle(color: Colors.white, fontSize: 18, height: 1.5),
           ),
 
           const SizedBox(height: 30),
@@ -106,50 +97,30 @@ class AIFinanceAssistantCard extends StatelessWidget {
             spacing: 14,
             runSpacing: 14,
             children: [
-              _ActionChip(
-                icon: Icons.analytics_outlined,
-                label: "Analyze",
-              ),
-              _ActionChip(
-                icon: Icons.savings_outlined,
-                label: "Save",
-              ),
-              _ActionChip(
-                icon: Icons.receipt_long_outlined,
-                label: "Report",
-              ),
-              _ActionChip(
-                icon: Icons.lightbulb_outline,
-                label: "Advice",
-              ),
+              _ActionChip(icon: Icons.analytics_outlined, label: "Analyze"),
+              _ActionChip(icon: Icons.savings_outlined, label: "Save"),
+              _ActionChip(icon: Icons.receipt_long_outlined, label: "Report"),
+              _ActionChip(icon: Icons.lightbulb_outline, label: "Advice"),
             ],
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(18),
             decoration: BoxDecoration(
               color: Colors.white.withValues(alpha: 0.08),
               borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.08),
-              ),
+              border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
             ),
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.notifications_active_outlined,
-                  color: Colors.amber,
-                ),
+                Icon(Icons.notifications_active_outlined, color: Colors.amber),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "Reminder: Your electricity bill is due in 2 days. Paying now helps avoid late fees.",
-                    style: TextStyle(
-                      color: Colors.white,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(color: Colors.white, height: 1.5),
                   ),
                 ),
               ],
@@ -175,10 +146,7 @@ class AIFinanceAssistantCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     "Recommendation: Move ₹5,000 into your Emergency Fund this month to stay ahead of your savings goal.",
-                    style: TextStyle(
-                      color: Colors.white,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(color: Colors.white, height: 1.5),
                   ),
                 ),
               ],
@@ -194,10 +162,7 @@ class _ActionChip extends StatelessWidget {
   final IconData icon;
   final String label;
 
-  const _ActionChip({
-    required this.icon,
-    required this.label,
-  });
+  const _ActionChip({required this.icon, required this.label});
 
   @override
   Widget build(BuildContext context) {
@@ -205,25 +170,16 @@ class _ActionChip extends StatelessWidget {
       borderRadius: BorderRadius.circular(16),
       onTap: () {},
       child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 18,
-          vertical: 14,
-        ),
+        padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
         decoration: BoxDecoration(
           color: Colors.white.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.10),
-          ),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.10)),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 20,
-            ),
+            Icon(icon, color: Colors.white, size: 20),
             const SizedBox(width: 8),
             Text(
               label,

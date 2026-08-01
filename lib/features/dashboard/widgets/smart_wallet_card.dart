@@ -53,9 +53,7 @@ class SmartWalletCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "All your money in one place",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -70,21 +68,13 @@ class SmartWalletCard extends StatelessWidget {
 
           const SizedBox(height: 30),
 
-          const Text(
-            "Total Balance",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          const Text("Total Balance", style: TextStyle(color: Colors.grey)),
 
           const SizedBox(height: 8),
 
           const Text(
             "₹3,48,520",
-            style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 24),
@@ -116,7 +106,7 @@ class SmartWalletCard extends StatelessWidget {
             amount: "₹1,33,400",
             color: Color(0xffF59E0B),
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -129,10 +119,7 @@ class SmartWalletCard extends StatelessWidget {
               children: [
                 const Text(
                   "Asset Distribution",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
 
                 const SizedBox(height: 16),
@@ -159,9 +146,7 @@ class SmartWalletCard extends StatelessWidget {
 
                 const Text(
                   "52% Bank • 10% Wallet • 38% Cards",
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  style: TextStyle(color: Colors.grey),
                 ),
               ],
             ),
@@ -173,10 +158,7 @@ class SmartWalletCard extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xff06B6D4),
-                  Color(0xff2563EB),
-                ],
+                colors: [Color(0xff06B6D4), Color(0xff2563EB)],
               ),
               borderRadius: BorderRadius.circular(22),
             ),
@@ -185,10 +167,7 @@ class SmartWalletCard extends StatelessWidget {
                 const CircleAvatar(
                   radius: 24,
                   backgroundColor: Colors.white24,
-                  child: Icon(
-                    Icons.add_card_rounded,
-                    color: Colors.white,
-                  ),
+                  child: Icon(Icons.add_card_rounded, color: Colors.white),
                 ),
 
                 const SizedBox(width: 16),
@@ -199,9 +178,7 @@ class SmartWalletCard extends StatelessWidget {
                     children: [
                       Text(
                         "Quick Add Money",
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(color: Colors.white70),
                       ),
                       SizedBox(height: 6),
                       Text(
@@ -265,10 +242,7 @@ class _WalletAccountTile extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: color.withValues(alpha: 0.12),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
 
           const SizedBox(width: 16),
@@ -287,22 +261,14 @@ class _WalletAccountTile extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
 
           Text(
             amount,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 17,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
           ),
         ],
       ),

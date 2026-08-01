@@ -53,9 +53,7 @@ class CashFlowTimelineCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Upcoming money movement",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -107,7 +105,7 @@ class CashFlowTimelineCard extends StatelessWidget {
             color: Colors.deepPurple,
             icon: Icons.home,
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -118,18 +116,12 @@ class CashFlowTimelineCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.auto_graph_rounded,
-                  color: Color(0xff0EA5E9),
-                ),
+                Icon(Icons.auto_graph_rounded, color: Color(0xff0EA5E9)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "Forecast: Based on your upcoming income and scheduled payments, your estimated end-of-month balance is ₹1,48,320.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -142,10 +134,7 @@ class CashFlowTimelineCard extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color(0xff0EA5E9),
-                  Color(0xff2563EB),
-                ],
+                colors: [Color(0xff0EA5E9), Color(0xff2563EB)],
               ),
               borderRadius: BorderRadius.circular(22),
             ),
@@ -166,9 +155,7 @@ class CashFlowTimelineCard extends StatelessWidget {
                     children: [
                       Text(
                         "Predicted Balance",
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(color: Colors.white70),
                       ),
                       SizedBox(height: 6),
                       Text(
@@ -216,17 +203,9 @@ class _TimelineItem extends StatelessWidget {
             CircleAvatar(
               radius: 22,
               backgroundColor: color.withValues(alpha: 0.12),
-              child: Icon(
-                icon,
-                color: color,
-                size: 22,
-              ),
+              child: Icon(icon, color: color, size: 22),
             ),
-            Container(
-              width: 2,
-              height: 56,
-              color: Colors.grey.shade300,
-            ),
+            Container(width: 2, height: 56, color: Colors.grey.shade300),
           ],
         ),
 

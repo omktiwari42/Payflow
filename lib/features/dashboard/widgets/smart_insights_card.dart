@@ -55,18 +55,13 @@ class SmartInsightsCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "AI-powered financial health",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
               ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.refresh),
-              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.refresh)),
             ],
           ),
 
@@ -95,12 +90,7 @@ class SmartInsightsCard extends StatelessWidget {
                   const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text(
-                        "Health",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Text("Health", style: TextStyle(color: Colors.grey)),
                       SizedBox(height: 8),
                       Text(
                         "86",
@@ -109,12 +99,7 @@ class SmartInsightsCard extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Text(
-                        "/100",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                      Text("/100", style: TextStyle(color: Colors.grey)),
                     ],
                   ),
                 ],
@@ -147,7 +132,7 @@ class SmartInsightsCard extends StatelessWidget {
               ),
             ],
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -158,18 +143,12 @@ class SmartInsightsCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.psychology_alt_rounded,
-                  color: Color(0xff7C3AED),
-                ),
+                Icon(Icons.psychology_alt_rounded, color: Color(0xff7C3AED)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "AI Analysis: Your financial health is excellent. Maintaining your current savings rate could increase your emergency fund by 35% within the next year.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -180,10 +159,7 @@ class SmartInsightsCard extends StatelessWidget {
 
           const Text(
             "Achievements",
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 16),
@@ -223,10 +199,7 @@ class SmartInsightsCard extends StatelessWidget {
               children: [
                 Text(
                   "Subscriptions",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                 ),
                 SizedBox(height: 12),
                 Text("Netflix • ₹649/month"),
@@ -269,10 +242,7 @@ class _InsightStat extends StatelessWidget {
         children: [
           Icon(icon, color: color),
           const SizedBox(height: 12),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.grey),
-          ),
+          Text(title, style: const TextStyle(color: Colors.grey)),
           const SizedBox(height: 6),
           Text(
             value,
@@ -304,17 +274,11 @@ class _AchievementBadge extends StatelessWidget {
     return Chip(
       avatar: CircleAvatar(
         backgroundColor: color.withValues(alpha: 0.15),
-        child: Icon(
-          icon,
-          color: color,
-          size: 18,
-        ),
+        child: Icon(icon, color: color, size: 18),
       ),
       label: Text(label),
       backgroundColor: color.withValues(alpha: 0.08),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(30),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
     );
   }
 }

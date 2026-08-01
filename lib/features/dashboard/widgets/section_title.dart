@@ -27,10 +27,7 @@ class SectionTitle extends StatelessWidget {
           ),
         ),
         if (actionText != null)
-          TextButton(
-            onPressed: onActionPressed,
-            child: Text(actionText!),
-          ),
+          TextButton(onPressed: onActionPressed, child: Text(actionText!)),
       ],
     );
   }

@@ -39,19 +39,26 @@ class _PayBillScreenState extends State<PayBillScreen> {
     String title,
     String subtitle,
   ) {
-    return RadioListTile<PaymentMethod>(
-      value: method,
-      groupValue: _selectedMethod,
-      onChanged: (value) {
-        if (value == null) return;
+    return ListTile(
+      leading: Radio<PaymentMethod>(
+        value: method,
+        groupValue: _selectedMethod,
+        onChanged: (value) {
+          if (value == null) return;
 
-        setState(() {
-          _selectedMethod = value;
-        });
-      },
-      secondary: Icon(icon),
+          setState(() {
+            _selectedMethod = value;
+          });
+        },
+      ),
       title: Text(title),
       subtitle: Text(subtitle),
+      trailing: Icon(icon),
+      onTap: () {
+        setState(() {
+          _selectedMethod = method;
+        });
+      },
     );
   }
 
@@ -278,24 +285,26 @@ class _PayBillScreenState extends State<PayBillScreen> {
                         setState(() {
                           _processing = true;
                         });
-
                         await Future.delayed(const Duration(seconds: 2));
 
                         _service.payBill(widget.bill.id);
 
                         if (!mounted) return;
 
+                        final messenger = ScaffoldMessenger.of(context);
+                        final navigator = Navigator.of(context);
+
                         setState(() {
                           _processing = false;
                         });
 
-                        ScaffoldMessenger.of(context).showSnackBar(
+                        messenger.showSnackBar(
                           const SnackBar(
                             content: Text("Bill paid successfully."),
                           ),
                         );
 
-                        Navigator.pop(context);
+                        navigator.pop();
                       },
                 icon: _processing
                     ? const SizedBox(

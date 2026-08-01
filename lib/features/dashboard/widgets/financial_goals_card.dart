@@ -53,9 +53,7 @@ class FinancialGoalsCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Track your savings goals",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -97,7 +95,7 @@ class FinancialGoalsCard extends StatelessWidget {
             progress: 0.70,
             color: const Color(0xffF59E0B),
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -107,18 +105,12 @@ class FinancialGoalsCard extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                Icon(
-                  Icons.auto_awesome_rounded,
-                  color: Color(0xff8B5CF6),
-                ),
+                Icon(Icons.auto_awesome_rounded, color: Color(0xff8B5CF6)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "AI Tip: Increase your monthly savings by ₹5,000 to reach all your goals 2 months earlier.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -169,10 +161,7 @@ class _GoalTile extends StatelessWidget {
               ),
               Text(
                 "${(progress * 100).toInt()}%",
-                style: TextStyle(
-                  color: color,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: color, fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -197,10 +186,7 @@ class _GoalTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "Saved",
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  const Text("Saved", style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 4),
                   Text(
                     saved,
@@ -214,10 +200,7 @@ class _GoalTile extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  const Text(
-                    "Target",
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  const Text("Target", style: TextStyle(color: Colors.grey)),
                   const SizedBox(height: 4),
                   Text(
                     target,

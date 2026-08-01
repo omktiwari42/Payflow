@@ -93,14 +93,24 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
   }
 
   Widget paymentMethod(String title, IconData icon) {
-    return RadioListTile<String>(
-      value: title,
-      groupValue: _selectedMethod,
-      secondary: Icon(icon),
+    return ListTile(
+      contentPadding: EdgeInsets.zero,
+      leading: Radio<String>(
+        value: title,
+        groupValue: _selectedMethod,
+        onChanged: (value) {
+          if (value == null) return;
+
+          setState(() {
+            _selectedMethod = value;
+          });
+        },
+      ),
       title: Text(title),
-      onChanged: (value) {
+      trailing: Icon(icon),
+      onTap: () {
         setState(() {
-          _selectedMethod = value!;
+          _selectedMethod = title;
         });
       },
     );

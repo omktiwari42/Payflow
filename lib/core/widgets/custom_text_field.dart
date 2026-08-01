@@ -60,18 +60,12 @@ class _CustomTextFieldState extends State<CustomTextField> {
             FocusScope.of(context).unfocus();
           }
         },
-        style: const TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w500,
-        ),
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
         decoration: InputDecoration(
           labelText: widget.labelText,
           hintText: widget.hintText,
 
-          prefixIcon: Icon(
-            widget.prefixIcon,
-            size: 22,
-          ),
+          prefixIcon: Icon(widget.prefixIcon, size: 22),
 
           suffixIcon: widget.isPassword
               ? IconButton(
@@ -104,34 +98,22 @@ class _CustomTextFieldState extends State<CustomTextField> {
 
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-              color: Colors.grey.shade300,
-              width: 1,
-            ),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
           ),
 
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-              color: theme.colorScheme.primary,
-              width: 2,
-            ),
+            borderSide: BorderSide(color: theme.colorScheme.primary, width: 2),
           ),
 
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 1.5,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
           ),
 
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: const BorderSide(
-              color: Colors.red,
-              width: 2,
-            ),
+            borderSide: const BorderSide(color: Colors.red, width: 2),
           ),
         ),
       ),

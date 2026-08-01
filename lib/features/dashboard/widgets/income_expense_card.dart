@@ -56,10 +56,7 @@ class IncomeExpenseCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Monthly financial overview",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.grey, fontSize: 14),
                     ),
                   ],
                 ),
@@ -76,11 +73,7 @@ class IncomeExpenseCard extends StatelessWidget {
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(
-                      Icons.trending_up,
-                      color: Colors.green,
-                      size: 16,
-                    ),
+                    Icon(Icons.trending_up, color: Colors.green, size: 16),
                     SizedBox(width: 4),
                     Text(
                       "+18%",
@@ -124,12 +117,9 @@ class IncomeExpenseCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 26),
-                    const Text(
+          const Text(
             "Savings Progress",
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 16),
@@ -140,9 +130,7 @@ class IncomeExpenseCard extends StatelessWidget {
               value: progress,
               minHeight: 12,
               backgroundColor: Colors.grey.shade200,
-              valueColor: const AlwaysStoppedAnimation(
-                Color(0xff2563EB),
-              ),
+              valueColor: const AlwaysStoppedAnimation(Color(0xff2563EB)),
             ),
           ),
 
@@ -178,18 +166,12 @@ class IncomeExpenseCard extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                Icon(
-                  Icons.lightbulb_outline_rounded,
-                  color: Colors.amber,
-                ),
+                Icon(Icons.lightbulb_outline_rounded, color: Colors.amber),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "Great job! Your expenses are lower than your income this month. Keep saving to reach your financial goals.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -230,10 +212,7 @@ class _FinanceTile extends StatelessWidget {
           CircleAvatar(
             radius: 20,
             backgroundColor: color.withValues(alpha: 0.15),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
 
           const SizedBox(height: 16),
@@ -250,20 +229,14 @@ class _FinanceTile extends StatelessWidget {
 
           Text(
             amount,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
 
           const SizedBox(height: 6),
 
           Text(
             subtitle,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w600,
-            ),
+            style: TextStyle(color: color, fontWeight: FontWeight.w600),
           ),
         ],
       ),

@@ -1,13 +1,9 @@
-
 import 'package:flutter/material.dart';
 
 class BalanceCard extends StatelessWidget {
   final String balance;
 
-  const BalanceCard({
-    super.key,
-    required this.balance,
-  });
+  const BalanceCard({super.key, required this.balance});
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +15,7 @@ class BalanceCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [
-            Color(0xFF1E3A8A),
-            Color(0xFF2563EB),
-            Color(0xFF3B82F6),
-          ],
+          colors: [Color(0xFF1E3A8A), Color(0xFF2563EB), Color(0xFF3B82F6)],
         ),
         boxShadow: [
           BoxShadow(
@@ -63,7 +55,10 @@ class BalanceCard extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 10,
+                  vertical: 5,
+                ),
                 decoration: BoxDecoration(
                   color: const Color(0xFF4CAF50),
                   borderRadius: BorderRadius.circular(20),
@@ -92,10 +87,7 @@ class BalanceCard extends StatelessWidget {
           const SizedBox(height: 6),
           const Text(
             "Updated just now",
-            style: TextStyle(
-              color: Colors.white70,
-              fontSize: 13,
-            ),
+            style: TextStyle(color: Colors.white70, fontSize: 13),
           ),
           const SizedBox(height: 18),
           Row(

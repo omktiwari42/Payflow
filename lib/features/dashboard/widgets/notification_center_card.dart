@@ -21,10 +21,8 @@ class NotificationCenterCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
-
               Container(
                 height: 58,
                 width: 58,
@@ -45,7 +43,6 @@ class NotificationCenterCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
                       "Notification Center",
                       style: TextStyle(
@@ -58,11 +55,8 @@ class NotificationCenterCard extends StatelessWidget {
 
                     Text(
                       "Recent alerts and updates",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
-
                   ],
                 ),
               ),
@@ -84,7 +78,6 @@ class NotificationCenterCard extends StatelessWidget {
                   ),
                 ),
               ),
-
             ],
           ),
 
@@ -127,7 +120,7 @@ class NotificationCenterCard extends StatelessWidget {
             subtitle: "Portfolio up 2.3% today",
             time: "Today",
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -138,18 +131,12 @@ class NotificationCenterCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.auto_awesome,
-                  color: Color(0xff2563EB),
-                ),
+                Icon(Icons.auto_awesome, color: Color(0xff2563EB)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "AI Alert: Your food expenses are 9% lower than last week. Keep this trend to save an extra ₹2,000 this month.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -202,10 +189,7 @@ class _NotificationTile extends StatelessWidget {
               CircleAvatar(
                 radius: 24,
                 backgroundColor: iconColor.withValues(alpha: 0.12),
-                child: Icon(
-                  icon,
-                  color: iconColor,
-                ),
+                child: Icon(icon, color: iconColor),
               ),
               Positioned(
                 right: 0,
@@ -238,12 +222,7 @@ class _NotificationTile extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
@@ -253,10 +232,7 @@ class _NotificationTile extends StatelessWidget {
             children: [
               Text(
                 time,
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 12,
-                ),
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
               ),
               const SizedBox(height: 10),
               Container(

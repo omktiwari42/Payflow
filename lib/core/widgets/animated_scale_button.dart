@@ -4,15 +4,10 @@ class AnimatedScaleButton extends StatefulWidget {
   final Widget child;
   final VoidCallback? onTap;
 
-  const AnimatedScaleButton({
-    super.key,
-    required this.child,
-    this.onTap,
-  });
+  const AnimatedScaleButton({super.key, required this.child, this.onTap});
 
   @override
-  State<AnimatedScaleButton> createState() =>
-      _AnimatedScaleButtonState();
+  State<AnimatedScaleButton> createState() => _AnimatedScaleButtonState();
 }
 
 class _AnimatedScaleButtonState extends State<AnimatedScaleButton> {

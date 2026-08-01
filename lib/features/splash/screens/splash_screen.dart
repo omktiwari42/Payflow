@@ -28,10 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [
-              Color(0xFF2563EB),
-              Color(0xFF1D4ED8),
-            ],
+            colors: [Color(0xFF2563EB), Color(0xFF1D4ED8)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -58,10 +55,7 @@ class _SplashScreenState extends State<SplashScreen> {
               SizedBox(height: 10),
               Text(
                 "Fast • Secure • Smart",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 18,
-                ),
+                style: TextStyle(color: Colors.white70, fontSize: 18),
               ),
             ],
           ),

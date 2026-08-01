@@ -13,8 +13,7 @@ class AnimatedDashboardCard extends StatefulWidget {
   });
 
   @override
-  State<AnimatedDashboardCard> createState() =>
-      _AnimatedDashboardCardState();
+  State<AnimatedDashboardCard> createState() => _AnimatedDashboardCardState();
 }
 
 class _AnimatedDashboardCardState extends State<AnimatedDashboardCard>
@@ -42,12 +41,7 @@ class _AnimatedDashboardCardState extends State<AnimatedDashboardCard>
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.12),
       end: Offset.zero,
-    ).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeOutCubic,
-      ),
-    );
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     Future.delayed(widget.delay, () {
       if (mounted) {

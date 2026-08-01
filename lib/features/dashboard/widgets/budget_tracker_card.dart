@@ -58,18 +58,13 @@ class BudgetTrackerCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Monthly budget overview",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
               ),
 
-              TextButton(
-                onPressed: () {},
-                child: const Text("Details"),
-              ),
+              TextButton(onPressed: () {}, child: const Text("Details")),
             ],
           ),
 
@@ -98,12 +93,7 @@ class BudgetTrackerCard extends StatelessWidget {
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
-                        "Spent",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
+                      const Text("Spent", style: TextStyle(color: Colors.grey)),
 
                       const SizedBox(height: 8),
 
@@ -156,7 +146,7 @@ class BudgetTrackerCard extends StatelessWidget {
               ),
             ],
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -167,18 +157,12 @@ class BudgetTrackerCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.auto_awesome_rounded,
-                  color: Color(0xff2563EB),
-                ),
+                Icon(Icons.auto_awesome_rounded, color: Color(0xff2563EB)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "AI Insight: You're spending responsibly this month. If you continue at this pace, you'll stay within budget.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -191,10 +175,7 @@ class BudgetTrackerCard extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xff2563EB),
-                  Color(0xff1D4ED8),
-                ],
+                colors: [Color(0xff2563EB), Color(0xff1D4ED8)],
               ),
               borderRadius: BorderRadius.circular(22),
             ),
@@ -215,9 +196,7 @@ class BudgetTrackerCard extends StatelessWidget {
                     children: [
                       Text(
                         "Safe to Spend Today",
-                        style: TextStyle(
-                          color: Colors.white70,
-                        ),
+                        style: TextStyle(color: Colors.white70),
                       ),
                       SizedBox(height: 6),
                       Text(
@@ -276,10 +255,7 @@ class _BudgetInfo extends StatelessWidget {
           CircleAvatar(
             radius: 20,
             backgroundColor: color.withValues(alpha: 0.15),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
           const SizedBox(height: 16),
           Text(
@@ -292,10 +268,7 @@ class _BudgetInfo extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
         ],
       ),

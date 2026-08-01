@@ -96,7 +96,7 @@ class _BillSkeletonState extends State<BillSkeleton>
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: 6,
-      itemBuilder: (_, __) => _card(),
+      itemBuilder: (_, _) => _card(),
     );
   }
 }

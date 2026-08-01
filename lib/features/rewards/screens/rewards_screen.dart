@@ -118,7 +118,9 @@ class RewardsScreen extends StatelessWidget {
               ),
               child: ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: (reward["color"] as Color).withValues(alpha: 0.15),
+                  backgroundColor: (reward["color"] as Color).withValues(
+                    alpha: 0.15,
+                  ),
                   child: Icon(
                     reward["icon"] as IconData,
                     color: reward["color"] as Color,

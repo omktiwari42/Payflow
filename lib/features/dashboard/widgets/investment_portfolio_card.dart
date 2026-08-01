@@ -53,47 +53,31 @@ class InvestmentPortfolioCard extends StatelessWidget {
                     SizedBox(height: 4),
                     Text(
                       "Track your wealth growth",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
                   ],
                 ),
               ),
 
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.more_horiz),
-              ),
+              IconButton(onPressed: () {}, icon: const Icon(Icons.more_horiz)),
             ],
           ),
 
           const SizedBox(height: 28),
 
-          const Text(
-            "Portfolio Value",
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          const Text("Portfolio Value", style: TextStyle(color: Colors.grey)),
 
           const SizedBox(height: 6),
 
           const Text(
             "₹12,48,750",
-            style: TextStyle(
-              fontSize: 34,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 34, fontWeight: FontWeight.bold),
           ),
 
           const SizedBox(height: 10),
 
           Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 14,
-              vertical: 8,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
             decoration: BoxDecoration(
               color: Colors.green.withValues(alpha: 0.10),
               borderRadius: BorderRadius.circular(30),
@@ -136,7 +120,7 @@ class InvestmentPortfolioCard extends StatelessWidget {
             change: "+8.9%",
             color: Color(0xffF59E0B),
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -147,18 +131,12 @@ class InvestmentPortfolioCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(
-                  Icons.auto_awesome_rounded,
-                  color: Color(0xff14B8A6),
-                ),
+                Icon(Icons.auto_awesome_rounded, color: Color(0xff14B8A6)),
                 SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     "AI Insight: Your portfolio is well diversified. Consider increasing SIP investments to improve long-term growth.",
-                    style: TextStyle(
-                      fontSize: 14,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(fontSize: 14, height: 1.5),
                   ),
                 ),
               ],
@@ -222,10 +200,7 @@ class _HoldingTile extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: color.withValues(alpha: 0.12),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
 
           const SizedBox(width: 16),
@@ -242,12 +217,7 @@ class _HoldingTile extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  value,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
+                Text(value, style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
@@ -288,12 +258,7 @@ class _PortfolioStat extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          Text(title, style: const TextStyle(color: Colors.grey)),
 
           const SizedBox(height: 10),
 

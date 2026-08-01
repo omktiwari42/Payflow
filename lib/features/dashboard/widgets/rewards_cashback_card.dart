@@ -10,10 +10,7 @@ class RewardsCashbackCard extends StatelessWidget {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         gradient: const LinearGradient(
-          colors: [
-            Color(0xffFFF7ED),
-            Color(0xffFFFFFF),
-          ],
+          colors: [Color(0xffFFF7ED), Color(0xffFFFFFF)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
@@ -28,10 +25,8 @@ class RewardsCashbackCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           Row(
             children: [
-
               Container(
                 height: 58,
                 width: 58,
@@ -52,7 +47,6 @@ class RewardsCashbackCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     Text(
                       "Rewards & Cashback",
                       style: TextStyle(
@@ -65,11 +59,8 @@ class RewardsCashbackCard extends StatelessWidget {
 
                     Text(
                       "Save more with every payment",
-                      style: TextStyle(
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(color: Colors.grey),
                     ),
-
                   ],
                 ),
               ),
@@ -87,22 +78,16 @@ class RewardsCashbackCard extends StatelessWidget {
             padding: const EdgeInsets.all(22),
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [
-                  Color(0xffF59E0B),
-                  Color(0xffF97316),
-                ],
+                colors: [Color(0xffF59E0B), Color(0xffF97316)],
               ),
               borderRadius: BorderRadius.circular(22),
             ),
             child: const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Text(
                   "Available Cashback",
-                  style: TextStyle(
-                    color: Colors.white70,
-                  ),
+                  style: TextStyle(color: Colors.white70),
                 ),
 
                 SizedBox(height: 10),
@@ -120,9 +105,7 @@ class RewardsCashbackCard extends StatelessWidget {
 
                 Text(
                   "Gold Rewards Member",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: TextStyle(color: Colors.white),
                 ),
               ],
             ),
@@ -154,7 +137,7 @@ class RewardsCashbackCard extends StatelessWidget {
             expiry: "Available Today",
             color: Color(0xff8B5CF6),
           ),
-                    const SizedBox(height: 28),
+          const SizedBox(height: 28),
 
           Container(
             padding: const EdgeInsets.all(20),
@@ -167,10 +150,7 @@ class RewardsCashbackCard extends StatelessWidget {
                 const CircleAvatar(
                   radius: 26,
                   backgroundColor: Color(0xffF59E0B),
-                  child: Icon(
-                    Icons.redeem_rounded,
-                    color: Colors.white,
-                  ),
+                  child: Icon(Icons.redeem_rounded, color: Colors.white),
                 ),
 
                 const SizedBox(width: 16),
@@ -189,9 +169,7 @@ class RewardsCashbackCard extends StatelessWidget {
                       SizedBox(height: 6),
                       Text(
                         "You have 3 scratch cards waiting to be opened.",
-                        style: TextStyle(
-                          color: Colors.black54,
-                        ),
+                        style: TextStyle(color: Colors.black54),
                       ),
                     ],
                   ),
@@ -267,10 +245,7 @@ class _RewardOffer extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: color.withValues(alpha: 0.12),
-            child: Icon(
-              Icons.local_offer_rounded,
-              color: color,
-            ),
+            child: Icon(Icons.local_offer_rounded, color: color),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -285,17 +260,11 @@ class _RewardOffer extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.grey),
-                ),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
                 const SizedBox(height: 4),
                 Text(
                   expiry,
-                  style: TextStyle(
-                    color: color,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(color: color, fontWeight: FontWeight.w600),
                 ),
               ],
             ),
@@ -332,26 +301,15 @@ class _RewardStat extends StatelessWidget {
           CircleAvatar(
             radius: 22,
             backgroundColor: color.withValues(alpha: 0.12),
-            child: Icon(
-              icon,
-              color: color,
-            ),
+            child: Icon(icon, color: color),
           ),
           const SizedBox(height: 12),
           Text(
             value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 20,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          Text(title, style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
