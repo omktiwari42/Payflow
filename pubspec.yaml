@@ -14,19 +14,32 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: ^0.20.3
 
-  # Charts for Spending Analytics
+  # Charts
   fl_chart: ^0.69.0
 
   # QR Scanner
   mobile_scanner: ^5.2.3
 
-  # Pick images from gallery
+  # Image Picker
   image_picker: ^1.1.2
+
+  # Networking
   dio: ^5.11.0
+
+  # Secure Storage
   flutter_secure_storage: ^10.3.1
+
+  # OTP Input
   pinput: ^6.0.2
+
+  # Animations
   flutter_animate: ^4.5.2
+  animated_text_kit: ^4.2.3
+
+  # Loading Skeleton
   shimmer: ^3.0.0
+
+  # Internet Connectivity
   connectivity_plus: ^7.3.1
 
 dev_dependencies:
