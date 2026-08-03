@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/widgets/custom_text_field.dart';
-import '../services/auth_service.dart';
+import '../services/auth_api_service.dart';
 import 'otp_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -86,9 +86,11 @@ class _LoginScreenState extends State<LoginScreen>
     });
 
     try {
-      final success = await AuthService.instance.sendOtp(
+      final response = await AuthApiService.instance.sendOtp(
         _phoneController.text.trim(),
       );
+
+      final success = response["success"] == true;
 
       if (!mounted) return;
 

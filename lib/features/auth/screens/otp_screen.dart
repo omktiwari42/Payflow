@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pinput/pinput.dart';
 
-import '../services/auth_service.dart';
+import '../services/auth_api_service.dart';
 import 'complete_profile_screen.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -92,11 +92,10 @@ class _OtpScreenState extends State<OtpScreen>
 
     try {
       debugPrint("VERIFY OTP CALLED");
-      final response = await AuthService.instance.verifyOtp(
+      final response = await AuthApiService.instance.verifyOtp(
         phone: widget.phone,
         otp: _otpController.text.trim(),
       );
-
       if (!mounted) return;
 
       setState(() {
@@ -133,7 +132,7 @@ class _OtpScreenState extends State<OtpScreen>
   }
 
   Future<void> _resendOtp() async {
-    await AuthService.instance.sendOtp(widget.phone);
+    await AuthApiService.instance.sendOtp(widget.phone);
 
     _startTimer();
 
