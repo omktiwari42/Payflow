@@ -10,85 +10,49 @@ class DashboardApiService {
 
   /*
   |--------------------------------------------------------------------------
-  | Dashboard Data
+  | Dashboard
   |--------------------------------------------------------------------------
   */
 
   Future<Map<String, dynamic>> getDashboard() async {
-    final Response response = await ApiClient.dio.get(ApiConstants.dashboard);
+    try {
+      final Response response = await ApiClient.dio.get(ApiConstants.dashboard);
 
-    return Map<String, dynamic>.from(response.data);
+      return Map<String, dynamic>.from(response.data);
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data["message"] ?? "Unable to load dashboard.",
+      );
+    }
   }
 
   /*
   |--------------------------------------------------------------------------
-  | Wallet Balance
+  | Dashboard Helpers
   |--------------------------------------------------------------------------
   */
 
-  Future<double> getBalance() async {
-    final dashboard = await getDashboard();
-
+  double getBalance(Map<String, dynamic> dashboard) {
     return (dashboard["wallet_balance"] ?? 0).toDouble();
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Monthly Income
-  |--------------------------------------------------------------------------
-  */
-
-  Future<double> getIncome() async {
-    final dashboard = await getDashboard();
-
+  double getIncome(Map<String, dynamic> dashboard) {
     return (dashboard["income"] ?? 0).toDouble();
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Monthly Expense
-  |--------------------------------------------------------------------------
-  */
-
-  Future<double> getExpense() async {
-    final dashboard = await getDashboard();
-
+  double getExpense(Map<String, dynamic> dashboard) {
     return (dashboard["expense"] ?? 0).toDouble();
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Recent Transactions
-  |--------------------------------------------------------------------------
-  */
-
-  Future<List<dynamic>> recentTransactions() async {
-    final dashboard = await getDashboard();
-
-    return dashboard["recent_transactions"] ?? [];
+  List<dynamic> recentTransactions(Map<String, dynamic> dashboard) {
+    return List<dynamic>.from(dashboard["recent_transactions"] ?? []);
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Upcoming Bills
-  |--------------------------------------------------------------------------
-  */
-
-  Future<List<dynamic>> upcomingBills() async {
-    final dashboard = await getDashboard();
-
-    return dashboard["upcoming_bills"] ?? [];
+  List<dynamic> upcomingBills(Map<String, dynamic> dashboard) {
+    return List<dynamic>.from(dashboard["upcoming_bills"] ?? []);
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Notifications
-  |--------------------------------------------------------------------------
-  */
-
-  Future<List<dynamic>> notifications() async {
-    final dashboard = await getDashboard();
-
-    return dashboard["notifications"] ?? [];
+  List<dynamic> notifications(Map<String, dynamic> dashboard) {
+    return List<dynamic>.from(dashboard["notifications"] ?? []);
   }
 }
