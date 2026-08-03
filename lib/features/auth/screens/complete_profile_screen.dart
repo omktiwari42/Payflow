@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/auth_service.dart';
+import '../services/auth_api_service.dart';
 
 class CompleteProfileScreen extends StatefulWidget {
   final String phone;
@@ -12,11 +12,11 @@ class CompleteProfileScreen extends StatefulWidget {
 }
 
 class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final _nameController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
 
-  final _emailController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   bool _loading = false;
 
@@ -37,9 +37,11 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     });
 
     try {
-      await AuthService.instance.completeProfile(
+      await AuthApiService.instance.completeProfile(
         fullName: _nameController.text.trim(),
-        email: _emailController.text.trim(),
+        email: _emailController.text.trim().isEmpty
+            ? null
+            : _emailController.text.trim(),
       );
 
       if (!mounted) return;
@@ -64,56 +66,111 @@ class _CompleteProfileScreenState extends State<CompleteProfileScreen> {
     }
   }
 
+  String? _validateName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return "Full name is required";
+    }
+
+    if (value.trim().length < 3) {
+      return "Enter a valid full name";
+    }
+
+    return null;
+  }
+
+  String? _validateEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return null;
+    }
+
+    final emailRegex = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+
+    if (!emailRegex.hasMatch(value.trim())) {
+      return "Enter a valid email";
+    }
+
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Complete Profile")),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              Text(
-                widget.phone,
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-
-              const SizedBox(height: 25),
-
-              TextFormField(
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: "Full Name"),
-                validator: (value) {
-                  if (value == null || value.trim().isEmpty) {
-                    return "Enter your full name";
-                  }
-
-                  return null;
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                  labelText: "Email (Optional)",
+      appBar: AppBar(title: const Text("Complete Profile"), centerTitle: true),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                const CircleAvatar(
+                  radius: 45,
+                  child: Icon(Icons.person, size: 45),
                 ),
-              ),
 
-              const SizedBox(height: 35),
+                const SizedBox(height: 20),
 
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _loading ? null : _continue,
-                  child: _loading
-                      ? const CircularProgressIndicator()
-                      : const Text("Continue"),
+                Text(
+                  widget.phone,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 30),
+
+                TextFormField(
+                  controller: _nameController,
+                  textInputAction: TextInputAction.next,
+                  validator: _validateName,
+                  decoration: const InputDecoration(
+                    labelText: "Full Name",
+                    prefixIcon: Icon(Icons.person),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                const SizedBox(height: 20),
+
+                TextFormField(
+                  controller: _emailController,
+                  keyboardType: TextInputType.emailAddress,
+                  validator: _validateEmail,
+                  decoration: const InputDecoration(
+                    labelText: "Email (Optional)",
+                    prefixIcon: Icon(Icons.email),
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+
+                const SizedBox(height: 35),
+
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    onPressed: _loading ? null : _continue,
+                    child: _loading
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2.5,
+                              color: Colors.white,
+                            ),
+                          )
+                        : const Text(
+                            "Continue",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
