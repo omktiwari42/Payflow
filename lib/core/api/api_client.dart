@@ -10,10 +10,14 @@ class ApiClient {
       Dio(
           BaseOptions(
             baseUrl: ApiConstants.baseUrl,
-            connectTimeout: const Duration(seconds: 20),
-            receiveTimeout: const Duration(seconds: 20),
-            sendTimeout: const Duration(seconds: 20),
-            headers: {"Content-Type": "application/json"},
+            connectTimeout: const Duration(seconds: 30),
+            receiveTimeout: const Duration(seconds: 30),
+            sendTimeout: const Duration(seconds: 30),
+            headers: {
+              "Content-Type": "application/json",
+              "Accept": "application/json",
+            },
+            responseType: ResponseType.json,
           ),
         )
         ..interceptors.add(
@@ -21,14 +25,18 @@ class ApiClient {
             onRequest: (options, handler) async {
               final token = await TokenStorage.getToken();
 
-              if (token != null) {
+              if (token != null && token.isNotEmpty) {
                 options.headers["Authorization"] = "Bearer $token";
               }
 
               handler.next(options);
             },
 
-            onError: (error, handler) {
+            onResponse: (response, handler) {
+              handler.next(response);
+            },
+
+            onError: (DioException error, handler) {
               handler.next(error);
             },
           ),

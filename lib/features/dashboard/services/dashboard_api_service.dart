@@ -8,12 +8,6 @@ class DashboardApiService {
 
   static final DashboardApiService instance = DashboardApiService._();
 
-  /*
-  |--------------------------------------------------------------------------
-  | Dashboard
-  |--------------------------------------------------------------------------
-  */
-
   Future<Map<String, dynamic>> getDashboard() async {
     try {
       final Response response = await ApiClient.dio.get(ApiConstants.dashboard);
@@ -26,33 +20,47 @@ class DashboardApiService {
     }
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Dashboard Helpers
-  |--------------------------------------------------------------------------
-  */
+  Map<String, dynamic> summary(Map<String, dynamic> dashboard) {
+    return Map<String, dynamic>.from(dashboard["summary"] ?? {});
+  }
 
   double getBalance(Map<String, dynamic> dashboard) {
-    return (dashboard["wallet_balance"] ?? 0).toDouble();
+    final s = summary(dashboard);
+
+    return double.tryParse(s["walletBalance"].toString()) ?? 0;
   }
 
   double getIncome(Map<String, dynamic> dashboard) {
-    return (dashboard["income"] ?? 0).toDouble();
+    final s = summary(dashboard);
+
+    return double.tryParse(s["totalReceived"].toString()) ?? 0;
   }
 
   double getExpense(Map<String, dynamic> dashboard) {
-    return (dashboard["expense"] ?? 0).toDouble();
+    final s = summary(dashboard);
+
+    return double.tryParse(s["totalSent"].toString()) ?? 0;
+  }
+
+  int totalTransactions(Map<String, dynamic> dashboard) {
+    final s = summary(dashboard);
+
+    return s["totalTransactions"] ?? 0;
   }
 
   List<dynamic> recentTransactions(Map<String, dynamic> dashboard) {
-    return List<dynamic>.from(dashboard["recent_transactions"] ?? []);
+    final s = summary(dashboard);
+
+    return List<dynamic>.from(s["recentTransactions"] ?? []);
   }
 
-  List<dynamic> upcomingBills(Map<String, dynamic> dashboard) {
-    return List<dynamic>.from(dashboard["upcoming_bills"] ?? []);
-  }
+  List<Map<String, dynamic>> getRecentTransactions(
+    Map<String, dynamic> dashboard,
+  ) {
+    final summary = Map<String, dynamic>.from(dashboard["summary"] ?? {});
 
-  List<dynamic> notifications(Map<String, dynamic> dashboard) {
-    return List<dynamic>.from(dashboard["notifications"] ?? []);
+    return (summary["recentTransactions"] as List<dynamic>? ?? [])
+        .map((e) => Map<String, dynamic>.from(e))
+        .toList();
   }
 }

@@ -17,6 +17,13 @@ class TokenStorage {
     if (token.trim().isEmpty) return;
 
     await _storage.write(key: _tokenKey, value: token.trim());
+
+    final saved = await _storage.read(key: _tokenKey);
+
+    print("======================================");
+    print("✅ TOKEN SAVED");
+    print(saved);
+    print("======================================");
   }
 
   /*
@@ -27,6 +34,11 @@ class TokenStorage {
 
   static Future<String?> getToken() async {
     final token = await _storage.read(key: _tokenKey);
+
+    print("======================================");
+    print("📖 TOKEN READ");
+    print(token);
+    print("======================================");
 
     if (token == null || token.trim().isEmpty) {
       return null;
@@ -43,6 +55,10 @@ class TokenStorage {
 
   static Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
+
+    print("======================================");
+    print("🗑 TOKEN DELETED");
+    print("======================================");
   }
 
   /*
@@ -52,7 +68,15 @@ class TokenStorage {
   */
 
   static Future<bool> isLoggedIn() async {
-    return (await getToken()) != null;
+    final token = await getToken();
+
+    final loggedIn = token != null && token.isNotEmpty;
+
+    print("======================================");
+    print("🔐 IS LOGGED IN : $loggedIn");
+    print("======================================");
+
+    return loggedIn;
   }
 
   /*
@@ -67,11 +91,15 @@ class TokenStorage {
 
   /*
   |--------------------------------------------------------------------------
-  | Clear All Secure Storage
+  | Clear Secure Storage
   |--------------------------------------------------------------------------
   */
 
   static Future<void> clearAll() async {
     await _storage.deleteAll();
+
+    print("======================================");
+    print("🧹 SECURE STORAGE CLEARED");
+    print("======================================");
   }
 }

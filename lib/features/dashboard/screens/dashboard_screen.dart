@@ -1,24 +1,26 @@
 import 'package:flutter/material.dart';
-import '../widgets/balance_card.dart';
-import '../widgets/quick_action_button.dart';
-import '../widgets/section_title.dart';
-import '../widgets/transaction_tile.dart';
-import '../widgets/weekly_spending_chart.dart';
-import '../widgets/card_carousel.dart';
-import '../widgets/income_expense_card.dart';
-import '../widgets/recent_payments.dart';
-import '../widgets/bills_due_card.dart';
-import '../widgets/spending_categories_card.dart';
-import '../widgets/budget_tracker_card.dart';
-import '../widgets/financial_goals_card.dart';
-import '../widgets/investment_portfolio_card.dart';
+import 'package:mobile/core/widgets/animated_dashboard_card.dart';
+
+import '../services/dashboard_api_service.dart';
 import '../widgets/ai_finance_assistant_card.dart';
+import '../widgets/balance_card.dart';
+import '../widgets/bills_due_card.dart';
+import '../widgets/budget_tracker_card.dart';
+import '../widgets/card_carousel.dart';
 import '../widgets/cash_flow_timeline_card.dart';
+import '../widgets/financial_goals_card.dart';
+import '../widgets/income_expense_card.dart';
+import '../widgets/investment_portfolio_card.dart';
+import '../widgets/multi_currency_card.dart';
+import '../widgets/quick_action_button.dart';
+import '../widgets/recent_payments.dart';
+import '../widgets/rewards_cashback_card.dart';
+import '../widgets/section_title.dart';
 import '../widgets/smart_insights_card.dart';
 import '../widgets/smart_wallet_card.dart';
-import '../widgets/multi_currency_card.dart';
-import '../widgets/rewards_cashback_card.dart';
-import 'package:mobile/core/widgets/animated_dashboard_card.dart';
+import '../widgets/spending_categories_card.dart';
+import '../widgets/transaction_tile.dart';
+import '../widgets/weekly_spending_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -28,6 +30,11 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
+  Map<String, dynamic>? dashboardData;
+
+  bool isLoading = true;
+
+  String? error;
   int selectedIndex = 0;
 
   final List<Map<String, dynamic>> quickActions = [
@@ -78,7 +85,85 @@ class _DashboardScreenState extends State<DashboardScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    _loadDashboard();
+  }
+
+  Future<void> _loadDashboard() async {
+    try {
+      final data = await DashboardApiService.instance.getDashboard();
+
+      setState(() {
+        dashboardData = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        error = e.toString();
+        isLoading = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    if (isLoading) {
+      return Scaffold(
+        backgroundColor: const Color(0xffF4F7FC),
+        body: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            const SizedBox(height: 60),
+
+            Container(
+              height: 180,
+              decoration: BoxDecoration(
+                color: Colors.grey.shade300,
+                borderRadius: BorderRadius.circular(24),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              children: List.generate(
+                4,
+                (_) => Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 6),
+                    height: 80,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(18),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 25),
+
+            ...List.generate(
+              6,
+              (_) => Container(
+                margin: const EdgeInsets.only(bottom: 16),
+                height: 90,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade300,
+                  borderRadius: BorderRadius.circular(18),
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    if (error != null) {
+      return Scaffold(body: Center(child: Text(error!)));
+    }
+
     return Scaffold(
       backgroundColor: const Color(0xffF4F7FC),
       body: CustomScrollView(
@@ -110,7 +195,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                               child: Icon(Icons.person),
                             ),
                             const SizedBox(width: 12),
-                            const Expanded(
+                            Expanded(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -120,7 +205,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   ),
                                   SizedBox(height: 4),
                                   Text(
-                                    "Om Kumar",
+                                    dashboardData?["user"]?["full_name"] ??
+                                        "User",
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -140,7 +226,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                           ],
                         ),
                         const Spacer(),
-                        const BalanceCard(balance: "₹10,24,560.45"),
+                        BalanceCard(
+                          balance:
+                              "₹${DashboardApiService.instance.getBalance(dashboardData!).toStringAsFixed(2)}",
+                        ),
                       ],
                     ),
                   ),
@@ -288,18 +377,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ListView.separated(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemCount: transactions.length,
+                    itemCount: DashboardApiService.instance
+                        .recentTransactions(dashboardData!)
+                        .length,
                     separatorBuilder: (_, _) => const SizedBox(height: 12),
                     itemBuilder: (context, index) {
-                      final t = transactions[index];
+                      final t = DashboardApiService.instance.recentTransactions(
+                        dashboardData!,
+                      )[index];
                       return AnimatedDashboardCard(
                         delay: Duration(milliseconds: 1800 + (index * 100)),
                         child: TransactionTile(
-                          title: t["title"] as String,
-                          subtitle: t["subtitle"] as String,
-                          amount: t["amount"] as String,
-                          icon: t["icon"] as IconData,
-                          color: t["color"] as Color,
+                          title: "Transaction",
+                          subtitle: t["created_at"]?.toString() ?? "",
+                          amount:
+                              "₹${double.tryParse(t["amount"].toString())?.toStringAsFixed(2) ?? "0.00"}",
+                          icon: Icons.swap_horiz,
+                          color: Colors.blue,
                         ),
                       );
                     },
