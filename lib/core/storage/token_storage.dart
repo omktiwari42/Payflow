@@ -7,25 +7,71 @@ class TokenStorage {
 
   static const String _tokenKey = "jwt_token";
 
+  /*
+  |--------------------------------------------------------------------------
+  | Save JWT Token
+  |--------------------------------------------------------------------------
+  */
+
   static Future<void> saveToken(String token) async {
-    await _storage.write(key: _tokenKey, value: token);
+    if (token.trim().isEmpty) return;
+
+    await _storage.write(key: _tokenKey, value: token.trim());
   }
 
+  /*
+  |--------------------------------------------------------------------------
+  | Get JWT Token
+  |--------------------------------------------------------------------------
+  */
+
   static Future<String?> getToken() async {
-    return await _storage.read(key: _tokenKey);
+    final token = await _storage.read(key: _tokenKey);
+
+    if (token == null || token.trim().isEmpty) {
+      return null;
+    }
+
+    return token.trim();
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Delete JWT Token
+  |--------------------------------------------------------------------------
+  */
 
   static Future<void> deleteToken() async {
     await _storage.delete(key: _tokenKey);
   }
 
-  static Future<bool> isLoggedIn() async {
-    final token = await getToken();
+  /*
+  |--------------------------------------------------------------------------
+  | Check Login
+  |--------------------------------------------------------------------------
+  */
 
-    return token != null && token.isNotEmpty;
+  static Future<bool> isLoggedIn() async {
+    return (await getToken()) != null;
   }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Logout
+  |--------------------------------------------------------------------------
+  */
 
   static Future<void> logout() async {
     await deleteToken();
+  }
+
+  /*
+  |--------------------------------------------------------------------------
+  | Clear All Secure Storage
+  |--------------------------------------------------------------------------
+  */
+
+  static Future<void> clearAll() async {
+    await _storage.deleteAll();
   }
 }
