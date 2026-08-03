@@ -12,9 +12,9 @@ import '../widgets/cash_flow_timeline_card.dart';
 import '../widgets/dashboard_stats_card.dart';
 import '../widgets/financial_goals_card.dart';
 import '../widgets/investment_portfolio_card.dart';
+import '../widgets/live_recent_transactions.dart';
 import '../widgets/multi_currency_card.dart';
 import '../widgets/quick_action_button.dart';
-import '../widgets/recent_payments.dart';
 import '../widgets/rewards_cashback_card.dart';
 import '../widgets/section_title.dart';
 import '../widgets/smart_insights_card.dart';
@@ -283,9 +283,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 300),
-                      child: const RecentPayments(),
+                      child: LiveRecentTransactions(
+                        transactions: dashboardData?.recentTransactions ?? [],
+                      ),
                     ),
-
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
