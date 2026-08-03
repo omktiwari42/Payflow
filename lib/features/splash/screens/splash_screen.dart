@@ -4,7 +4,7 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 
 import '../../auth/screens/login_screen.dart';
-import '../../auth/services/auth_service.dart';
+import '../../auth/services/auth_api_service.dart';
 import '../../navigation/screens/main_navigation_screen.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -51,7 +51,7 @@ class _SplashScreenState extends State<SplashScreen>
   Future<void> _navigate() async {
     await Future.delayed(const Duration(seconds: 4));
 
-    final loggedIn = await AuthService.instance.isLoggedIn();
+    final loggedIn = await AuthApiService.instance.isLoggedIn();
 
     if (!mounted) return;
 
