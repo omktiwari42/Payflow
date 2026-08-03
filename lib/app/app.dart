@@ -5,6 +5,7 @@ import '../core/theme/app_theme.dart';
 import '../features/auth/screens/login_screen.dart';
 import '../features/help_support/help_support_routes.dart';
 import '../features/navigation/screens/main_navigation_screen.dart';
+import '../features/splash/screens/splash_screen.dart';
 
 class PayFlowApp extends StatelessWidget {
   const PayFlowApp({super.key});
@@ -14,15 +15,17 @@ class PayFlowApp extends StatelessWidget {
     return MaterialApp(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
+
       theme: AppTheme.lightTheme,
 
-      // Start the app with Login Screen
-      home: const LoginScreen(),
+      home: SplashScreen(),
 
       routes: {
-        ...HelpSupportRoutes.routes,
+        "/login": (_) => const LoginScreen(),
 
         "/dashboard": (_) => const MainNavigationScreen(),
+
+        ...HelpSupportRoutes.routes,
       },
     );
   }
