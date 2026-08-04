@@ -15,9 +15,21 @@ class WalletApiService {
   */
 
   Future<Map<String, dynamic>> getWallet() async {
-    final Response response = await ApiClient.dio.get(ApiConstants.wallet);
+    try {
+      final Response response = await ApiClient.dio.get(ApiConstants.wallet);
 
-    return Map<String, dynamic>.from(response.data);
+      final data = Map<String, dynamic>.from(response.data);
+
+      if (data["success"] != true) {
+        throw Exception(data["message"] ?? "Unable to load wallet.");
+      }
+
+      return data;
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?["message"]?.toString() ?? "Unable to load wallet.",
+      );
+    }
   }
 
   /*
@@ -29,11 +41,9 @@ class WalletApiService {
   Future<double> getBalance() async {
     final data = await getWallet();
 
-    if (data["wallet"] == null) {
-      return 0;
-    }
+    final wallet = Map<String, dynamic>.from(data["wallet"] ?? {});
 
-    return (data["wallet"]["wallet_balance"] as num).toDouble();
+    return double.tryParse(wallet["wallet_balance"].toString()) ?? 0.0;
   }
 
   /*
@@ -43,12 +53,24 @@ class WalletApiService {
   */
 
   Future<Map<String, dynamic>> addMoney(double amount) async {
-    final Response response = await ApiClient.dio.post(
-      "${ApiConstants.wallet}/add-money",
-      data: {"amount": amount},
-    );
+    try {
+      final Response response = await ApiClient.dio.post(
+        "${ApiConstants.wallet}/add-money",
+        data: {"amount": amount},
+      );
 
-    return Map<String, dynamic>.from(response.data);
+      final data = Map<String, dynamic>.from(response.data);
+
+      if (data["success"] != true) {
+        throw Exception(data["message"] ?? "Unable to add money.");
+      }
+
+      return data;
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?["message"]?.toString() ?? "Unable to add money.",
+      );
+    }
   }
 
   /*
@@ -58,12 +80,24 @@ class WalletApiService {
   */
 
   Future<Map<String, dynamic>> withdraw(double amount) async {
-    final Response response = await ApiClient.dio.post(
-      "${ApiConstants.wallet}/withdraw",
-      data: {"amount": amount},
-    );
+    try {
+      final Response response = await ApiClient.dio.post(
+        "${ApiConstants.wallet}/withdraw",
+        data: {"amount": amount},
+      );
 
-    return Map<String, dynamic>.from(response.data);
+      final data = Map<String, dynamic>.from(response.data);
+
+      if (data["success"] != true) {
+        throw Exception(data["message"] ?? "Unable to withdraw money.");
+      }
+
+      return data;
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?["message"]?.toString() ?? "Unable to withdraw money.",
+      );
+    }
   }
 
   /*
@@ -72,11 +106,26 @@ class WalletApiService {
   |--------------------------------------------------------------------------
   */
 
-  Future<List<dynamic>> history() async {
-    final Response response = await ApiClient.dio.get(
-      "${ApiConstants.wallet}/history",
-    );
+  Future<List<Map<String, dynamic>>> history() async {
+    try {
+      final Response response = await ApiClient.dio.get(
+        "${ApiConstants.wallet}/history",
+      );
 
-    return response.data["transactions"] ?? [];
+      final data = Map<String, dynamic>.from(response.data);
+
+      if (data["success"] != true) {
+        throw Exception(data["message"] ?? "Unable to load wallet history.");
+      }
+
+      return (data["transactions"] as List<dynamic>? ?? [])
+          .map((e) => Map<String, dynamic>.from(e))
+          .toList();
+    } on DioException catch (e) {
+      throw Exception(
+        e.response?.data?["message"]?.toString() ??
+            "Unable to load wallet history.",
+      );
+    }
   }
 }
