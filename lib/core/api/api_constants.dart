@@ -5,16 +5,10 @@ class ApiConstants {
   // Base URL
   // ==========================
 
-  // Android Emulator
   static const String baseUrl = "http://10.0.2.2:5000/api";
 
-  // Linux / Windows Desktop
   // static const String baseUrl = "http://localhost:5000/api";
-
-  // Physical Device
   // static const String baseUrl = "http://192.168.1.100:5000/api";
-
-  // Production
   // static const String baseUrl = "https://your-domain.com/api";
 
   // ==========================
@@ -44,9 +38,9 @@ class ApiConstants {
   // ==========================
 
   static const String transactions = "/transactions";
-  static const String sendMoney = "/transactions/send";
   static const String transactionHistory = "/transactions/history";
   static const String transactionDetails = "/transactions/details";
+  static const String sendMoney = "/transactions/send";
 
   // ==========================
   // Beneficiaries
