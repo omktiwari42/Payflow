@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../services/receipt_service.dart';
+
 class TransactionDetailsScreen extends StatelessWidget {
   final Map<String, dynamic> transaction;
 
@@ -62,11 +64,11 @@ class TransactionDetailsScreen extends StatelessWidget {
 
           CircleAvatar(
             radius: 42,
-            backgroundColor: _statusColor(status).withOpacity(.15),
+            backgroundColor: _statusColor(status).withValues(alpha: .15),
             child: Icon(
               Icons.check_circle,
-              color: _statusColor(status),
               size: 52,
+              color: _statusColor(status),
             ),
           ),
 
@@ -114,7 +116,7 @@ class TransactionDetailsScreen extends StatelessWidget {
                   ),
                   _tile(
                     "Note",
-                    transaction["note"]?.toString().isNotEmpty == true
+                    (transaction["note"] ?? "").toString().isNotEmpty
                         ? transaction["note"].toString()
                         : "-",
                   ),
@@ -127,22 +129,50 @@ class TransactionDetailsScreen extends StatelessWidget {
           const SizedBox(height: 30),
 
           FilledButton.icon(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Receipt download coming soon.")),
-              );
+            onPressed: () async {
+              try {
+                await ReceiptService.instance.printReceipt(transaction);
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Receipt generated successfully."),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              }
             },
-            icon: const Icon(Icons.download),
+            icon: const Icon(Icons.picture_as_pdf),
             label: const Text("Download Receipt"),
           ),
 
           const SizedBox(height: 15),
 
           OutlinedButton.icon(
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Share feature coming soon.")),
-              );
+            onPressed: () async {
+              try {
+                await ReceiptService.instance.shareReceipt(transaction);
+
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Receipt shared successfully."),
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(e.toString())));
+                }
+              }
             },
             icon: const Icon(Icons.share),
             label: const Text("Share Receipt"),
