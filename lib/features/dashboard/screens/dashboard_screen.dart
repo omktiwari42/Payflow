@@ -27,10 +27,10 @@ class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
   @override
-  State<DashboardScreen> createState() => _DashboardScreenState();
+  DashboardScreenState createState() => DashboardScreenState();
 }
 
-class _DashboardScreenState extends State<DashboardScreen> {
+class DashboardScreenState extends State<DashboardScreen> {
   DashboardModel? dashboardData;
 
   bool isLoading = true;
@@ -65,6 +65,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
     _loadDashboard();
+  }
+
+  Future<void> refreshDashboard() async {
+    await _loadDashboard();
   }
 
   Future<void> _loadDashboard() async {

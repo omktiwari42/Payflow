@@ -9,19 +9,29 @@ class SendMoneyApiService {
   static final SendMoneyApiService instance = SendMoneyApiService._();
 
   Future<Map<String, dynamic>> sendMoney({
-    required String receiverPhone,
+    required String phone,
     required double amount,
     String note = "",
   }) async {
     try {
       final Response response = await ApiClient.dio.post(
         ApiConstants.sendMoney,
-        data: {"receiverPhone": receiverPhone, "amount": amount, "note": note},
+        data: {"phone": phone, "amount": amount, "note": note},
       );
 
-      return Map<String, dynamic>.from(response.data);
+      final data = Map<String, dynamic>.from(response.data);
+
+      if (data["success"] != true) {
+        throw Exception(data["message"] ?? "Money transfer failed.");
+      }
+
+      return data;
     } on DioException catch (e) {
-      throw Exception(e.response?.data["message"] ?? "Money transfer failed.");
+      throw Exception(
+        e.response?.data?["message"]?.toString() ?? "Money transfer failed.",
+      );
+    } catch (e) {
+      throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
   }
 }

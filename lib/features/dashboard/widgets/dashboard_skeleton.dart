@@ -34,7 +34,7 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
   }) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, _) {
+      builder: (_, __) {
         return Container(
           width: width,
           height: height,
@@ -57,35 +57,35 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(22),
+        borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: .04),
             blurRadius: 10,
-            offset: const Offset(0, 6),
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Row(
         children: [
-          skeleton(width: 56, height: 56, radius: BorderRadius.circular(28)),
+          skeleton(width: 54, height: 54, radius: BorderRadius.circular(27)),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                skeleton(width: 140, height: 16),
+                skeleton(width: 150, height: 15),
                 const SizedBox(height: 10),
-                skeleton(width: 90, height: 12),
+                skeleton(width: 95, height: 12),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              skeleton(width: 70, height: 16),
+              skeleton(width: 70, height: 15),
               const SizedBox(height: 8),
-              skeleton(width: 60, height: 22),
+              skeleton(width: 55, height: 20),
             ],
           ),
         ],
@@ -93,45 +93,94 @@ class _DashboardSkeletonState extends State<DashboardSkeleton>
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      physics: const NeverScrollableScrollPhysics(),
-      padding: const EdgeInsets.all(20),
+  Widget statCard() {
+    return Container(
+      height: 130,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(22),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: .04),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          skeleton(width: 170, height: 28),
+          skeleton(width: 28, height: 28, radius: BorderRadius.circular(14)),
+          const Spacer(),
+          skeleton(width: 70, height: 14),
+          const SizedBox(height: 10),
+          skeleton(width: 95, height: 20),
+        ],
+      ),
+    );
+  }
 
-          const SizedBox(height: 24),
-
-          skeleton(height: 215, radius: BorderRadius.circular(28)),
-
-          const SizedBox(height: 24),
-
-          Row(
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xffF4F7FC),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: skeleton(height: 140, radius: BorderRadius.circular(22)),
+              /// Header
+              Row(
+                children: [
+                  skeleton(
+                    width: 58,
+                    height: 58,
+                    radius: BorderRadius.circular(29),
+                  ),
+                  const SizedBox(width: 16),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      skeleton(width: 90, height: 12),
+                      const SizedBox(height: 10),
+                      skeleton(width: 170, height: 20),
+                    ],
+                  ),
+                ],
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: skeleton(height: 140, radius: BorderRadius.circular(22)),
+
+              const SizedBox(height: 30),
+
+              /// Wallet Card
+              skeleton(height: 215, radius: BorderRadius.circular(30)),
+
+              const SizedBox(height: 26),
+
+              /// Stats
+              Row(
+                children: [
+                  Expanded(child: statCard()),
+                  const SizedBox(width: 16),
+                  Expanded(child: statCard()),
+                ],
               ),
+
+              const SizedBox(height: 32),
+
+              skeleton(width: 170, height: 20),
+
+              const SizedBox(height: 20),
+
+              transactionTile(),
+              transactionTile(),
+              transactionTile(),
+              transactionTile(),
             ],
           ),
-
-          const SizedBox(height: 28),
-
-          skeleton(width: 170, height: 24),
-
-          const SizedBox(height: 18),
-
-          transactionTile(),
-          transactionTile(),
-          transactionTile(),
-          transactionTile(),
-        ],
+        ),
       ),
     );
   }

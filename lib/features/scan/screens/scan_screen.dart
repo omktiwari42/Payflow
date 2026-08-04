@@ -72,16 +72,21 @@ class _ScanScreenState extends State<ScanScreen> {
     final data = UpiParser.parse(value);
 
     if (data["isUpi"] == true) {
-      await Navigator.push(
+      final result = await Navigator.push(
         context,
         MaterialPageRoute(
           builder: (_) => SendMoneyScreen(
             recipientName: data["name"],
+            phone: data["phone"] ?? "",
             upiId: data["upiId"],
             amount: data["amount"],
           ),
         ),
       );
+
+      if (result == true) {
+        // Dashboard will reload when opened again.
+      }
 
       _isScanned = false;
       await controller.start();
@@ -131,13 +136,10 @@ class _ScanScreenState extends State<ScanScreen> {
               await _handleScan(value);
             },
           ),
-
           IgnorePointer(
             child: Container(color: Colors.black.withValues(alpha: 0.35)),
           ),
-
           const Center(child: ScannerOverlay()),
-
           Positioned(
             left: 20,
             right: 20,

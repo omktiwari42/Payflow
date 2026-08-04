@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../../transactions/models/transaction_model.dart';
-import '../../transactions/services/transaction_service.dart';
+import '../services/send_money_api_service.dart';
 
 class SendMoneyScreen extends StatefulWidget {
   final String? recipientName;
+  final String? phone;
   final String? upiId;
   final double? amount;
 
   const SendMoneyScreen({
     super.key,
     this.recipientName,
+    this.phone,
     this.upiId,
     this.amount,
   });
@@ -24,6 +25,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
   final _noteController = TextEditingController();
 
   String _selectedMethod = "Wallet";
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -51,45 +53,65 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
       return;
     }
 
-    final transaction = TransactionModel(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      recipientName: widget.recipientName ?? "Unknown",
-      upiId: widget.upiId ?? "",
-      amount: amount,
-      note: _noteController.text,
-      status: "Success",
-      dateTime: DateTime.now(),
-      isSent: true,
-    );
+    if (widget.phone == null || widget.phone!.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Recipient phone not found.")),
+      );
+      return;
+    }
 
-    TransactionService.instance.addTransaction(transaction);
+    setState(() {
+      _isLoading = true;
+    });
 
-    if (!mounted) return;
+    try {
+      await SendMoneyApiService.instance.sendMoney(
+        phone: widget.phone!,
+        amount: amount,
+        note: _noteController.text,
+      );
 
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.green),
-            SizedBox(width: 8),
-            Text("Payment Successful"),
+      if (!mounted) return;
+
+      await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Text("Payment Successful"),
+            ],
+          ),
+          content: Text("₹${amount.toStringAsFixed(2)} sent successfully."),
+          actions: [
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context, true);
+              },
+              child: const Text("Done"),
+            ),
           ],
         ),
-        content: Text("₹${amount.toStringAsFixed(2)} sent successfully."),
-        actions: [
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context, true);
-            },
-            child: const Text("Done"),
-          ),
-        ],
-      ),
-    );
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   Widget paymentMethod(String title, IconData icon) {
@@ -140,7 +162,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Text(widget.upiId ?? ""),
+                  Text(widget.phone ?? widget.upiId ?? ""),
                 ],
               ),
             ),
@@ -148,7 +170,7 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           const SizedBox(height: 25),
           TextField(
             controller: _amountController,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: const InputDecoration(
               prefixText: "₹ ",
               labelText: "Amount",
@@ -175,9 +197,18 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           SizedBox(
             height: 56,
             child: FilledButton.icon(
-              onPressed: _sendMoney,
-              icon: const Icon(Icons.send),
-              label: const Text("Send Money"),
+              onPressed: _isLoading ? null : _sendMoney,
+              icon: _isLoading
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : const Icon(Icons.send),
+              label: Text(_isLoading ? "Sending..." : "Send Money"),
             ),
           ),
         ],

@@ -2,17 +2,28 @@ import 'package:dio/dio.dart';
 
 import '../../../core/api/api_client.dart';
 import '../../../core/api/api_constants.dart';
+import '../models/dashboard_model.dart';
 
 class DashboardApiService {
   DashboardApiService._();
 
   static final DashboardApiService instance = DashboardApiService._();
 
-  Future<Map<String, dynamic>> getDashboard() async {
+  /*
+  |--------------------------------------------------------------------------
+  | Dashboard
+  |--------------------------------------------------------------------------
+  */
+
+  Future<DashboardModel> getDashboard() async {
     try {
       final Response response = await ApiClient.dio.get(ApiConstants.dashboard);
 
-      return Map<String, dynamic>.from(response.data);
+      final Map<String, dynamic> data = Map<String, dynamic>.from(
+        response.data,
+      );
+
+      return DashboardModel.fromJson(data);
     } on DioException catch (e) {
       throw Exception(
         e.response?.data["message"] ?? "Unable to load dashboard.",
@@ -20,47 +31,34 @@ class DashboardApiService {
     }
   }
 
-  Map<String, dynamic> summary(Map<String, dynamic> dashboard) {
-    return Map<String, dynamic>.from(dashboard["summary"] ?? {});
+  /*
+  |--------------------------------------------------------------------------
+  | Helpers
+  |--------------------------------------------------------------------------
+  */
+
+  Future<double> getWalletBalance() async {
+    final dashboard = await getDashboard();
+    return dashboard.walletBalance;
   }
 
-  double getBalance(Map<String, dynamic> dashboard) {
-    final s = summary(dashboard);
-
-    return double.tryParse(s["walletBalance"].toString()) ?? 0;
+  Future<double> getTotalSent() async {
+    final dashboard = await getDashboard();
+    return dashboard.totalSent;
   }
 
-  double getIncome(Map<String, dynamic> dashboard) {
-    final s = summary(dashboard);
-
-    return double.tryParse(s["totalReceived"].toString()) ?? 0;
+  Future<double> getTotalReceived() async {
+    final dashboard = await getDashboard();
+    return dashboard.totalReceived;
   }
 
-  double getExpense(Map<String, dynamic> dashboard) {
-    final s = summary(dashboard);
-
-    return double.tryParse(s["totalSent"].toString()) ?? 0;
+  Future<int> getTotalTransactions() async {
+    final dashboard = await getDashboard();
+    return dashboard.totalTransactions;
   }
 
-  int totalTransactions(Map<String, dynamic> dashboard) {
-    final s = summary(dashboard);
-
-    return s["totalTransactions"] ?? 0;
-  }
-
-  List<dynamic> recentTransactions(Map<String, dynamic> dashboard) {
-    final s = summary(dashboard);
-
-    return List<dynamic>.from(s["recentTransactions"] ?? []);
-  }
-
-  List<Map<String, dynamic>> getRecentTransactions(
-    Map<String, dynamic> dashboard,
-  ) {
-    final summary = Map<String, dynamic>.from(dashboard["summary"] ?? {});
-
-    return (summary["recentTransactions"] as List<dynamic>? ?? [])
-        .map((e) => Map<String, dynamic>.from(e))
-        .toList();
+  Future<List<dynamic>> getRecentTransactions() async {
+    final dashboard = await getDashboard();
+    return dashboard.recentTransactions;
   }
 }
