@@ -18,6 +18,7 @@ import '../widgets/people_business_card.dart';
 import '../widgets/quick_action_button.dart';
 import '../widgets/refer_earn_card.dart';
 import '../widgets/rewards_cashback_card.dart';
+import '../widgets/scan_pay_card.dart';
 import '../widgets/section_title.dart';
 import '../widgets/shopping_card.dart';
 import '../widgets/smart_wallet_card.dart';
@@ -267,6 +268,12 @@ class DashboardScreenState extends State<DashboardScreen> {
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 150),
                       child: const PeopleBusinessCard(),
+                    ),
+
+                    const SizedBox(height: 28),
+                    AnimatedDashboardCard(
+                      delay: const Duration(milliseconds: 180),
+                      child: const ScanPayCard(),
                     ),
 
                     const SizedBox(height: 28),
