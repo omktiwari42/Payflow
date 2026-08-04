@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../services/transaction_api_service.dart';
+import 'transaction_details_screen.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -62,7 +63,7 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
         filteredTransactions = transactions;
       } else {
         filteredTransactions = transactions.where((tx) {
-          return tx.toString().toLowerCase().contains(query);
+          return tx.values.join(" ").toLowerCase().contains(query);
         }).toList();
       }
     });
@@ -83,8 +84,8 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
 
   IconData transactionIcon(String type) {
     return type.toUpperCase() == "SEND"
-        ? Icons.arrow_upward
-        : Icons.arrow_downward;
+        ? Icons.arrow_upward_rounded
+        : Icons.arrow_downward_rounded;
   }
 
   @override
@@ -124,58 +125,83 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
                             ),
                           )
                         : ListView.builder(
+                            padding: const EdgeInsets.only(bottom: 20),
                             itemCount: filteredTransactions.length,
                             itemBuilder: (_, index) {
                               final tx = filteredTransactions[index];
+
+                              final status =
+                                  tx["status"]?.toString() ?? "SUCCESS";
+
+                              final type =
+                                  tx["transaction_type"]?.toString() ?? "";
 
                               return Card(
                                 margin: const EdgeInsets.symmetric(
                                   horizontal: 16,
                                   vertical: 8,
                                 ),
-                                child: ListTile(
-                                  leading: CircleAvatar(
-                                    child: Icon(
-                                      transactionIcon(
-                                        tx["transaction_type"] ?? "",
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(12),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (_) =>
+                                            TransactionDetailsScreen(
+                                              transaction: tx,
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      child: Icon(transactionIcon(type)),
+                                    ),
+                                    title: Text(
+                                      tx["receiver_name"] ??
+                                          tx["sender_name"] ??
+                                          "User",
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ),
-                                  title: Text(
-                                    tx["receiver_name"] ??
-                                        tx["sender_name"] ??
-                                        "User",
-                                  ),
-                                  subtitle: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(tx["note"] ?? ""),
-                                      Text(
-                                        tx["created_at"] ?? "",
-                                        style: const TextStyle(fontSize: 12),
-                                      ),
-                                    ],
-                                  ),
-                                  trailing: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(
-                                        "₹${tx["amount"]}",
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        if ((tx["note"] ?? "")
+                                            .toString()
+                                            .isNotEmpty)
+                                          Text(tx["note"]),
+                                        Text(
+                                          tx["created_at"] ?? "",
+                                          style: const TextStyle(fontSize: 12),
                                         ),
-                                      ),
-                                      Text(
-                                        tx["status"] ?? "SUCCESS",
-                                        style: TextStyle(
-                                          color: statusColor(
-                                            tx["status"] ?? "SUCCESS",
+                                      ],
+                                    ),
+                                    trailing: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "₹${tx["amount"]}",
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
                                           ),
-                                          fontWeight: FontWeight.bold,
                                         ),
-                                      ),
-                                    ],
+                                        Text(
+                                          status,
+                                          style: TextStyle(
+                                            color: statusColor(status),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               );
