@@ -12,7 +12,9 @@ import '../widgets/financial_services_card.dart';
 import '../widgets/insurance_card.dart';
 import '../widgets/live_recent_transactions.dart';
 import '../widgets/loan_services_card.dart';
+import '../widgets/manage_money_card.dart';
 import '../widgets/multi_currency_card.dart';
+import '../widgets/people_business_card.dart';
 import '../widgets/quick_action_button.dart';
 import '../widgets/refer_earn_card.dart';
 import '../widgets/rewards_cashback_card.dart';
@@ -262,6 +264,13 @@ class DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(height: 12),
 
+                    AnimatedDashboardCard(
+                      delay: const Duration(milliseconds: 150),
+                      child: const PeopleBusinessCard(),
+                    ),
+
+                    const SizedBox(height: 28),
+
                     AnimatedDashboardCard(child: const CardCarousel()),
 
                     const SizedBox(height: 12),
@@ -356,6 +365,13 @@ class DashboardScreenState extends State<DashboardScreen> {
                     ),
 
                     const SizedBox(height: 28),
+                    AnimatedDashboardCard(
+                      delay: const Duration(milliseconds: 1300),
+                      child: const ManageMoneyCard(),
+                    ),
+
+                    const SizedBox(height: 28),
+
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 1400),
                       child: const SmartWalletCard(),
