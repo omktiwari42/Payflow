@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../send_money/screens/send_money_screen.dart';
 import '../models/beneficiary_model.dart';
 import '../services/beneficiary_api_service.dart';
+import 'add_beneficiary_screen.dart';
 
 class BeneficiariesScreen extends StatefulWidget {
   const BeneficiariesScreen({super.key});
@@ -71,9 +72,9 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
     });
   }
 
-  Future<void> _delete(BeneficiaryModel b) async {
+  Future<void> _delete(BeneficiaryModel beneficiary) async {
     try {
-      await BeneficiaryApiService.instance.deleteBeneficiary(b.id);
+      await BeneficiaryApiService.instance.deleteBeneficiary(beneficiary.id);
 
       await _loadBeneficiaries();
 
@@ -91,19 +92,24 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
     }
   }
 
+  Future<void> _openAddBeneficiary() async {
+    final updated = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (_) => const AddBeneficiaryScreen()),
+    );
+
+    if (updated == true) {
+      await _loadBeneficiaries();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Beneficiaries"), centerTitle: true),
 
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text("Add Beneficiary screen coming next."),
-            ),
-          );
-        },
+        onPressed: _openAddBeneficiary,
         child: const Icon(Icons.add),
       ),
 
@@ -130,11 +136,11 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
                 : RefreshIndicator(
                     onRefresh: _loadBeneficiaries,
                     child: filtered.isEmpty
-                        ? const Center(child: Text("No Beneficiaries"))
+                        ? const Center(child: Text("No Beneficiaries Found"))
                         : ListView.builder(
                             itemCount: filtered.length,
                             itemBuilder: (_, index) {
-                              final b = filtered[index];
+                              final beneficiary = filtered[index];
 
                               return Card(
                                 margin: const EdgeInsets.symmetric(
@@ -144,27 +150,30 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
                                 child: ListTile(
                                   leading: CircleAvatar(
                                     child: Text(
-                                      b.fullName.isEmpty ? "?" : b.fullName[0],
+                                      beneficiary.fullName.isEmpty
+                                          ? "?"
+                                          : beneficiary.fullName[0]
+                                                .toUpperCase(),
                                     ),
                                   ),
 
-                                  title: Text(b.fullName),
+                                  title: Text(beneficiary.fullName),
 
                                   subtitle: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(b.phone),
-                                      if (b.upiId != null &&
-                                          b.upiId!.isNotEmpty)
-                                        Text(b.upiId!),
+                                      Text(beneficiary.phone),
+                                      if (beneficiary.upiId != null &&
+                                          beneficiary.upiId!.isNotEmpty)
+                                        Text(beneficiary.upiId!),
                                     ],
                                   ),
 
                                   trailing: PopupMenuButton<String>(
                                     onSelected: (value) {
                                       if (value == "delete") {
-                                        _delete(b);
+                                        _delete(beneficiary);
                                       }
                                     },
                                     itemBuilder: (_) => const [
@@ -180,9 +189,9 @@ class _BeneficiariesScreenState extends State<BeneficiariesScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (_) => SendMoneyScreen(
-                                          recipientName: b.fullName,
-                                          phone: b.phone,
-                                          upiId: b.upiId,
+                                          recipientName: beneficiary.fullName,
+                                          phone: beneficiary.phone,
+                                          upiId: beneficiary.upiId,
                                         ),
                                       ),
                                     );
