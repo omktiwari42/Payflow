@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../models/transaction_model.dart';
-import '../services/transaction_service.dart';
+import '../services/transaction_api_service.dart';
 
 class TransactionHistoryScreen extends StatefulWidget {
   const TransactionHistoryScreen({super.key});
@@ -12,62 +11,80 @@ class TransactionHistoryScreen extends StatefulWidget {
 }
 
 class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
-  final TransactionService service = TransactionService.instance;
-
   final TextEditingController _searchController = TextEditingController();
 
-  List<TransactionModel> transactions = [];
+  List<Map<String, dynamic>> transactions = [];
+  List<Map<String, dynamic>> filteredTransactions = [];
 
-  String selectedFilter = "All";
-
-  final filters = ["All", "Sent", "Received", "Success", "Pending", "Failed"];
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    service.seedDummyTransactions();
     _loadTransactions();
   }
 
-  void _loadTransactions() {
-    setState(() {
-      transactions = service.getAllTransactions();
-    });
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadTransactions() async {
+    try {
+      final data = await TransactionApiService.instance.getTransactions();
+
+      if (!mounted) return;
+
+      setState(() {
+        transactions = data;
+        filteredTransactions = data;
+        isLoading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        isLoading = false;
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(e.toString())));
+    }
   }
 
   void _search(String value) {
+    final query = value.toLowerCase();
+
     setState(() {
-      if (value.isEmpty) {
-        _applyFilter(selectedFilter);
+      if (query.isEmpty) {
+        filteredTransactions = transactions;
       } else {
-        transactions = service.searchTransactions(value);
+        filteredTransactions = transactions.where((tx) {
+          return tx.toString().toLowerCase().contains(query);
+        }).toList();
       }
     });
   }
 
-  void _applyFilter(String filter) {
-    selectedFilter = filter;
-
-    setState(() {
-      transactions = service.filterTransactions(filter);
-    });
-  }
-
   Color statusColor(String status) {
-    switch (status) {
-      case "Success":
+    switch (status.toUpperCase()) {
+      case "SUCCESS":
         return Colors.green;
-      case "Pending":
-        return Colors.orange;
-      case "Failed":
+      case "FAILED":
         return Colors.red;
+      case "PENDING":
+        return Colors.orange;
       default:
         return Colors.grey;
     }
   }
 
-  IconData transactionIcon(bool sent) {
-    return sent ? Icons.arrow_upward : Icons.arrow_downward;
+  IconData transactionIcon(String type) {
+    return type.toUpperCase() == "SEND"
+        ? Icons.arrow_upward
+        : Icons.arrow_downward;
   }
 
   @override
@@ -76,15 +93,6 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
       appBar: AppBar(
         title: const Text("Transaction History"),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.delete_sweep),
-            onPressed: () {
-              service.clearAllTransactions();
-              _loadTransactions();
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -103,88 +111,77 @@ class _TransactionHistoryScreenState extends State<TransactionHistoryScreen> {
             ),
           ),
 
-          SizedBox(
-            height: 45,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: filters.length,
-              itemBuilder: (_, index) {
-                final filter = filters[index];
-
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6),
-                  child: ChoiceChip(
-                    label: Text(filter),
-                    selected: selectedFilter == filter,
-                    onSelected: (_) => _applyFilter(filter),
-                  ),
-                );
-              },
-            ),
-          ),
-
-          const SizedBox(height: 10),
-
           Expanded(
-            child: RefreshIndicator(
-              onRefresh: () async {
-                _loadTransactions();
-              },
-              child: transactions.isEmpty
-                  ? const Center(
-                      child: Text(
-                        "No Transactions Found",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    )
-                  : ListView.builder(
-                      itemCount: transactions.length,
-                      itemBuilder: (_, index) {
-                        final tx = transactions[index];
+            child: isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    onRefresh: _loadTransactions,
+                    child: filteredTransactions.isEmpty
+                        ? const Center(
+                            child: Text(
+                              "No Transactions Found",
+                              style: TextStyle(fontSize: 18),
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: filteredTransactions.length,
+                            itemBuilder: (_, index) {
+                              final tx = filteredTransactions[index];
 
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 8,
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              child: Icon(transactionIcon(tx.isSent)),
-                            ),
-                            title: Text(tx.recipientName),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(tx.upiId),
-                                Text(
-                                  tx.dateTime.toString(),
-                                  style: const TextStyle(fontSize: 12),
+                              return Card(
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 8,
                                 ),
-                              ],
-                            ),
-                            trailing: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "₹${tx.amount.toStringAsFixed(2)}",
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: Icon(
+                                      transactionIcon(
+                                        tx["transaction_type"] ?? "",
+                                      ),
+                                    ),
+                                  ),
+                                  title: Text(
+                                    tx["receiver_name"] ??
+                                        tx["sender_name"] ??
+                                        "User",
+                                  ),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(tx["note"] ?? ""),
+                                      Text(
+                                        tx["created_at"] ?? "",
+                                        style: const TextStyle(fontSize: 12),
+                                      ),
+                                    ],
+                                  ),
+                                  trailing: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "₹${tx["amount"]}",
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Text(
+                                        tx["status"] ?? "SUCCESS",
+                                        style: TextStyle(
+                                          color: statusColor(
+                                            tx["status"] ?? "SUCCESS",
+                                          ),
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
-                                Text(
-                                  tx.status,
-                                  style: TextStyle(
-                                    color: statusColor(tx.status),
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
-                        );
-                      },
-                    ),
-            ),
+                  ),
           ),
         ],
       ),
