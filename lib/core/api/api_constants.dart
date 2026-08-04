@@ -122,4 +122,14 @@ class ApiConstants {
   // ==========================
 
   static const String notifications = "/notifications";
+
+  // ==========================
+  // Notifications
+  // ==========================
+
+  static const String notificationDetails = "/notifications/details";
+  static const String unreadNotifications = "/notifications/unread";
+  static const String markNotificationRead = "/notifications/read";
+  static const String markAllNotificationsRead = "/notifications/read-all";
+  static const String deleteNotification = "/notifications/delete";
 }
