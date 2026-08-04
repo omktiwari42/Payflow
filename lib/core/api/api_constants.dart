@@ -44,6 +44,9 @@ class ApiConstants {
   // ==========================
 
   static const String transactions = "/transactions";
+  static const String sendMoney = "/transactions/send";
+  static const String transactionHistory = "/transactions/history";
+  static const String transactionDetails = "/transactions/details";
 
   // ==========================
   // Beneficiaries
