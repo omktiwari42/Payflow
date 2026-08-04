@@ -49,8 +49,15 @@ class ApiConstants {
   static const String transactions = "/transactions";
   static const String transactionHistory = "/transactions/history";
   static const String transactionDetails = "/transactions/details";
+
   static const String sendMoney = "/transactions/send";
+
   static const String requestMoney = "/transactions/request";
+  static const String requestHistory = "/transactions/request/history";
+  static const String requestDetails = "/transactions/request/details";
+  static const String acceptRequest = "/transactions/request/accept";
+  static const String rejectRequest = "/transactions/request/reject";
+
   static const String filterTransactions = "/transactions/filter";
 
   // ==========================
