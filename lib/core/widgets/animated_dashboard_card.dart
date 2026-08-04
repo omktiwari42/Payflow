@@ -39,14 +39,12 @@ class _AnimatedDashboardCardState extends State<AnimatedDashboardCard>
     );
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, 0.12),
+      begin: const Offset(0, 0.10),
       end: Offset.zero,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic));
 
     Future.delayed(widget.delay, () {
-      if (mounted) {
-        _controller.forward();
-      }
+      if (mounted) _controller.forward();
     });
   }
 
@@ -56,32 +54,29 @@ class _AnimatedDashboardCardState extends State<AnimatedDashboardCard>
     super.dispose();
   }
 
-  void _onTapDown(TapDownDetails details) {
-    setState(() => _scale = 0.97);
-  }
-
-  void _onTapEnd() {
-    setState(() => _scale = 1.0);
+  void _pressed(bool value) {
+    if (widget.onTap == null) return;
+    setState(() => _scale = value ? 0.98 : 1.0);
   }
 
   @override
   Widget build(BuildContext context) {
+    Widget child = FadeTransition(
+      opacity: _fadeAnimation,
+      child: SlideTransition(position: _slideAnimation, child: widget.child),
+    );
+
+    if (widget.onTap == null) return child;
+
     return GestureDetector(
       onTap: widget.onTap,
-      onTapDown: _onTapDown,
-      onTapUp: (_) => _onTapEnd(),
-      onTapCancel: _onTapEnd,
+      onTapDown: (_) => _pressed(true),
+      onTapUp: (_) => _pressed(false),
+      onTapCancel: () => _pressed(false),
       child: AnimatedScale(
-        duration: const Duration(milliseconds: 120),
         scale: _scale,
-        curve: Curves.easeOut,
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: SlideTransition(
-            position: _slideAnimation,
-            child: widget.child,
-          ),
-        ),
+        duration: const Duration(milliseconds: 120),
+        child: child,
       ),
     );
   }

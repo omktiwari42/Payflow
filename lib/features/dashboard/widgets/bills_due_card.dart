@@ -5,191 +5,130 @@ class BillsDueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bills = [
+    final services = [
+      {
+        "title": "Mobile",
+        "icon": Icons.phone_android_rounded,
+        "color": Colors.blue,
+      },
       {
         "title": "Electricity",
-        "subtitle": "Due Tomorrow",
-        "amount": "₹1,450",
         "icon": Icons.bolt_rounded,
-        "color": const Color(0xffF59E0B),
-        "status": "Pending",
+        "color": Colors.amber,
+      },
+      {"title": "DTH", "icon": Icons.tv_rounded, "color": Colors.deepPurple},
+      {"title": "Broadband", "icon": Icons.wifi_rounded, "color": Colors.green},
+      {
+        "title": "Water",
+        "icon": Icons.water_drop_rounded,
+        "color": Colors.lightBlue,
       },
       {
-        "title": "Jio Fiber",
-        "subtitle": "Due in 3 Days",
-        "amount": "₹999",
-        "icon": Icons.wifi_rounded,
-        "color": const Color(0xff2563EB),
-        "status": "Pending",
+        "title": "Gas",
+        "icon": Icons.local_fire_department_rounded,
+        "color": Colors.orange,
       },
       {
-        "title": "Netflix",
-        "subtitle": "Auto Pay",
-        "amount": "₹649",
-        "icon": Icons.movie_rounded,
-        "color": const Color(0xffE11D48),
-        "status": "Auto",
+        "title": "FASTag",
+        "icon": Icons.directions_car_rounded,
+        "color": Colors.red,
+      },
+      {
+        "title": "Credit Card",
+        "icon": Icons.credit_card_rounded,
+        "color": Colors.indigo,
       },
     ];
 
     return Container(
-      padding: const EdgeInsets.all(22),
+      padding: const EdgeInsets.fromLTRB(18, 18, 18, 14),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(.05),
+            blurRadius: 12,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
             children: [
-              const Text(
-                "Bills Due",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              const Expanded(
+                child: Text(
+                  "Recharge & Bills",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
               ),
-              const Spacer(),
-              TextButton(onPressed: () {}, child: const Text("View All")),
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(55, 32),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text("View All"),
+              ),
             ],
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 12),
 
-          ListView.separated(
+          GridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: bills.length,
-            separatorBuilder: (_, _) => const Divider(height: 28),
-            itemBuilder: (context, index) {
-              final bill = bills[index];
+            itemCount: services.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+              mainAxisExtent: 82,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 10,
+            ),
+            itemBuilder: (_, index) {
+              final item = services[index];
 
-              return Row(
-                children: [
-                  Container(
-                    width: 54,
-                    height: 54,
-                    decoration: BoxDecoration(
-                      color: (bill["color"] as Color).withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Icon(
-                      bill["icon"] as IconData,
-                      color: bill["color"] as Color,
-                      size: 28,
-                    ),
-                  ),
-
-                  const SizedBox(width: 16),
-
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          bill["title"] as String,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
-
-                        const SizedBox(height: 4),
-
-                        Text(
-                          bill["subtitle"] as String,
-                          style: const TextStyle(color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    bill["amount"] as String,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 17,
-                    ),
-                  ),
-
-                  const SizedBox(width: 12),
-
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 6,
-                    ),
-                    decoration: BoxDecoration(
-                      color: bill["status"] == "Pending"
-                          ? Colors.orange.withValues(alpha: 0.12)
-                          : Colors.green.withValues(alpha: 0.12),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    child: Text(
-                      bill["status"] as String,
-                      style: TextStyle(
-                        color: bill["status"] == "Pending"
-                            ? Colors.orange
-                            : Colors.green,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+              return InkWell(
+                borderRadius: BorderRadius.circular(12),
+                onTap: () {},
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: (item["color"] as Color).withOpacity(.10),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        item["icon"] as IconData,
+                        color: item["color"] as Color,
+                        size: 24,
                       ),
                     ),
-                  ),
-                ],
-              );
-            },
-          ),
 
-          const SizedBox(height: 24),
+                    const SizedBox(height: 5),
 
-          const Divider(),
-
-          const SizedBox(height: 20),
-
-          Row(
-            children: [
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
                     Text(
-                      "Total Due",
-                      style: TextStyle(color: Colors.grey, fontSize: 14),
-                    ),
-                    SizedBox(height: 6),
-                    Text(
-                      "₹3,098",
-                      style: TextStyle(
-                        fontSize: 26,
-                        fontWeight: FontWeight.bold,
+                      item["title"] as String,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        height: 1.15,
                       ),
                     ),
                   ],
                 ),
-              ),
-
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: const Icon(Icons.payment_rounded),
-                label: const Text("Pay Now"),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff2563EB),
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 22,
-                    vertical: 16,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-              ),
-            ],
+              );
+            },
           ),
         ],
       ),

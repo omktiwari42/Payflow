@@ -3,24 +3,25 @@ import 'package:mobile/core/widgets/animated_dashboard_card.dart';
 
 import '../models/dashboard_model.dart';
 import '../services/dashboard_api_service.dart';
-import '../widgets/ai_finance_assistant_card.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/bills_due_card.dart';
-import '../widgets/budget_tracker_card.dart';
 import '../widgets/card_carousel.dart';
-import '../widgets/cash_flow_timeline_card.dart';
+import '../widgets/cashback_offers_card.dart';
 import '../widgets/dashboard_stats_card.dart';
-import '../widgets/financial_goals_card.dart';
-import '../widgets/investment_portfolio_card.dart';
+import '../widgets/financial_services_card.dart';
+import '../widgets/insurance_card.dart';
 import '../widgets/live_recent_transactions.dart';
+import '../widgets/loan_services_card.dart';
 import '../widgets/multi_currency_card.dart';
 import '../widgets/quick_action_button.dart';
+import '../widgets/refer_earn_card.dart';
 import '../widgets/rewards_cashback_card.dart';
 import '../widgets/section_title.dart';
-import '../widgets/smart_insights_card.dart';
+import '../widgets/shopping_card.dart';
 import '../widgets/smart_wallet_card.dart';
-import '../widgets/spending_categories_card.dart';
 import '../widgets/transaction_tile.dart';
+import '../widgets/travel_booking_card.dart';
+import '../widgets/upi_services_card.dart';
 import '../widgets/weekly_spending_chart.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -158,7 +159,7 @@ class DashboardScreenState extends State<DashboardScreen> {
           slivers: [
             SliverAppBar(
               pinned: true,
-              expandedHeight: 340,
+              expandedHeight: 430,
               elevation: 0,
               backgroundColor: const Color(0xff2563EB),
               flexibleSpace: FlexibleSpaceBar(
@@ -172,7 +173,7 @@ class DashboardScreenState extends State<DashboardScreen> {
                   ),
                   child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 12),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -212,10 +213,14 @@ class DashboardScreenState extends State<DashboardScreen> {
                               ),
                             ],
                           ),
-                          const Spacer(),
+                          const SizedBox(height: 20),
+
                           BalanceCard(
                             balance:
                                 "₹${dashboardData?.walletBalance.toStringAsFixed(2) ?? "0.00"}",
+                            onAddMoney: () {},
+                            onTransfer: () {},
+                            onScanQR: () {},
                           ),
                         ],
                       ),
@@ -236,15 +241,17 @@ class DashboardScreenState extends State<DashboardScreen> {
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: quickActions.length,
+                      padding: EdgeInsets.zero,
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 4,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 10,
-                            mainAxisExtent: 100,
+                            crossAxisSpacing: 14,
+                            mainAxisSpacing: 18,
+                            childAspectRatio: 0.92,
                           ),
                       itemBuilder: (context, index) {
                         final item = quickActions[index];
+
                         return QuickActionButton(
                           title: item["title"] as String,
                           icon: item["icon"] as IconData,
@@ -253,14 +260,11 @@ class DashboardScreenState extends State<DashboardScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 12),
 
-                    AnimatedDashboardCard(
-                      delay: const Duration(milliseconds: 100),
-                      child: const CardCarousel(),
-                    ),
+                    AnimatedDashboardCard(child: const CardCarousel()),
 
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 12),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 200),
@@ -291,64 +295,67 @@ class DashboardScreenState extends State<DashboardScreen> {
                         transactions: dashboardData?.recentTransactions ?? [],
                       ),
                     ),
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 12),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 400),
                       child: const BillsDueCard(),
                     ),
-
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 500),
-                      child: const SpendingCategoriesCard(),
+                      child: const FinancialServicesCard(),
                     ),
-
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 600),
-                      child: const BudgetTrackerCard(),
+                      child: const TravelBookingCard(),
                     ),
 
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 700),
-                      child: const FinancialGoalsCard(),
+                      child: const CashbackOffersCard(),
                     ),
 
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 800),
-                      child: const InvestmentPortfolioCard(),
+                      child: const UpiServicesCard(),
                     ),
 
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 900),
-                      child: const AIFinanceAssistantCard(),
+                      child: const ShoppingCard(),
                     ),
 
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 1000),
-                      child: const SmartInsightsCard(),
+                      child: const ReferEarnCard(),
                     ),
 
                     const SizedBox(height: 28),
 
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 1100),
-                      child: const CashFlowTimelineCard(),
+                      child: const InsuranceCard(),
                     ),
 
                     const SizedBox(height: 28),
+                    AnimatedDashboardCard(
+                      delay: const Duration(milliseconds: 1200),
+                      child: const LoanServicesCard(),
+                    ),
 
+                    const SizedBox(height: 28),
                     AnimatedDashboardCard(
                       delay: const Duration(milliseconds: 1400),
                       child: const SmartWalletCard(),

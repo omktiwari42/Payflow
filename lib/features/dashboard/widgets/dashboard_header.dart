@@ -2,8 +2,17 @@ import 'package:flutter/material.dart';
 
 class DashboardHeader extends StatelessWidget {
   final String name;
+  final VoidCallback? onNotificationTap;
+  final VoidCallback? onSearchTap;
+  final String? profileImage;
 
-  const DashboardHeader({super.key, required this.name});
+  const DashboardHeader({
+    super.key,
+    required this.name,
+    this.onNotificationTap,
+    this.onSearchTap,
+    this.profileImage,
+  });
 
   String getGreeting() {
     final hour = DateTime.now().hour;
@@ -21,19 +30,18 @@ class DashboardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Container(
-          height: 56,
-          width: 56,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(18),
-            gradient: const LinearGradient(
-              colors: [Color(0xff2563EB), Color(0xff4F46E5)],
-            ),
-          ),
-          child: const Icon(Icons.person, color: Colors.white, size: 30),
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: Colors.grey.shade200,
+          backgroundImage: profileImage != null
+              ? NetworkImage(profileImage!)
+              : null,
+          child: profileImage == null
+              ? const Icon(Icons.person, size: 32, color: Colors.black87)
+              : null,
         ),
 
-        const SizedBox(width: 16),
+        const SizedBox(width: 14),
 
         Expanded(
           child: Column(
@@ -41,13 +49,19 @@ class DashboardHeader extends StatelessWidget {
             children: [
               Text(
                 getGreeting(),
-                style: const TextStyle(fontSize: 14, color: Colors.grey),
+                style: TextStyle(
+                  color: Colors.grey.shade600,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
 
               const SizedBox(height: 4),
 
               Text(
                 name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -57,32 +71,36 @@ class DashboardHeader extends StatelessWidget {
           ),
         ),
 
-        Container(
-          height: 48,
-          width: 48,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: .05),
-                blurRadius: 10,
-              ),
-            ],
+        InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: onSearchTap,
+          child: const Padding(
+            padding: EdgeInsets.all(8),
+            child: Icon(Icons.search, size: 28),
           ),
+        ),
+
+        const SizedBox(width: 6),
+
+        InkWell(
+          borderRadius: BorderRadius.circular(30),
+          onTap: onNotificationTap,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
-              const Center(
-                child: Icon(Icons.notifications_none_rounded, size: 26),
+              const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(Icons.notifications_none_rounded, size: 28),
               ),
               Positioned(
-                right: 10,
-                top: 10,
+                right: 7,
+                top: 7,
                 child: Container(
                   height: 10,
                   width: 10,
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     color: Colors.red,
+                    border: Border.all(color: Colors.white, width: 2),
                     shape: BoxShape.circle,
                   ),
                 ),

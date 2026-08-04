@@ -10,47 +10,29 @@ class CardCarousel extends StatefulWidget {
 class _CardCarouselState extends State<CardCarousel> {
   final PageController _controller = PageController(viewportFraction: 0.92);
 
-  double currentPage = 0;
+  int currentPage = 0;
 
-  final List<Map<String, dynamic>> cards = [
+  final List<Map<String, dynamic>> banners = [
     {
-      "bank": "PayFlow Black",
-      "holder": "OM KUMAR",
-      "number": "5245 •••• •••• 4532",
-      "expiry": "08/29",
-      "balance": "₹10,24,560",
-      "gradient": const [
-        Color(0xff111827),
-        Color(0xff1F2937),
-        Color(0xff374151),
-      ],
-      "logo": "VISA",
+      "title": "Pay & Win",
+      "subtitle": "Get up to ₹500 Cashback\non your first transfer.",
+      "button": "Pay Now",
+      "colors": [Color(0xff059669), Color(0xff10B981)],
+      "icon": Icons.account_balance_wallet_outlined,
     },
     {
-      "bank": "PayFlow Platinum",
-      "holder": "OM KUMAR",
-      "number": "4589 •••• •••• 9821",
-      "expiry": "11/30",
-      "balance": "₹4,85,200",
-      "gradient": const [
-        Color(0xff2563EB),
-        Color(0xff1D4ED8),
-        Color(0xff3B82F6),
-      ],
-      "logo": "MASTER",
+      "title": "Invite Friends",
+      "subtitle": "Earn ₹100 for every\nsuccessful referral.",
+      "button": "Invite",
+      "colors": [Color(0xff2563EB), Color(0xff3B82F6)],
+      "icon": Icons.group_add,
     },
     {
-      "bank": "PayFlow Gold",
-      "holder": "OM KUMAR",
-      "number": "4012 •••• •••• 7812",
-      "expiry": "02/31",
-      "balance": "₹18,90,000",
-      "gradient": const [
-        Color(0xffF59E0B),
-        Color(0xffD97706),
-        Color(0xffB45309),
-      ],
-      "logo": "VISA",
+      "title": "Pay Bills",
+      "subtitle": "Electricity • Mobile\nFASTag • DTH",
+      "button": "Explore",
+      "colors": [Color(0xffEA580C), Color(0xffF97316)],
+      "icon": Icons.receipt_long,
     },
   ];
 
@@ -60,7 +42,7 @@ class _CardCarouselState extends State<CardCarousel> {
 
     _controller.addListener(() {
       setState(() {
-        currentPage = _controller.page ?? 0;
+        currentPage = (_controller.page ?? 0).round();
       });
     });
   }
@@ -77,179 +59,106 @@ class _CardCarouselState extends State<CardCarousel> {
       mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 260,
+          height: 170,
           child: PageView.builder(
             controller: _controller,
-            itemCount: cards.length,
-            itemBuilder: (context, index) {
-              final card = cards[index];
+            itemCount: banners.length,
+            itemBuilder: (_, index) {
+              final banner = banners[index];
 
-              final scale = (1 - (currentPage - index).abs() * 0.08).clamp(
-                0.9,
-                1.0,
-              );
-
-              return Transform.scale(
-                scale: scale,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Container(
-                    padding: const EdgeInsets.all(22),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(28),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: List<Color>.from(card["gradient"]),
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 6),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 16,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(24),
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: List<Color>.from(banner["colors"]),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(.10),
+                        blurRadius: 14,
+                        offset: const Offset(0, 6),
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.18),
-                          blurRadius: 22,
-                          offset: const Offset(0, 12),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Icon(banner["icon"], color: Colors.white, size: 28),
+
+                            const SizedBox(height: 10),
+
                             Text(
-                              card["bank"],
+                              banner["title"],
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.contactless,
-                              color: Colors.white70,
-                            ),
-                          ],
-                        ),
 
-                        const SizedBox(height: 18),
+                            const SizedBox(height: 6),
 
-                        Row(
-                          children: [
-                            Container(
-                              width: 52,
-                              height: 38,
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade300,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                            ),
-                            const Spacer(),
                             Text(
-                              card["logo"],
+                              banner["subtitle"],
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 2,
-                                fontSize: 18,
+                                color: Colors.white70,
+                                fontSize: 13,
+                                height: 1.3,
+                              ),
+                            ),
+
+                            const SizedBox(height: 6),
+
+                            SizedBox(
+                              height: 36,
+                              child: FilledButton(
+                                onPressed: () {},
+                                style: FilledButton.styleFrom(
+                                  backgroundColor: Colors.white,
+                                  foregroundColor: Colors.black,
+                                  elevation: 0,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+                                child: Text(banner["button"]),
                               ),
                             ),
                           ],
                         ),
+                      ),
 
-                        const Spacer(),
-                        Text(
-                          card["number"],
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 19,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 2,
-                          ),
+                      const SizedBox(width: 18),
+
+                      Container(
+                        width: 78,
+                        height: 78,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(.15),
+                          borderRadius: BorderRadius.circular(22),
                         ),
-
-                        const SizedBox(height: 22),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    "CARD HOLDER",
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 10,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    card["holder"],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  const Text(
-                                    "EXPIRES",
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 10,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    card["expiry"],
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 15,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  const Text(
-                                    "BALANCE",
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 10,
-                                      letterSpacing: 1.5,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Text(
-                                    card["balance"],
-                                    textAlign: TextAlign.end,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
+                        child: Icon(
+                          banner["icon"],
+                          color: Colors.white70,
+                          size: 42,
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );
@@ -257,23 +166,25 @@ class _CardCarouselState extends State<CardCarousel> {
           ),
         ),
 
-        const SizedBox(height: 18),
+        const SizedBox(height: 8),
+
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(cards.length, (index) {
-            final bool active = currentPage.round() == index;
-
-            return AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
+          children: List.generate(
+            banners.length,
+            (index) => AnimatedContainer(
+              duration: const Duration(milliseconds: 250),
               margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: active ? 24 : 8,
+              width: currentPage == index ? 20 : 8,
               height: 8,
               decoration: BoxDecoration(
-                color: active ? const Color(0xff2563EB) : Colors.grey.shade400,
+                color: currentPage == index
+                    ? const Color(0xff2563EB)
+                    : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(20),
               ),
-            );
-          }),
+            ),
+          ),
         ),
       ],
     );
