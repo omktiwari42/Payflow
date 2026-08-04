@@ -5,6 +5,7 @@ class ApiConstants {
   // Base URL
   // ==========================
 
+  // Android Emulator
   static const String baseUrl = "http://10.0.2.2:5000/api";
 
   // Linux / Windows Desktop
@@ -51,6 +52,15 @@ class ApiConstants {
   static const String sendMoney = "/transactions/send";
   static const String requestMoney = "/transactions/request";
   static const String filterTransactions = "/transactions/filter";
+
+  // ==========================
+  // Bank Accounts
+  // ==========================
+
+  static const String bankAccounts = "/bank-accounts";
+  static const String addBankAccount = "/bank-accounts";
+  static const String deleteBankAccount = "/bank-accounts";
+  static const String setPrimaryBankAccount = "/bank-accounts/primary";
 
   // ==========================
   // Beneficiaries

@@ -1,5 +1,5 @@
 class BankAccountModel {
-  final String id;
+  final int id;
   final String bankName;
   final String accountHolderName;
   final String accountNumber;
@@ -16,13 +16,15 @@ class BankAccountModel {
   });
 
   String get maskedAccountNumber {
-    if (accountNumber.length <= 4) return accountNumber;
+    if (accountNumber.length <= 4) {
+      return accountNumber;
+    }
 
     return "•••• ${accountNumber.substring(accountNumber.length - 4)}";
   }
 
   BankAccountModel copyWith({
-    String? id,
+    int? id,
     String? bankName,
     String? accountHolderName,
     String? accountNumber,
@@ -42,22 +44,22 @@ class BankAccountModel {
   Map<String, dynamic> toJson() {
     return {
       "id": id,
-      "bankName": bankName,
-      "accountHolderName": accountHolderName,
-      "accountNumber": accountNumber,
-      "ifscCode": ifscCode,
-      "isPrimary": isPrimary,
+      "bank_name": bankName,
+      "account_holder": accountHolderName,
+      "account_number": accountNumber,
+      "ifsc": ifscCode,
+      "is_primary": isPrimary,
     };
   }
 
   factory BankAccountModel.fromJson(Map<String, dynamic> json) {
     return BankAccountModel(
-      id: json["id"],
-      bankName: json["bankName"],
-      accountHolderName: json["accountHolderName"],
-      accountNumber: json["accountNumber"],
-      ifscCode: json["ifscCode"],
-      isPrimary: json["isPrimary"] ?? false,
+      id: json["id"] ?? 0,
+      bankName: json["bank_name"] ?? "",
+      accountHolderName: json["account_holder"] ?? "",
+      accountNumber: json["account_number"] ?? "",
+      ifscCode: json["ifsc"] ?? "",
+      isPrimary: json["is_primary"] ?? false,
     );
   }
 }

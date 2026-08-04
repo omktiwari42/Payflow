@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../models/bank_account_model.dart';
-import '../services/bank_account_service.dart';
+import '../services/bank_account_api_service.dart';
+import '../skeletons/bank_accounts_skeleton.dart';
 import '../widgets/bank_account_card.dart';
 import '../widgets/empty_bank_widget.dart';
-import '../skeletons/bank_accounts_skeleton.dart';
 import 'add_bank_account_screen.dart';
 
 class BankAccountsScreen extends StatefulWidget {
@@ -15,8 +15,6 @@ class BankAccountsScreen extends StatefulWidget {
 }
 
 class _BankAccountsScreenState extends State<BankAccountsScreen> {
-  final BankAccountService _service = BankAccountService.instance;
-
   List<BankAccountModel> _accounts = [];
 
   bool _loading = true;
@@ -28,21 +26,32 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
   }
 
   Future<void> _loadAccounts() async {
-    setState(() {
-      _loading = true;
-    });
+    try {
+      if (mounted) {
+        setState(() {
+          _loading = true;
+        });
+      }
 
-    await Future.delayed(const Duration(milliseconds: 600));
+      final accounts = await BankAccountApiService.instance.getBankAccounts();
 
-    _service.loadDummyAccounts();
+      if (!mounted) return;
 
-    _accounts = _service.getAccounts();
+      setState(() {
+        _accounts = accounts;
+        _loading = false;
+      });
+    } catch (e) {
+      if (!mounted) return;
 
-    if (!mounted) return;
+      setState(() {
+        _loading = false;
+      });
 
-    setState(() {
-      _loading = false;
-    });
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    }
   }
 
   Future<void> _goToAddScreen() async {
@@ -52,49 +61,85 @@ class _BankAccountsScreenState extends State<BankAccountsScreen> {
     );
 
     if (added == true) {
-      _loadAccounts();
+      await _loadAccounts();
     }
   }
 
   Future<void> _deleteAccount(BankAccountModel account) async {
-    final result = await showDialog<bool>(
+    final confirm = await showDialog<bool>(
       context: context,
       builder: (_) => AlertDialog(
         title: const Text("Delete Account"),
         content: Text("Delete ${account.bankName} account?"),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context, false),
+            onPressed: () {
+              Navigator.pop(context, false);
+            },
             child: const Text("Cancel"),
           ),
           FilledButton(
-            onPressed: () => Navigator.pop(context, true),
+            onPressed: () {
+              Navigator.pop(context, true);
+            },
             child: const Text("Delete"),
           ),
         ],
       ),
     );
 
-    if (result == true) {
-      _service.removeAccount(account.id);
-      _loadAccounts();
+    if (confirm != true) return;
+
+    try {
+      await BankAccountApiService.instance.deleteBankAccount(account.id);
+
+      await _loadAccounts();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Bank account deleted successfully.")),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
     }
   }
 
-  void _makePrimary(BankAccountModel account) {
-    _service.setPrimaryAccount(account.id);
-    _loadAccounts();
+  Future<void> _makePrimary(BankAccountModel account) async {
+    try {
+      await BankAccountApiService.instance.setPrimary(account.id);
+
+      await _loadAccounts();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Primary account updated.")));
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Bank Accounts"), centerTitle: true),
+
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _goToAddScreen,
         icon: const Icon(Icons.add),
         label: const Text("Add Account"),
       ),
+
       body: RefreshIndicator(
         onRefresh: _loadAccounts,
         child: _loading

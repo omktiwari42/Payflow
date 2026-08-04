@@ -19,7 +19,7 @@ class BankAccountService {
     }
   }
 
-  void removeAccount(String id) {
+  void removeAccount(int id) {
     final removedAccount = _accounts.firstWhere(
       (account) => account.id == id,
       orElse: () => throw Exception("Account not found"),
@@ -34,7 +34,7 @@ class BankAccountService {
     }
   }
 
-  void setPrimaryAccount(String id) {
+  void setPrimaryAccount(int id) {
     for (int i = 0; i < _accounts.length; i++) {
       _accounts[i] = _accounts[i].copyWith(isPrimary: _accounts[i].id == id);
     }
@@ -48,7 +48,7 @@ class BankAccountService {
     }
   }
 
-  BankAccountModel? findById(String id) {
+  BankAccountModel? findById(int id) {
     try {
       return _accounts.firstWhere((account) => account.id == id);
     } catch (_) {
@@ -61,7 +61,7 @@ class BankAccountService {
 
     _accounts.addAll([
       const BankAccountModel(
-        id: "1",
+        id: 1,
         bankName: "State Bank of India",
         accountHolderName: "Om Kumar Tiwari",
         accountNumber: "123456789012",
@@ -69,14 +69,14 @@ class BankAccountService {
         isPrimary: true,
       ),
       const BankAccountModel(
-        id: "2",
+        id: 2,
         bankName: "HDFC Bank",
         accountHolderName: "Om Kumar Tiwari",
         accountNumber: "987654321098",
         ifscCode: "HDFC0005678",
       ),
       const BankAccountModel(
-        id: "3",
+        id: 3,
         bankName: "ICICI Bank",
         accountHolderName: "Om Kumar Tiwari",
         accountNumber: "456789123456",
