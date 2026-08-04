@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../services/wallet_service.dart';
+import '../services/wallet_api_service.dart';
 
 class AddMoneyScreen extends StatefulWidget {
   const AddMoneyScreen({super.key});
@@ -34,41 +34,55 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
       _loading = true;
     });
 
-    await Future.delayed(const Duration(seconds: 1));
+    try {
+      final result = await WalletApiService.instance.addMoney(amount);
 
-    WalletService.instance.addMoney(amount);
+      if (!mounted) return;
 
-    if (!mounted) return;
+      setState(() {
+        _loading = false;
+      });
 
-    setState(() {
-      _loading = false;
-    });
-
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
-        title: const Row(
-          children: [
-            Icon(Icons.check_circle, color: Colors.green),
-            SizedBox(width: 8),
-            Text("Money Added"),
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+          title: const Row(
+            children: [
+              Icon(Icons.check_circle, color: Colors.green),
+              SizedBox(width: 8),
+              Text("Money Added"),
+            ],
+          ),
+          content: Text(
+            result["message"] ??
+                "₹${amount.toStringAsFixed(2)} added successfully.",
+          ),
+          actions: [
+            FilledButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.pop(context, true);
+              },
+              child: const Text("Done"),
+            ),
           ],
         ),
-        content: Text(
-          "₹${amount.toStringAsFixed(2)} has been added to your wallet.",
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () {
-              Navigator.pop(context);
-              Navigator.pop(context, true);
-            },
-            child: const Text("Done"),
-          ),
-        ],
-      ),
-    );
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      setState(() {
+        _loading = false;
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    }
   }
 
   Widget _quickAmount(double amount) {
@@ -92,13 +106,17 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
             size: 90,
             color: Colors.blue,
           ),
+
           const SizedBox(height: 20),
+
           const Text(
             "Add Money to Wallet",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
           ),
+
           const SizedBox(height: 30),
+
           TextField(
             controller: _amountController,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -108,7 +126,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               border: OutlineInputBorder(),
             ),
           ),
+
           const SizedBox(height: 20),
+
           Wrap(
             spacing: 10,
             runSpacing: 10,
@@ -120,7 +140,9 @@ class _AddMoneyScreenState extends State<AddMoneyScreen> {
               _quickAmount(5000),
             ],
           ),
+
           const SizedBox(height: 40),
+
           SizedBox(
             height: 55,
             child: FilledButton.icon(
