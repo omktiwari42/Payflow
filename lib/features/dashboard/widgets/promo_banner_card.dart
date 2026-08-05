@@ -6,7 +6,8 @@ class PromoBannerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 170,
+      width: double.infinity,
+      constraints: const BoxConstraints(minHeight: 170),
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(24),
@@ -15,37 +16,74 @@ class PromoBannerCard extends StatelessWidget {
         ),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Expanded(
+          Expanded(
+            flex: 3,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
+                const Text(
                   "PayFlow Premium",
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   style: TextStyle(
                     color: Colors.white,
-                    fontSize: 24,
+                    fontSize: 22,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
 
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                Text(
+                const Text(
                   "Unlimited cashback, instant rewards, exclusive offers and premium banking features.",
-                  style: TextStyle(color: Colors.white70, height: 1.4),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: Colors.white70,
+                    height: 1.45,
+                    fontSize: 14,
+                  ),
                 ),
 
-                Spacer(),
+                const SizedBox(height: 18),
 
-                FilledButton(onPressed: null, child: Text("Explore")),
+                SizedBox(
+                  height: 42,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: const Color(0xff2563EB),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: const Text(
+                      "Explore",
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
 
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
 
-          Icon(Icons.workspace_premium, color: Colors.amber, size: 80),
+          Expanded(
+            flex: 1,
+            child: Center(
+              child: Icon(
+                Icons.workspace_premium_rounded,
+                color: Colors.amber.shade300,
+                size: 64,
+              ),
+            ),
+          ),
         ],
       ),
     );

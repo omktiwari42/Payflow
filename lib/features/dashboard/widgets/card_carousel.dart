@@ -41,9 +41,13 @@ class _CardCarouselState extends State<CardCarousel> {
     super.initState();
 
     _controller.addListener(() {
-      setState(() {
-        currentPage = (_controller.page ?? 0).round();
-      });
+      final page = _controller.page?.round() ?? 0;
+
+      if (page != currentPage && mounted) {
+        setState(() {
+          currentPage = page;
+        });
+      }
     });
   }
 
@@ -56,10 +60,9 @@ class _CardCarouselState extends State<CardCarousel> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
       children: [
         SizedBox(
-          height: 170,
+          height: 210,
           child: PageView.builder(
             controller: _controller,
             itemCount: banners.length,
@@ -69,10 +72,7 @@ class _CardCarouselState extends State<CardCarousel> {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 6),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 18,
-                    vertical: 16,
-                  ),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
                     gradient: LinearGradient(
@@ -82,80 +82,94 @@ class _CardCarouselState extends State<CardCarousel> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(.10),
-                        blurRadius: 14,
-                        offset: const Offset(0, 6),
+                        color: Colors.black.withValues(alpha: 0.08),
+                        blurRadius: 16,
+                        offset: const Offset(0, 8),
                       ),
                     ],
                   ),
                   child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
+                        flex: 3,
                         child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Icon(banner["icon"], color: Colors.white, size: 28),
 
-                            const SizedBox(height: 10),
+                            const SizedBox(height: 12),
 
                             Text(
                               banner["title"],
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
+                                fontSize: 24,
                               ),
                             ),
 
-                            const SizedBox(height: 6),
+                            const SizedBox(height: 8),
 
                             Text(
                               banner["subtitle"],
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(
                                 color: Colors.white70,
-                                fontSize: 13,
-                                height: 1.3,
+                                fontSize: 14,
+                                height: 1.4,
                               ),
                             ),
 
-                            const SizedBox(height: 6),
+                            const Spacer(),
 
                             SizedBox(
-                              height: 36,
-                              child: FilledButton(
+                              height: 42,
+                              child: ElevatedButton(
                                 onPressed: () {},
-                                style: FilledButton.styleFrom(
+                                style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
+                                  foregroundColor: Colors.black87,
                                   elevation: 0,
                                   padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
+                                    horizontal: 22,
                                   ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: Text(banner["button"]),
+                                child: Text(
+                                  banner["button"],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
 
-                      const SizedBox(width: 18),
+                      const SizedBox(width: 20),
 
-                      Container(
-                        width: 78,
-                        height: 78,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(.15),
-                          borderRadius: BorderRadius.circular(22),
-                        ),
-                        child: Icon(
-                          banner["icon"],
-                          color: Colors.white70,
-                          size: 42,
+                      Expanded(
+                        child: Center(
+                          child: Container(
+                            width: 86,
+                            height: 86,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Icon(
+                              banner["icon"],
+                              color: Colors.white,
+                              size: 48,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -166,25 +180,27 @@ class _CardCarouselState extends State<CardCarousel> {
           ),
         ),
 
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(
-            banners.length,
-            (index) => AnimatedContainer(
+          children: List.generate(banners.length, (index) {
+            final selected = currentPage == index;
+
+            return AnimatedContainer(
               duration: const Duration(milliseconds: 250),
+              curve: Curves.easeInOut,
               margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: currentPage == index ? 20 : 8,
+              width: selected ? 22 : 8,
               height: 8,
               decoration: BoxDecoration(
-                color: currentPage == index
+                color: selected
                     ? const Color(0xff2563EB)
                     : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(20),
               ),
-            ),
-          ),
+            );
+          }),
         ),
       ],
     );

@@ -27,11 +27,11 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     super.initState();
 
     _pages = [
-      DashboardScreen(key: _dashboardKey), // Home
-      const WalletScreen(), // Wallet
-      const ScanScreen(), // Scan
-      const SearchScreen(), // Search
-      const ProfileScreen(), // Profile
+      DashboardScreen(key: _dashboardKey),
+      const WalletScreen(),
+      const ScanScreen(),
+      const SearchScreen(),
+      const ProfileScreen(),
     ];
   }
 
