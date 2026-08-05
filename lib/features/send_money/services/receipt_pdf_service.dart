@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:open_filex/open_filex.dart';
@@ -182,12 +181,12 @@ Txn ID   : $transactionId
 
                 pw.Text(
                   "Fast • Secure • Smart",
-                  style: const pw.TextStyle(color: PdfColors.grey700),
+                  style: pw.TextStyle(color: PdfColors.grey700),
                 ),
 
                 pw.SizedBox(height: 5),
 
-                const pw.Text(
+                pw.Text(
                   "support@payflow.app",
                   style: pw.TextStyle(color: PdfColors.grey),
                 ),
@@ -237,10 +236,14 @@ Txn ID   : $transactionId
       amount: amount,
       transactionId: transactionId,
     );
-
-    await Share.shareXFiles([
-      XFile(file.path),
-    ], text: "PayFlow Payment Receipt");
+    await SharePlus.instance.share(
+      ShareParams(
+        files: <XFile>[XFile(file.path)],
+        title: "PayFlow Receipt",
+        subject: "PayFlow Receipt",
+        text: "PayFlow Payment Receipt",
+      ),
+    );
   }
 
   Future<File> saveReceipt({
@@ -263,10 +266,7 @@ Txn ID   : $transactionId
       child: pw.Row(
         children: [
           pw.Expanded(
-            child: pw.Text(
-              title,
-              style: const pw.TextStyle(color: PdfColors.grey),
-            ),
+            child: pw.Text(title, style: pw.TextStyle(color: PdfColors.grey)),
           ),
           pw.Text(value, style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
         ],
