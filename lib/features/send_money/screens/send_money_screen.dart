@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../services/send_money_api_service.dart';
 import '../widgets/amount_card.dart';
 import '../widgets/amount_keypad.dart';
+import 'payment_review_screen.dart';
 
 class SendMoneyScreen extends StatefulWidget {
   final String? recipientName;
@@ -180,7 +181,31 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
                           _amountController.text = value;
                         });
                       },
-                      onContinue: _sendMoney,
+                      onContinue: () {
+                        final amount = double.tryParse(_amountController.text);
+
+                        if (amount == null || amount <= 0) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Enter a valid amount"),
+                            ),
+                          );
+                          return;
+                        }
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => PaymentReviewScreen(
+                              recipientName:
+                                  widget.recipientName ?? "Unknown User",
+                              phone: widget.phone ?? "",
+                              amount: amount,
+                              note: _noteController.text.trim(),
+                            ),
+                          ),
+                        );
+                      },
                     ),
 
                     if (_isLoading)

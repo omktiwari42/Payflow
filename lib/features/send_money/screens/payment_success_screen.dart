@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+
 import 'transaction_receipt_screen.dart';
 
 class PaymentSuccessScreen extends StatelessWidget {
-  final String receiverName;
-  final String amount;
+  final String recipientName;
+  final double amount;
 
   const PaymentSuccessScreen({
     super.key,
-    required this.receiverName,
+    required this.recipientName,
     required this.amount,
   });
 
   @override
   Widget build(BuildContext context) {
+    final transactionId =
+        "#TXN${DateTime.now().millisecondsSinceEpoch.toString().substring(5)}";
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
       body: SafeArea(
@@ -42,7 +46,7 @@ class PaymentSuccessScreen extends StatelessWidget {
               const SizedBox(height: 15),
 
               Text(
-                "₹$amount",
+                "₹${amount.toStringAsFixed(2)}",
                 style: const TextStyle(
                   fontSize: 42,
                   fontWeight: FontWeight.bold,
@@ -53,7 +57,7 @@ class PaymentSuccessScreen extends StatelessWidget {
               const SizedBox(height: 15),
 
               Text(
-                "Sent to $receiverName",
+                "Sent to $recipientName",
                 style: TextStyle(fontSize: 18, color: Colors.grey.shade700),
               ),
 
@@ -70,13 +74,13 @@ class PaymentSuccessScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    _detailRow("Transaction ID", "#TXN94839284"),
-                    const Divider(),
-                    _detailRow("Date", "22 Jul 2026"),
+                    _detailRow("Transaction ID", transactionId),
                     const Divider(),
                     _detailRow("Status", "Completed"),
                     const Divider(),
                     _detailRow("Payment Method", "PayFlow Wallet"),
+                    const Divider(),
+                    _detailRow("Amount", "₹${amount.toStringAsFixed(2)}"),
                   ],
                 ),
               ),
@@ -116,10 +120,10 @@ class PaymentSuccessScreen extends StatelessWidget {
                       context,
                       MaterialPageRoute(
                         builder: (_) => TransactionReceiptScreen(
-                          receiverName: receiverName,
-                          amount: amount,
-                          upiId: "rahul@upi",
-                          transactionId: "#TXN94839284",
+                          receiverName: recipientName,
+                          amount: amount.toStringAsFixed(2),
+                          upiId: "payflow@upi",
+                          transactionId: transactionId,
                         ),
                       ),
                     );
