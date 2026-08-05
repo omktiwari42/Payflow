@@ -1,5 +1,8 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -19,44 +22,88 @@ class ReceiptPdfService {
   }) async {
     final pdf = pw.Document();
 
+    final ByteData imageData = await rootBundle.load(
+      "assets/images/payflow_logo.png",
+    );
+
+    final Uint8List logoBytes = imageData.buffer.asUint8List();
+
+    final logo = pw.MemoryImage(logoBytes);
+
     final now = DateTime.now();
 
     pdf.addPage(
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
-        build: (context) => [
+        build: (_) => [
+          pw.Container(
+            padding: const pw.EdgeInsets.all(22),
+            decoration: pw.BoxDecoration(
+              color: PdfColors.blue700,
+              borderRadius: pw.BorderRadius.circular(18),
+            ),
+            child: pw.Row(
+              children: [
+                pw.Container(
+                  width: 70,
+                  height: 70,
+                  padding: const pw.EdgeInsets.all(8),
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.white,
+                    borderRadius: pw.BorderRadius.circular(14),
+                  ),
+                  child: pw.Image(logo),
+                ),
+
+                pw.SizedBox(width: 20),
+
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Text(
+                      "PayFlow",
+                      style: pw.TextStyle(
+                        color: PdfColors.white,
+                        fontSize: 28,
+                        fontWeight: pw.FontWeight.bold,
+                      ),
+                    ),
+
+                    pw.SizedBox(height: 5),
+
+                    pw.Text(
+                      "Digital Payment Receipt",
+                      style: const pw.TextStyle(
+                        color: PdfColors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          pw.SizedBox(height: 30),
+
           pw.Center(
             child: pw.Column(
               children: [
-                pw.Text(
-                  "PayFlow",
-                  style: pw.TextStyle(
-                    fontSize: 30,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.blue,
+                pw.Container(
+                  padding: const pw.EdgeInsets.symmetric(
+                    horizontal: 18,
+                    vertical: 8,
                   ),
-                ),
-
-                pw.SizedBox(height: 8),
-
-                pw.Text(
-                  "Payment Receipt",
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
+                  decoration: pw.BoxDecoration(
+                    color: PdfColors.green100,
+                    borderRadius: pw.BorderRadius.circular(30),
                   ),
-                ),
-
-                pw.Divider(),
-
-                pw.SizedBox(height: 20),
-
-                pw.Text(
-                  "PAYMENT SUCCESSFUL",
-                  style: pw.TextStyle(
-                    color: PdfColors.green,
-                    fontWeight: pw.FontWeight.bold,
-                    fontSize: 18,
+                  child: pw.Text(
+                    "PAYMENT SUCCESSFUL",
+                    style: pw.TextStyle(
+                      color: PdfColors.green800,
+                      fontWeight: pw.FontWeight.bold,
+                    ),
                   ),
                 ),
 
@@ -65,41 +112,86 @@ class ReceiptPdfService {
                 pw.Text(
                   "₹$amount",
                   style: pw.TextStyle(
-                    fontSize: 36,
+                    fontSize: 38,
                     fontWeight: pw.FontWeight.bold,
                   ),
                 ),
-
-                pw.SizedBox(height: 30),
               ],
             ),
           ),
 
-          _row("Receiver", receiverName),
-          _row("UPI ID", upiId),
-          _row("Transaction ID", transactionId),
-          _row("Status", "SUCCESS"),
-          _row("Payment Method", "PayFlow Wallet"),
-          _row("Date", "${now.day}/${now.month}/${now.year}"),
-          _row("Time", "${now.hour}:${now.minute.toString().padLeft(2, '0')}"),
+          pw.SizedBox(height: 30),
+
+          pw.Container(
+            padding: const pw.EdgeInsets.all(18),
+            decoration: pw.BoxDecoration(
+              border: pw.Border.all(color: PdfColors.grey300),
+              borderRadius: pw.BorderRadius.circular(12),
+            ),
+            child: pw.Column(
+              children: [
+                _row("Receiver", receiverName),
+                _row("UPI ID", upiId),
+                _row("Transaction ID", transactionId),
+                _row("Status", "SUCCESS"),
+                _row("Payment Method", "PayFlow Wallet"),
+                _row("Date", "${now.day}/${now.month}/${now.year}"),
+                _row(
+                  "Time",
+                  "${now.hour}:${now.minute.toString().padLeft(2, "0")}",
+                ),
+              ],
+            ),
+          ),
 
           pw.SizedBox(height: 30),
 
           pw.Center(
             child: pw.BarcodeWidget(
               barcode: pw.Barcode.qrCode(),
-              data: transactionId,
-              width: 140,
-              height: 140,
+              data:
+                  """
+PayFlow Receipt
+
+Receiver : $receiverName
+UPI ID   : $upiId
+Amount   : ₹$amount
+Txn ID   : $transactionId
+""",
+              width: 150,
+              height: 150,
             ),
           ),
 
-          pw.SizedBox(height: 40),
+          pw.SizedBox(height: 35),
+
+          pw.Divider(),
 
           pw.Center(
-            child: pw.Text(
-              "Generated by PayFlow",
-              style: const pw.TextStyle(color: PdfColors.grey),
+            child: pw.Column(
+              children: [
+                pw.Text(
+                  "Generated securely by PayFlow",
+                  style: pw.TextStyle(
+                    color: PdfColors.blue700,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+
+                pw.SizedBox(height: 5),
+
+                pw.Text(
+                  "Fast • Secure • Smart",
+                  style: const pw.TextStyle(color: PdfColors.grey700),
+                ),
+
+                pw.SizedBox(height: 5),
+
+                const pw.Text(
+                  "support@payflow.app",
+                  style: pw.TextStyle(color: PdfColors.grey),
+                ),
+              ],
             ),
           ),
         ],
@@ -108,9 +200,11 @@ class ReceiptPdfService {
 
     final dir = await getApplicationDocumentsDirectory();
 
-    final file = File("${dir.path}/Receipt_$transactionId.pdf");
+    final file = File("${dir.path}/PayFlow_Receipt_$transactionId.pdf");
 
     await file.writeAsBytes(await pdf.save());
+
+    await OpenFilex.open(file.path);
 
     return file;
   }
@@ -165,7 +259,7 @@ class ReceiptPdfService {
 
   static pw.Widget _row(String title, String value) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 6),
+      padding: const pw.EdgeInsets.symmetric(vertical: 8),
       child: pw.Row(
         children: [
           pw.Expanded(
