@@ -30,7 +30,6 @@ class TransactionReceiptScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xffF5F7FB),
-
       appBar: AppBar(
         elevation: 0,
         centerTitle: true,
@@ -39,7 +38,6 @@ class TransactionReceiptScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -148,14 +146,26 @@ class TransactionReceiptScreen extends StatelessWidget {
                     icon: Icons.download,
                     title: "Download",
                     onTap: () {
-                      ReceiptService.instance.downloadReceipt(context);
+                      ReceiptService.instance.downloadReceipt(
+                        context,
+                        receiverName: receiverName,
+                        upiId: upiId,
+                        amount: amount,
+                        transactionId: transactionId,
+                      );
                     },
                   ),
                   ReceiptActionButton(
                     icon: Icons.share,
                     title: "Share",
                     onTap: () {
-                      ReceiptService.instance.shareReceipt(context);
+                      ReceiptService.instance.shareReceipt(
+                        context,
+                        receiverName: receiverName,
+                        upiId: upiId,
+                        amount: amount,
+                        transactionId: transactionId,
+                      );
                     },
                   ),
                 ],
@@ -169,14 +179,26 @@ class TransactionReceiptScreen extends StatelessWidget {
                     icon: Icons.save_alt,
                     title: "Save",
                     onTap: () {
-                      ReceiptService.instance.saveReceipt(context);
+                      ReceiptService.instance.saveReceipt(
+                        context,
+                        receiverName: receiverName,
+                        upiId: upiId,
+                        amount: amount,
+                        transactionId: transactionId,
+                      );
                     },
                   ),
                   ReceiptActionButton(
                     icon: Icons.print,
                     title: "Print",
                     onTap: () {
-                      ReceiptService.instance.printReceipt(context);
+                      ReceiptService.instance.printReceipt(
+                        context,
+                        receiverName: receiverName,
+                        upiId: upiId,
+                        amount: amount,
+                        transactionId: transactionId,
+                      );
                     },
                   ),
                 ],
