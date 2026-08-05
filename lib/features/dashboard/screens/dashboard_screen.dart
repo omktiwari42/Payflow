@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:mobile/core/widgets/animated_dashboard_card.dart';
 
+import '../../profile/screens/profile_screen.dart';
+import '../../scan/screens/scan_screen.dart';
+import '../../wallet/screens/wallet_screen.dart';
 import '../models/dashboard_model.dart';
 import '../services/dashboard_api_service.dart';
 import '../widgets/balance_card.dart';
@@ -14,6 +17,7 @@ import '../widgets/live_recent_transactions.dart';
 import '../widgets/loan_services_card.dart';
 import '../widgets/manage_money_card.dart';
 import '../widgets/multi_currency_card.dart';
+import '../widgets/payflow_bottom_navbar.dart';
 import '../widgets/people_business_card.dart';
 import '../widgets/quick_action_button.dart';
 import '../widgets/refer_earn_card.dart';
@@ -153,9 +157,44 @@ class DashboardScreenState extends State<DashboardScreen> {
     if (error != null) {
       return Scaffold(body: Center(child: Text(error!)));
     }
-
     return Scaffold(
       backgroundColor: const Color(0xffF4F7FC),
+
+      bottomNavigationBar: PayflowBottomNavbar(
+        currentIndex: selectedIndex,
+        onTap: (index) {
+          switch (index) {
+            case 0:
+              break;
+
+            case 1:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const WalletScreen()),
+              );
+              break;
+
+            case 2:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ScanScreen()),
+              );
+              break;
+
+            case 3:
+              Navigator.pushNamed(context, "/activity");
+              break;
+
+            case 4:
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const ProfileScreen()),
+              );
+              break;
+          }
+        },
+      ), // <-- ADD THIS LINE
+
       body: RefreshIndicator(
         onRefresh: _loadDashboard,
         child: CustomScrollView(

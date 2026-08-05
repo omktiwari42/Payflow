@@ -25,16 +25,45 @@ class ApiClient {
             onRequest: (options, handler) async {
               final token = await TokenStorage.getToken();
 
+              print("========== TOKEN ==========");
+              print(token ?? "NULL");
+              print("===========================");
+
               if (token != null && token.isNotEmpty) {
                 options.headers["Authorization"] = "Bearer $token";
               }
 
+              print("========== REQUEST ==========");
+              print("URL      : ${options.uri}");
+              print("Method   : ${options.method}");
+              print("Headers  : ${options.headers}");
+              print("Data     : ${options.data}");
+              print("=============================");
+
               handler.next(options);
             },
+
             onResponse: (response, handler) {
+              print("========== RESPONSE ==========");
+              print("Status   : ${response.statusCode}");
+              print("URL      : ${response.requestOptions.uri}");
+              print("Data     : ${response.data}");
+              print("==============================");
+
               handler.next(response);
             },
+
             onError: (DioException error, handler) {
+              print("========== DIO ERROR ==========");
+              print("Type     : ${error.type}");
+              print("Message  : ${error.message}");
+              print("URL      : ${error.requestOptions.uri}");
+              print("Headers  : ${error.requestOptions.headers}");
+              print("Status   : ${error.response?.statusCode}");
+              print("Response : ${error.response?.data}");
+              print("Error    : ${error.error}");
+              print("===============================");
+
               handler.next(error);
             },
           ),

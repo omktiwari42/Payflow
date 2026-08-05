@@ -9,56 +9,37 @@ class DashboardApiService {
 
   static final DashboardApiService instance = DashboardApiService._();
 
-  /*
-  |--------------------------------------------------------------------------
-  | Dashboard
-  |--------------------------------------------------------------------------
-  */
-
   Future<DashboardModel> getDashboard() async {
     try {
-      final Response response = await ApiClient.dio.get(ApiConstants.dashboard);
+      final response = await ApiClient.dio.get(ApiConstants.dashboard);
 
-      final Map<String, dynamic> data = Map<String, dynamic>.from(
-        response.data,
-      );
-
-      return DashboardModel.fromJson(data);
+      return DashboardModel.fromJson(Map<String, dynamic>.from(response.data));
     } on DioException catch (e) {
-      throw Exception(
-        e.response?.data["message"] ?? "Unable to load dashboard.",
-      );
+      print("============== DASHBOARD ERROR ==============");
+      print("TYPE       : ${e.type}");
+      print("MESSAGE    : ${e.message}");
+      print("ERROR      : ${e.error}");
+      print("URL        : ${e.requestOptions.uri}");
+      print("HEADERS    : ${e.requestOptions.headers}");
+      print("STATUS     : ${e.response?.statusCode}");
+      print("BODY       : ${e.response?.data}");
+      print("============================================");
+
+      rethrow;
     }
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Helpers
-  |--------------------------------------------------------------------------
-  */
+  Future<double> getWalletBalance() async =>
+      (await getDashboard()).walletBalance;
 
-  Future<double> getWalletBalance() async {
-    final dashboard = await getDashboard();
-    return dashboard.walletBalance;
-  }
+  Future<double> getTotalSent() async => (await getDashboard()).totalSent;
 
-  Future<double> getTotalSent() async {
-    final dashboard = await getDashboard();
-    return dashboard.totalSent;
-  }
+  Future<double> getTotalReceived() async =>
+      (await getDashboard()).totalReceived;
 
-  Future<double> getTotalReceived() async {
-    final dashboard = await getDashboard();
-    return dashboard.totalReceived;
-  }
+  Future<int> getTotalTransactions() async =>
+      (await getDashboard()).totalTransactions;
 
-  Future<int> getTotalTransactions() async {
-    final dashboard = await getDashboard();
-    return dashboard.totalTransactions;
-  }
-
-  Future<List<dynamic>> getRecentTransactions() async {
-    final dashboard = await getDashboard();
-    return dashboard.recentTransactions;
-  }
+  Future<List<dynamic>> getRecentTransactions() async =>
+      (await getDashboard()).recentTransactions;
 }
