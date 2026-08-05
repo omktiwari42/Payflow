@@ -62,7 +62,7 @@ class _CardCarouselState extends State<CardCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 210,
+          height: 220,
           child: PageView.builder(
             controller: _controller,
             itemCount: banners.length,
@@ -76,8 +76,6 @@ class _CardCarouselState extends State<CardCarousel> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(24),
                     gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                       colors: List<Color>.from(banner["colors"]),
                     ),
                     boxShadow: [
@@ -89,42 +87,45 @@ class _CardCarouselState extends State<CardCarousel> {
                     ],
                   ),
                   child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Expanded(
                         flex: 3,
                         child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(banner["icon"], color: Colors.white, size: 28),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Icon(
+                                  banner["icon"],
+                                  color: Colors.white,
+                                  size: 28,
+                                ),
 
-                            const SizedBox(height: 12),
+                                const SizedBox(height: 10),
 
-                            Text(
-                              banner["title"],
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 24,
-                              ),
+                                Text(
+                                  banner["title"],
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+
+                                const SizedBox(height: 6),
+
+                                Text(
+                                  banner["subtitle"],
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                    height: 1.35,
+                                  ),
+                                ),
+                              ],
                             ),
-
-                            const SizedBox(height: 8),
-
-                            Text(
-                              banner["subtitle"],
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.white70,
-                                fontSize: 14,
-                                height: 1.4,
-                              ),
-                            ),
-
-                            const Spacer(),
 
                             SizedBox(
                               height: 42,
@@ -134,9 +135,6 @@ class _CardCarouselState extends State<CardCarousel> {
                                   backgroundColor: Colors.white,
                                   foregroundColor: Colors.black87,
                                   elevation: 0,
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 22,
-                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(12),
                                   ),
@@ -155,21 +153,17 @@ class _CardCarouselState extends State<CardCarousel> {
 
                       const SizedBox(width: 20),
 
-                      Expanded(
-                        child: Center(
-                          child: Container(
-                            width: 86,
-                            height: 86,
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Icon(
-                              banner["icon"],
-                              color: Colors.white,
-                              size: 48,
-                            ),
-                          ),
+                      Container(
+                        width: 82,
+                        height: 82,
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.15),
+                          borderRadius: BorderRadius.circular(24),
+                        ),
+                        child: Icon(
+                          banner["icon"],
+                          color: Colors.white,
+                          size: 44,
                         ),
                       ),
                     ],
@@ -184,23 +178,22 @@ class _CardCarouselState extends State<CardCarousel> {
 
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(banners.length, (index) {
-            final selected = currentPage == index;
-
-            return AnimatedContainer(
+          children: List.generate(
+            banners.length,
+            (index) => AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               curve: Curves.easeInOut,
               margin: const EdgeInsets.symmetric(horizontal: 4),
-              width: selected ? 22 : 8,
+              width: currentPage == index ? 22 : 8,
               height: 8,
               decoration: BoxDecoration(
-                color: selected
+                color: currentPage == index
                     ? const Color(0xff2563EB)
                     : Colors.grey.shade400,
                 borderRadius: BorderRadius.circular(20),
               ),
-            );
-          }),
+            ),
+          ),
         ),
       ],
     );
