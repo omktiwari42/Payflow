@@ -12,15 +12,16 @@ class ActivityApiService {
   Future<List<ActivityModel>> getTransactions() async {
     try {
       final Response response = await ApiClient.dio.get(
-        ApiConstants.transactions,
+        ApiConstants.transactionHistory,
       );
 
-      final data = response.data;
+      final dynamic data = response.data;
 
-      if (data is Map &&
-          data["transactions"] != null &&
-          data["transactions"] is List) {
-        return (data["transactions"] as List)
+      if (data is Map<String, dynamic>) {
+        final List<dynamic> transactions =
+            (data["transactions"] as List<dynamic>?) ?? [];
+
+        return transactions
             .map((e) => ActivityModel.fromJson(Map<String, dynamic>.from(e)))
             .toList();
       }
@@ -34,7 +35,9 @@ class ActivityApiService {
       return [];
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data["message"] ?? "Unable to load transactions.",
+        e.response?.data is Map
+            ? e.response?.data["message"] ?? "Unable to load transactions."
+            : "Unable to load transactions.",
       );
     } catch (e) {
       throw Exception("Unexpected Error: $e");
