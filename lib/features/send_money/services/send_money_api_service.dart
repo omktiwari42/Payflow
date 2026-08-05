@@ -16,20 +16,28 @@ class SendMoneyApiService {
     try {
       final Response response = await ApiClient.dio.post(
         ApiConstants.sendMoney,
-        data: {"phone": phone, "amount": amount, "note": note},
+        data: {"phone": phone.trim(), "amount": amount, "note": note.trim()},
       );
 
-      final data = Map<String, dynamic>.from(response.data);
+      final Map<String, dynamic> data = Map<String, dynamic>.from(
+        response.data,
+      );
 
-      if (data["success"] != true) {
-        throw Exception(data["message"] ?? "Money transfer failed.");
+      if (response.statusCode != 200 || data["success"] != true) {
+        throw Exception(
+          data["message"]?.toString() ?? "Money transfer failed.",
+        );
       }
 
       return data;
     } on DioException catch (e) {
-      throw Exception(
-        e.response?.data?["message"]?.toString() ?? "Money transfer failed.",
-      );
+      if (e.response?.data is Map) {
+        throw Exception(
+          e.response?.data["message"]?.toString() ?? "Money transfer failed.",
+        );
+      }
+
+      throw Exception(e.message ?? "Unable to connect to server.");
     } catch (e) {
       throw Exception(e.toString().replaceFirst("Exception: ", ""));
     }
