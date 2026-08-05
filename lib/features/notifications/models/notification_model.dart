@@ -4,7 +4,7 @@ class NotificationModel {
   final String message;
   final String type;
   final bool isRead;
-  final String createdAt;
+  final DateTime createdAt;
 
   const NotificationModel({
     required this.id,
@@ -22,7 +22,9 @@ class NotificationModel {
       message: json["message"] ?? "",
       type: json["type"] ?? "GENERAL",
       isRead: json["is_read"] ?? false,
-      createdAt: json["created_at"] ?? "",
+      createdAt:
+          DateTime.tryParse(json["created_at"]?.toString() ?? "") ??
+          DateTime.now(),
     );
   }
 
@@ -33,7 +35,7 @@ class NotificationModel {
       "message": message,
       "type": type,
       "is_read": isRead,
-      "created_at": createdAt,
+      "created_at": createdAt.toIso8601String(),
     };
   }
 
@@ -43,7 +45,7 @@ class NotificationModel {
     String? message,
     String? type,
     bool? isRead,
-    String? createdAt,
+    DateTime? createdAt,
   }) {
     return NotificationModel(
       id: id ?? this.id,
