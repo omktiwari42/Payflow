@@ -60,9 +60,24 @@ class ManageMoneyCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "Manage Money",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          Row(
+            children: [
+              const Expanded(
+                child: Text(
+                  "Manage Money",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  padding: EdgeInsets.zero,
+                  minimumSize: const Size(55, 30),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Text("View All"),
+              ),
+            ],
           ),
 
           const SizedBox(height: 18),
@@ -75,24 +90,26 @@ class ManageMoneyCard extends StatelessWidget {
               crossAxisCount: 4,
               crossAxisSpacing: 8,
               mainAxisSpacing: 10,
-              mainAxisExtent: 82,
+              mainAxisExtent: 84,
             ),
             itemBuilder: (_, index) {
               final item = items[index];
 
               return InkWell(
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(14),
                 onTap: () {},
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     CircleAvatar(
-                      radius: 24,
+                      radius: 25,
                       backgroundColor: (item["color"] as Color).withOpacity(
                         .12,
                       ),
                       child: Icon(
                         item["icon"] as IconData,
                         color: item["color"] as Color,
+                        size: 25,
                       ),
                     ),
 
@@ -100,10 +117,13 @@ class ManageMoneyCard extends StatelessWidget {
 
                     Text(
                       item["title"] as String,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.center,
                       style: const TextStyle(
-                        fontSize: 11,
+                        fontSize: 10.5,
                         fontWeight: FontWeight.w600,
+                        height: 1.2,
                       ),
                     ),
                   ],
