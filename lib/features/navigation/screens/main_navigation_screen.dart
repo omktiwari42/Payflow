@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../dashboard/screens/dashboard_screen.dart';
+import '../../dashboard/widgets/payflow_bottom_navbar.dart';
 import '../../profile/screens/profile_screen.dart';
 import '../../scan/screens/scan_screen.dart';
+import '../../search/screens/search_screen.dart';
 import '../../wallet/screens/wallet_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -25,15 +27,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     super.initState();
 
     _pages = [
-      DashboardScreen(key: _dashboardKey),
-      const WalletScreen(),
-      const ScanScreen(),
-      const ProfileScreen(),
+      DashboardScreen(key: _dashboardKey), // Home
+      const WalletScreen(), // Wallet
+      const ScanScreen(), // Scan
+      const SearchScreen(), // Search
+      const ProfileScreen(), // Profile
     ];
   }
 
   void _changePage(int index) {
-    if (_selectedIndex == index) return;
+    if (_selectedIndex == index) {
+      if (index == 0) {
+        _dashboardKey.currentState?.refreshDashboard();
+      }
+      return;
+    }
 
     setState(() {
       _selectedIndex = index;
@@ -46,6 +54,12 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return IndexedStack(index: _selectedIndex, children: _pages);
+    return Scaffold(
+      body: IndexedStack(index: _selectedIndex, children: _pages),
+      bottomNavigationBar: PayflowBottomNavbar(
+        currentIndex: _selectedIndex,
+        onTap: _changePage,
+      ),
+    );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../widgets/empty_search_widget.dart';
 import '../widgets/filter_chip_widget.dart';
 import '../widgets/popular_service_card.dart';
@@ -48,8 +49,6 @@ class _SearchScreenState extends State<SearchScreen> {
     {"title": "Fastag", "icon": Icons.directions_car, "color": Colors.purple},
   ];
 
-  String selectedFilter = "All";
-
   final List<String> filters = [
     "All",
     "Transactions",
@@ -58,108 +57,99 @@ class _SearchScreenState extends State<SearchScreen> {
     "Services",
   ];
 
+  String selectedFilter = "All";
+
   @override
   Widget build(BuildContext context) {
     final query = _controller.text.toLowerCase();
 
     final filteredRecent = recentSearches
-        .where((item) => item.toLowerCase().contains(query))
+        .where((e) => e.toLowerCase().contains(query))
         .toList();
 
     final filteredServices = popularServices.where((service) {
       return service["title"].toString().toLowerCase().contains(query);
     }).toList();
 
-    return Scaffold(
-      backgroundColor: const Color(0xffF5F7FB),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Colors.white,
-        title: const Text(
-          "Search",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-        ),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
-          SearchBarWidget(
-            controller: _controller,
-            onChanged: (_) {
-              setState(() {});
-            },
-          ),
-
-          const SizedBox(height: 20),
-
-          SizedBox(
-            height: 42,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemCount: filters.length,
-              separatorBuilder: (_, _) => const SizedBox(width: 10),
-              itemBuilder: (context, index) {
-                return FilterChipWidget(
-                  title: filters[index],
-                  selected: selectedFilter == filters[index],
-                  onTap: () {
-                    setState(() {
-                      selectedFilter = filters[index];
-                    });
-                  },
-                );
-              },
+    return SafeArea(
+      child: Container(
+        color: const Color(0xffF5F7FB),
+        child: ListView(
+          padding: const EdgeInsets.all(20),
+          children: [
+            const Center(
+              child: Text(
+                "Search",
+                style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 20),
 
-          const Text(
-            "Recent Searches",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+            SearchBarWidget(
+              controller: _controller,
+              onChanged: (_) => setState(() {}),
+            ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 20),
 
-          if (filteredServices.isEmpty && query.isNotEmpty)
-            EmptySearchWidget(
-              query: _controller.text,
-              onClear: () {
-                _controller.clear();
-                setState(() {});
-              },
-            )
-          else
-            ...filteredRecent.map(
-              (item) => RecentSearchCard(
-                title: item,
-                onTap: () {
-                  _controller.text = item;
-                  setState(() {});
+            SizedBox(
+              height: 42,
+              child: ListView.separated(
+                scrollDirection: Axis.horizontal,
+                itemCount: filters.length,
+                separatorBuilder: (_, __) => const SizedBox(width: 10),
+                itemBuilder: (_, index) {
+                  return FilterChipWidget(
+                    title: filters[index],
+                    selected: selectedFilter == filters[index],
+                    onTap: () {
+                      setState(() {
+                        selectedFilter = filters[index];
+                      });
+                    },
+                  );
                 },
               ),
             ),
 
-          const SizedBox(height: 30),
+            const SizedBox(height: 28),
 
-          const Text(
-            "Popular Services",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
+            const Text(
+              "Recent Searches",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
 
-          const SizedBox(height: 18),
+            const SizedBox(height: 16),
 
-          if (filteredServices.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 30),
-              child: Center(
-                child: Text(
-                  "No services found.",
-                  style: TextStyle(color: Colors.grey),
+            if (filteredServices.isEmpty && query.isNotEmpty)
+              EmptySearchWidget(
+                query: _controller.text,
+                onClear: () {
+                  _controller.clear();
+                  setState(() {});
+                },
+              )
+            else
+              ...filteredRecent.map(
+                (item) => RecentSearchCard(
+                  title: item,
+                  onTap: () {
+                    _controller.text = item;
+                    setState(() {});
+                  },
                 ),
               ),
-            )
-          else
+
+            const SizedBox(height: 30),
+
+            const Text(
+              "Popular Services",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 18),
+
             GridView.builder(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
@@ -170,22 +160,19 @@ class _SearchScreenState extends State<SearchScreen> {
                 crossAxisSpacing: 15,
                 mainAxisSpacing: 15,
               ),
-              itemBuilder: (context, index) {
+              itemBuilder: (_, index) {
                 final item = filteredServices[index];
 
                 return PopularServiceCard(
                   title: item["title"],
                   icon: item["icon"],
                   color: item["color"],
-                  onTap: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("${item["title"]} selected")),
-                    );
-                  },
+                  onTap: () {},
                 );
               },
             ),
-        ],
+          ],
+        ),
       ),
     );
   }

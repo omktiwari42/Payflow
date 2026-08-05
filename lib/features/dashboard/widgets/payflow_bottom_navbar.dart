@@ -23,7 +23,7 @@ class PayflowBottomNavbar extends StatelessWidget {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(.08),
+              color: Colors.black.withValues(alpha: .08),
               blurRadius: 20,
               offset: const Offset(0, -3),
             ),
@@ -42,16 +42,26 @@ class PayflowBottomNavbar extends StatelessWidget {
             Expanded(
               child: Center(
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(40),
                   onTap: () => onTap(2),
-                  child: Container(
+                  borderRadius: BorderRadius.circular(40),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
                     width: 62,
                     height: 62,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      gradient: LinearGradient(
+                      gradient: const LinearGradient(
                         colors: [Color(0xff00B4FF), Color(0xff2563EB)],
                       ),
+                      boxShadow: currentIndex == 2
+                          ? [
+                              BoxShadow(
+                                color: primary.withValues(alpha: .35),
+                                blurRadius: 12,
+                                spreadRadius: 2,
+                              ),
+                            ]
+                          : [],
                     ),
                     child: const Icon(
                       Icons.qr_code_scanner_rounded,
@@ -63,11 +73,7 @@ class PayflowBottomNavbar extends StatelessWidget {
               ),
             ),
 
-            _item(
-              icon: Icons.receipt_long_rounded,
-              label: "Activity",
-              index: 3,
-            ),
+            _item(icon: Icons.search_rounded, label: "Search", index: 3),
 
             _item(icon: Icons.person_rounded, label: "Profile", index: 4),
           ],
