@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 
 import '../storage/token_storage.dart';
 import 'api_constants.dart';
@@ -23,55 +22,22 @@ class ApiClient {
         )
         ..interceptors.add(
           InterceptorsWrapper(
-            // =========================================================
-            // REQUEST
-            // =========================================================
             onRequest: (options, handler) async {
               final token = await TokenStorage.getToken();
 
-              debugPrint("========== API REQUEST ==========");
-              debugPrint("URL    : ${options.uri}");
-              debugPrint("METHOD : ${options.method}");
-              debugPrint(
-                "TOKEN  : ${token == null || token.trim().isEmpty ? "NULL" : "FOUND"}",
-              );
-
-              if (token != null && token.trim().isNotEmpty) {
-                options.headers["Authorization"] = "Bearer ${token.trim()}";
+              if (token != null && token.isNotEmpty) {
+                options.headers["Authorization"] = "Bearer $token";
+              } else {
+                options.headers.remove("Authorization");
               }
-
-              debugPrint("HEADERS: ${options.headers}");
-              debugPrint("DATA   : ${options.data}");
-              debugPrint("================================");
 
               handler.next(options);
             },
 
-            // =========================================================
-            // RESPONSE
-            // =========================================================
-            onResponse: (response, handler) {
-              debugPrint("========== API RESPONSE ==========");
-              debugPrint("STATUS : ${response.statusCode}");
-              debugPrint("URL    : ${response.requestOptions.uri}");
-              debugPrint("DATA   : ${response.data}");
-              debugPrint("==================================");
-
-              handler.next(response);
-            },
-
-            // =========================================================
-            // ERROR
-            // =========================================================
-            onError: (DioException error, handler) {
-              debugPrint("========== API ERROR ==========");
-              debugPrint("TYPE     : ${error.type}");
-              debugPrint("STATUS   : ${error.response?.statusCode}");
-              debugPrint("URL      : ${error.requestOptions.uri}");
-              debugPrint("MESSAGE  : ${error.message}");
-              debugPrint("RESPONSE : ${error.response?.data}");
-              debugPrint("HEADERS  : ${error.requestOptions.headers}");
-              debugPrint("===============================");
+            onError: (DioException error, handler) async {
+              if (error.response?.statusCode == 401) {
+                await TokenStorage.deleteToken();
+              }
 
               handler.next(error);
             },
