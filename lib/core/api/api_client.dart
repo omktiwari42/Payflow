@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../storage/token_storage.dart';
 import 'api_constants.dart';
@@ -22,47 +23,55 @@ class ApiClient {
         )
         ..interceptors.add(
           InterceptorsWrapper(
+            // =========================================================
+            // REQUEST
+            // =========================================================
             onRequest: (options, handler) async {
               final token = await TokenStorage.getToken();
 
-              print("========== TOKEN ==========");
-              print(token ?? "NULL");
-              print("===========================");
+              debugPrint("========== API REQUEST ==========");
+              debugPrint("URL    : ${options.uri}");
+              debugPrint("METHOD : ${options.method}");
+              debugPrint(
+                "TOKEN  : ${token == null || token.trim().isEmpty ? "NULL" : "FOUND"}",
+              );
 
-              if (token != null && token.isNotEmpty) {
-                options.headers["Authorization"] = "Bearer $token";
+              if (token != null && token.trim().isNotEmpty) {
+                options.headers["Authorization"] = "Bearer ${token.trim()}";
               }
 
-              print("========== REQUEST ==========");
-              print("URL      : ${options.uri}");
-              print("Method   : ${options.method}");
-              print("Headers  : ${options.headers}");
-              print("Data     : ${options.data}");
-              print("=============================");
+              debugPrint("HEADERS: ${options.headers}");
+              debugPrint("DATA   : ${options.data}");
+              debugPrint("================================");
 
               handler.next(options);
             },
 
+            // =========================================================
+            // RESPONSE
+            // =========================================================
             onResponse: (response, handler) {
-              print("========== RESPONSE ==========");
-              print("Status   : ${response.statusCode}");
-              print("URL      : ${response.requestOptions.uri}");
-              print("Data     : ${response.data}");
-              print("==============================");
+              debugPrint("========== API RESPONSE ==========");
+              debugPrint("STATUS : ${response.statusCode}");
+              debugPrint("URL    : ${response.requestOptions.uri}");
+              debugPrint("DATA   : ${response.data}");
+              debugPrint("==================================");
 
               handler.next(response);
             },
 
+            // =========================================================
+            // ERROR
+            // =========================================================
             onError: (DioException error, handler) {
-              print("========== DIO ERROR ==========");
-              print("Type     : ${error.type}");
-              print("Message  : ${error.message}");
-              print("URL      : ${error.requestOptions.uri}");
-              print("Headers  : ${error.requestOptions.headers}");
-              print("Status   : ${error.response?.statusCode}");
-              print("Response : ${error.response?.data}");
-              print("Error    : ${error.error}");
-              print("===============================");
+              debugPrint("========== API ERROR ==========");
+              debugPrint("TYPE     : ${error.type}");
+              debugPrint("STATUS   : ${error.response?.statusCode}");
+              debugPrint("URL      : ${error.requestOptions.uri}");
+              debugPrint("MESSAGE  : ${error.message}");
+              debugPrint("RESPONSE : ${error.response?.data}");
+              debugPrint("HEADERS  : ${error.requestOptions.headers}");
+              debugPrint("===============================");
 
               handler.next(error);
             },
