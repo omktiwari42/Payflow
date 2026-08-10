@@ -1,59 +1,149 @@
-class NotificationModel {
-  final int id;
-  final String title;
-  final String message;
-  final String type;
-  final bool isRead;
-  final DateTime createdAt;
+import 'package:dio/dio.dart';
 
-  const NotificationModel({
-    required this.id,
-    required this.title,
-    required this.message,
-    required this.type,
-    required this.isRead,
-    required this.createdAt,
-  });
+import '../../../core/api/api_client.dart';
+import '../../../core/api/api_constants.dart';
+import '../models/notification_model.dart';
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) {
-    return NotificationModel(
-      id: json["id"] ?? 0,
-      title: json["title"] ?? "",
-      message: json["message"] ?? "",
-      type: json["type"] ?? "GENERAL",
-      isRead: json["is_read"] ?? false,
-      createdAt:
-          DateTime.tryParse(json["created_at"]?.toString() ?? "") ??
-          DateTime.now(),
-    );
+class NotificationApiService {
+  NotificationApiService._();
+
+  static final NotificationApiService instance = NotificationApiService._();
+
+  // ============================================================
+  // GET NOTIFICATIONS
+  // ============================================================
+
+  Future<List<NotificationModel>> getNotifications() async {
+    try {
+      final Response response = await ApiClient.dio.get(
+        ApiConstants.notifications,
+      );
+
+      final data = response.data;
+
+      if (data is Map && data["notifications"] is List) {
+        return (data["notifications"] as List)
+            .map(
+              (item) =>
+                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .toList();
+      }
+
+      if (data is List) {
+        return data
+            .map(
+              (item) =>
+                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .toList();
+      }
+
+      return [];
+    } on DioException catch (e) {
+      throw Exception(_getErrorMessage(e, "Unable to load notifications."));
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
+    }
   }
 
-  Map<String, dynamic> toJson() {
-    return {
-      "id": id,
-      "title": title,
-      "message": message,
-      "type": type,
-      "is_read": isRead,
-      "created_at": createdAt.toIso8601String(),
-    };
+  // ============================================================
+  // GET UNREAD NOTIFICATIONS
+  // ============================================================
+
+  Future<List<NotificationModel>> getUnreadNotifications() async {
+    try {
+      final Response response = await ApiClient.dio.get(
+        ApiConstants.unreadNotifications,
+      );
+
+      final data = response.data;
+
+      if (data is Map && data["notifications"] is List) {
+        return (data["notifications"] as List)
+            .map(
+              (item) =>
+                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .toList();
+      }
+
+      if (data is List) {
+        return data
+            .map(
+              (item) =>
+                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
+            )
+            .toList();
+      }
+
+      return [];
+    } on DioException catch (e) {
+      throw Exception(
+        _getErrorMessage(e, "Unable to load unread notifications."),
+      );
+    } catch (e) {
+      throw Exception("Unexpected error: $e");
+    }
   }
 
-  NotificationModel copyWith({
-    int? id,
-    String? title,
-    String? message,
-    String? type,
-    bool? isRead,
-    DateTime? createdAt,
-  }) {
-    return NotificationModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      message: message ?? this.message,
-      type: type ?? this.type,
-      isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
-    );
+  // ============================================================
+  // MARK NOTIFICATION AS READ
+  // ============================================================
+
+  Future<void> markAsRead(int notificationId) async {
+    try {
+      await ApiClient.dio.patch(
+        ApiConstants.markNotificationRead,
+        data: {"notification_id": notificationId},
+      );
+    } on DioException catch (e) {
+      throw Exception(
+        _getErrorMessage(e, "Unable to mark notification as read."),
+      );
+    }
+  }
+
+  // ============================================================
+  // MARK ALL AS READ
+  // ============================================================
+
+  Future<void> markAllAsRead() async {
+    try {
+      await ApiClient.dio.patch(ApiConstants.markAllNotificationsRead);
+    } on DioException catch (e) {
+      throw Exception(
+        _getErrorMessage(e, "Unable to mark notifications as read."),
+      );
+    }
+  }
+
+  // ============================================================
+  // DELETE NOTIFICATION
+  // ============================================================
+
+  Future<void> deleteNotification(int notificationId) async {
+    try {
+      await ApiClient.dio.delete(
+        ApiConstants.deleteNotification,
+        data: {"notification_id": notificationId},
+      );
+    } on DioException catch (e) {
+      throw Exception(_getErrorMessage(e, "Unable to delete notification."));
+    }
+  }
+
+  // ============================================================
+  // ERROR MESSAGE
+  // ============================================================
+
+  String _getErrorMessage(DioException error, String fallback) {
+    final data = error.response?.data;
+
+    if (data is Map && data["message"] != null) {
+      return data["message"].toString();
+    }
+
+    return fallback;
   }
 }
