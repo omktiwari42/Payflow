@@ -7,65 +7,59 @@ class TokenStorage {
 
   static const String _tokenKey = "jwt_token";
 
-  /*
-  |--------------------------------------------------------------------------
-  | Save JWT Token
-  |--------------------------------------------------------------------------
-  */
+  // ============================================================
+  // SAVE JWT TOKEN
+  // ============================================================
 
   static Future<void> saveToken(String token) async {
-    if (token.trim().isEmpty) return;
+    final cleanToken = token.trim();
 
-    await _storage.write(key: _tokenKey, value: token.trim());
+    if (cleanToken.isEmpty) {
+      throw Exception("Cannot save an empty authentication token.");
+    }
 
-    final saved = await _storage.read(key: _tokenKey);
+    await _storage.write(key: _tokenKey, value: cleanToken);
+
+    final savedToken = await _storage.read(key: _tokenKey);
+
+    if (savedToken == null || savedToken.trim() != cleanToken) {
+      throw Exception("Failed to save authentication token.");
+    }
 
     print("======================================");
     print("✅ TOKEN SAVED");
-    print(saved);
+    print("Token length: ${cleanToken.length}");
     print("======================================");
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Get JWT Token
-  |--------------------------------------------------------------------------
-  */
+  // ============================================================
+  // GET JWT TOKEN
+  // ============================================================
 
   static Future<String?> getToken() async {
     final token = await _storage.read(key: _tokenKey);
 
-    print("======================================");
-    print("📖 TOKEN READ");
-    print(token);
-    print("======================================");
-
     if (token == null || token.trim().isEmpty) {
+      print("======================================");
+      print("📖 TOKEN READ : NULL");
+      print("======================================");
+
       return null;
     }
 
-    return token.trim();
-  }
-
-  /*
-  |--------------------------------------------------------------------------
-  | Delete JWT Token
-  |--------------------------------------------------------------------------
-  */
-
-  static Future<void> deleteToken() async {
-    await _storage.delete(key: _tokenKey);
+    final cleanToken = token.trim();
 
     print("======================================");
-    print("🗑 TOKEN DELETED");
+    print("📖 TOKEN READ");
+    print("Token length: ${cleanToken.length}");
     print("======================================");
+
+    return cleanToken;
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Check Login
-  |--------------------------------------------------------------------------
-  */
+  // ============================================================
+  // CHECK WHETHER TOKEN EXISTS
+  // ============================================================
 
   static Future<bool> isLoggedIn() async {
     final token = await getToken();
@@ -79,21 +73,29 @@ class TokenStorage {
     return loggedIn;
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Logout
-  |--------------------------------------------------------------------------
-  */
+  // ============================================================
+  // DELETE JWT TOKEN
+  // ============================================================
+
+  static Future<void> deleteToken() async {
+    await _storage.delete(key: _tokenKey);
+
+    print("======================================");
+    print("🗑 TOKEN DELETED");
+    print("======================================");
+  }
+
+  // ============================================================
+  // LOGOUT
+  // ============================================================
 
   static Future<void> logout() async {
     await deleteToken();
   }
 
-  /*
-  |--------------------------------------------------------------------------
-  | Clear Secure Storage
-  |--------------------------------------------------------------------------
-  */
+  // ============================================================
+  // CLEAR ALL SECURE STORAGE
+  // ============================================================
 
   static Future<void> clearAll() async {
     await _storage.deleteAll();
