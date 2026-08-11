@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../models/notification_model.dart';
 import '../services/notification_api_service.dart';
+import 'notification_details_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
   const NotificationsScreen({super.key});
@@ -36,8 +37,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     });
 
     try {
-      final notifications =
-      await _api.getNotifications();
+      final notifications = await _api.getNotifications();
 
       if (!mounted) return;
 
@@ -52,16 +52,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         _isLoading = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString().replaceFirst(
-              "Exception: ",
-              "",
-            ),
-          ),
-        ),
-      );
+      _showError(e);
     }
   }
 
@@ -71,8 +62,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   Future<void> _refresh() async {
     try {
-      final notifications =
-      await _api.getNotifications();
+      final notifications = await _api.getNotifications();
 
       if (!mounted) return;
 
@@ -82,16 +72,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString().replaceFirst(
-              "Exception: ",
-              "",
-            ),
-          ),
-        ),
-      );
+      _showError(e);
     }
   }
 
@@ -131,21 +112,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         _isMarkingAllRead = false;
       });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString().replaceFirst(
-              "Exception: ",
-              "",
-            ),
-          ),
-        ),
-      );
+      _showError(e);
     }
   }
 
   // ============================================================
-  // MARK SINGLE NOTIFICATION AS READ
+  // MARK SINGLE AS READ
   // ============================================================
 
   Future<void> _markAsRead(NotificationModel notification,) async {
@@ -171,21 +143,51 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            e.toString().replaceFirst(
-              "Exception: ",
-              "",
-            ),
-          ),
-        ),
-      );
+      _showError(e);
     }
   }
 
   // ============================================================
-  // NOTIFICATION ICON
+  // OPEN DETAILS
+  // ============================================================
+
+  Future<void> _openNotification(NotificationModel notification,) async {
+    await _markAsRead(notification);
+
+    if (!mounted) return;
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            NotificationDetailsScreen(
+              notification: notification.copyWith(
+                isRead: true,
+              ),
+            ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // ERROR
+  // ============================================================
+
+  void _showError(Object error) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          error.toString().replaceFirst(
+            "Exception: ",
+            "",
+          ),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // ICON
   // ============================================================
 
   IconData _getIcon(String type) {
@@ -217,6 +219,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
+  // ============================================================
+  // COLOR
+  // ============================================================
+
   Color _getColor(String type) {
     switch (type.toUpperCase()) {
       case "PAYMENT":
@@ -247,38 +253,45 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   }
 
   // ============================================================
-  // TIME FORMAT
+  // TIME
   // ============================================================
 
-  String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
+  String _formatTime(String value) {
+    if (value.isEmpty) return "-";
 
-    if (difference.inSeconds < 60) {
-      return "Just now";
+    try {
+      final dateTime = DateTime.parse(value).toLocal();
+      final now = DateTime.now();
+
+      final difference = now.difference(dateTime);
+
+      if (difference.inSeconds < 60) {
+        return "Just now";
+      }
+
+      if (difference.inMinutes < 60) {
+        return "${difference.inMinutes} min ago";
+      }
+
+      if (difference.inHours < 24) {
+        return "${difference.inHours} hour"
+            "${difference.inHours == 1 ? "" : "s"} ago";
+      }
+
+      if (difference.inDays == 1) {
+        return "Yesterday";
+      }
+
+      if (difference.inDays < 7) {
+        return "${difference.inDays} days ago";
+      }
+
+      return "${dateTime.day.toString().padLeft(2, "0")}/"
+          "${dateTime.month.toString().padLeft(2, "0")}/"
+          "${dateTime.year}";
+    } catch (_) {
+      return value;
     }
-
-    if (difference.inMinutes < 60) {
-      return "${difference.inMinutes} min ago";
-    }
-
-    if (difference.inHours < 24) {
-      return "${difference.inHours} hour${difference.inHours == 1
-          ? ""
-          : "s"} ago";
-    }
-
-    if (difference.inDays == 1) {
-      return "Yesterday";
-    }
-
-    if (difference.inDays < 7) {
-      return "${difference.inDays} days ago";
-    }
-
-    return "${dateTime.day.toString().padLeft(2, "0")}/"
-        "${dateTime.month.toString().padLeft(2, "0")}/"
-        "${dateTime.year}";
   }
 
   // ============================================================
@@ -299,7 +312,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         elevation: 0,
-        centerTitle: false,
 
         title: Row(
           children: [
@@ -356,9 +368,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
               onPressed: unreadCount == 0
                   ? null
                   : _markAllAsRead,
-              child: const Text(
-                "Mark all read",
-              ),
+              child: const Text("Mark all read"),
             ),
         ],
       ),
@@ -373,13 +383,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             : ListView.builder(
           physics:
           const AlwaysScrollableScrollPhysics(),
+
           padding: const EdgeInsets.fromLTRB(
             20,
             8,
             20,
             30,
           ),
+
           itemCount: _notifications.length,
+
           itemBuilder: (context, index) {
             final notification =
             _notifications[index];
@@ -396,7 +409,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                 notification.createdAt,
               ),
               onTap: () {
-                _markAsRead(
+                _openNotification(
                   notification,
                 );
               },
@@ -565,6 +578,7 @@ class _NotificationLoading extends StatelessWidget {
       itemBuilder: (_, index) {
         return Container(
           height: 110,
+
           margin: const EdgeInsets.only(
             bottom: 14,
           ),
@@ -639,6 +653,7 @@ class _SkeletonLine extends StatelessWidget {
     return Container(
       width: width,
       height: height,
+
       decoration: BoxDecoration(
         color: const Color(0xFFE5E7EB),
         borderRadius: BorderRadius.circular(8),
