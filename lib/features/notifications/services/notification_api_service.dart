@@ -7,10 +7,12 @@ import '../models/notification_model.dart';
 class NotificationApiService {
   NotificationApiService._();
 
-  static final NotificationApiService instance = NotificationApiService._();
+  static final NotificationApiService instance =
+  NotificationApiService._();
 
   // ============================================================
-  // GET NOTIFICATIONS
+  // GET ALL NOTIFICATIONS
+  // GET /api/notifications
   // ============================================================
 
   Future<List<NotificationModel>> getNotifications() async {
@@ -19,36 +21,24 @@ class NotificationApiService {
         ApiConstants.notifications,
       );
 
-      final data = response.data;
-
-      if (data is Map && data["notifications"] is List) {
-        return (data["notifications"] as List)
-            .map(
-              (item) =>
-                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
-            )
-            .toList();
-      }
-
-      if (data is List) {
-        return data
-            .map(
-              (item) =>
-                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
-            )
-            .toList();
-      }
-
-      return [];
+      return _parseNotifications(response.data);
     } on DioException catch (e) {
-      throw Exception(_getErrorMessage(e, "Unable to load notifications."));
+      throw Exception(
+        _getErrorMessage(
+          e,
+          "Unable to load notifications.",
+        ),
+      );
     } catch (e) {
-      throw Exception("Unexpected error: $e");
+      throw Exception(
+        "Unexpected error: $e",
+      );
     }
   }
 
   // ============================================================
   // GET UNREAD NOTIFICATIONS
+  // GET /api/notifications/unread
   // ============================================================
 
   Future<List<NotificationModel>> getUnreadNotifications() async {
@@ -57,90 +47,130 @@ class NotificationApiService {
         ApiConstants.unreadNotifications,
       );
 
-      final data = response.data;
-
-      if (data is Map && data["notifications"] is List) {
-        return (data["notifications"] as List)
-            .map(
-              (item) =>
-                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
-            )
-            .toList();
-      }
-
-      if (data is List) {
-        return data
-            .map(
-              (item) =>
-                  NotificationModel.fromJson(Map<String, dynamic>.from(item)),
-            )
-            .toList();
-      }
-
-      return [];
+      return _parseNotifications(response.data);
     } on DioException catch (e) {
       throw Exception(
-        _getErrorMessage(e, "Unable to load unread notifications."),
+        _getErrorMessage(
+          e,
+          "Unable to load unread notifications.",
+        ),
       );
     } catch (e) {
-      throw Exception("Unexpected error: $e");
+      throw Exception(
+        "Unexpected error: $e",
+      );
     }
   }
 
   // ============================================================
-  // MARK NOTIFICATION AS READ
+  // MARK ONE NOTIFICATION AS READ
+  // PUT /api/notifications/:id/read
   // ============================================================
 
   Future<void> markAsRead(int notificationId) async {
     try {
-      await ApiClient.dio.patch(
-        ApiConstants.markNotificationRead,
-        data: {"notification_id": notificationId},
+      await ApiClient.dio.put(
+        "${ApiConstants.notifications}/$notificationId/read",
       );
     } on DioException catch (e) {
       throw Exception(
-        _getErrorMessage(e, "Unable to mark notification as read."),
+        _getErrorMessage(
+          e,
+          "Unable to mark notification as read.",
+        ),
       );
     }
   }
 
   // ============================================================
-  // MARK ALL AS READ
+  // MARK ALL NOTIFICATIONS AS READ
+  //
+  // Backend currently has no dedicated mark-all endpoint.
+  // So we fetch unread notifications and mark them individually.
   // ============================================================
 
   Future<void> markAllAsRead() async {
     try {
-      await ApiClient.dio.patch(ApiConstants.markAllNotificationsRead);
-    } on DioException catch (e) {
+      final unread = await getUnreadNotifications();
+
+      if (unread.isEmpty) {
+        return;
+      }
+
+      for (final notification in unread) {
+        await markAsRead(notification.id);
+      }
+    } catch (e) {
       throw Exception(
-        _getErrorMessage(e, "Unable to mark notifications as read."),
+        e.toString().replaceFirst(
+          "Exception: ",
+          "",
+        ),
       );
     }
   }
 
   // ============================================================
   // DELETE NOTIFICATION
+  // DELETE /api/notifications/:id
   // ============================================================
 
-  Future<void> deleteNotification(int notificationId) async {
+  Future<void> deleteNotification(int notificationId,) async {
     try {
       await ApiClient.dio.delete(
-        ApiConstants.deleteNotification,
-        data: {"notification_id": notificationId},
+        "${ApiConstants.notifications}/$notificationId",
       );
     } on DioException catch (e) {
-      throw Exception(_getErrorMessage(e, "Unable to delete notification."));
+      throw Exception(
+        _getErrorMessage(
+          e,
+          "Unable to delete notification.",
+        ),
+      );
     }
+  }
+
+  // ============================================================
+  // PARSE NOTIFICATIONS
+  // ============================================================
+
+  List<NotificationModel> _parseNotifications(dynamic data,) {
+    if (data is Map &&
+        data["notifications"] is List) {
+      return (data["notifications"] as List)
+          .map(
+            (item) =>
+            NotificationModel.fromJson(
+              Map<String, dynamic>.from(item),
+            ),
+      )
+          .toList();
+    }
+
+    if (data is List) {
+      return data
+          .map(
+            (item) =>
+            NotificationModel.fromJson(
+              Map<String, dynamic>.from(item),
+            ),
+      )
+          .toList();
+    }
+
+    return [];
   }
 
   // ============================================================
   // ERROR MESSAGE
   // ============================================================
 
-  String _getErrorMessage(DioException error, String fallback) {
+  String _getErrorMessage(DioException error,
+      String fallback,) {
     final data = error.response?.data;
 
-    if (data is Map && data["message"] != null) {
+    if (data is Map &&
+        data["message"] != null) {
       return data["message"].toString();
     }
 
