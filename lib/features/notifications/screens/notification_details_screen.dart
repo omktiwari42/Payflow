@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
+import '../../transactions/screens/transaction_details_screen.dart';
+import '../../transactions/services/transaction_api_service.dart';
 import '../models/notification_model.dart';
 
 class NotificationDetailsScreen extends StatelessWidget {
   final NotificationModel notification;
 
   const NotificationDetailsScreen({super.key, required this.notification});
-
-  // ============================================================
-  // ICON
-  // ============================================================
 
   IconData _getIcon(String type) {
     switch (type.toUpperCase()) {
@@ -40,10 +38,6 @@ class NotificationDetailsScreen extends StatelessWidget {
     }
   }
 
-  // ============================================================
-  // COLOR
-  // ============================================================
-
   Color _getColor(String type) {
     switch (type.toUpperCase()) {
       case "PAYMENT":
@@ -73,10 +67,6 @@ class NotificationDetailsScreen extends StatelessWidget {
     }
   }
 
-  // ============================================================
-  // DATE FORMAT
-  // ============================================================
-
   String _formatDate(DateTime dateTime) {
     final date = dateTime.toLocal();
 
@@ -88,13 +78,58 @@ class NotificationDetailsScreen extends StatelessWidget {
   }
 
   // ============================================================
-  // BUILD
+  // OPEN TRANSACTION
   // ============================================================
+
+  Future<void> _openTransaction(BuildContext context) async {
+    final transactionId = notification.transactionId;
+
+    if (transactionId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Transaction details are unavailable.")),
+      );
+      return;
+    }
+
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+
+    try {
+      final transaction = await TransactionApiService.instance.getTransaction(
+        transactionId,
+      );
+
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => TransactionDetailsScreen(transaction: transaction),
+        ),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final color = _getColor(notification.type);
+
     final icon = _getIcon(notification.type);
+
+    final isPayment = notification.type.toUpperCase() == "PAYMENT";
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
@@ -117,9 +152,6 @@ class NotificationDetailsScreen extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
 
-            // ==================================================
-            // ICON
-            // ==================================================
             Container(
               width: 100,
               height: 100,
@@ -132,9 +164,6 @@ class NotificationDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 24),
 
-            // ==================================================
-            // TITLE
-            // ==================================================
             Text(
               notification.title,
               textAlign: TextAlign.center,
@@ -143,9 +172,6 @@ class NotificationDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            // ==================================================
-            // TYPE
-            // ==================================================
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
               decoration: BoxDecoration(
@@ -164,9 +190,6 @@ class NotificationDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // ==================================================
-            // DETAILS CARD
-            // ==================================================
             Card(
               elevation: 0,
               shape: RoundedRectangleBorder(
@@ -174,10 +197,8 @@ class NotificationDetailsScreen extends StatelessWidget {
               ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
-
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
-
                   children: [
                     const Text(
                       "Notification Details",
@@ -216,6 +237,13 @@ class NotificationDetailsScreen extends StatelessWidget {
                       value: _formatDate(notification.createdAt),
                     ),
 
+                    if (notification.transactionId != null)
+                      _DetailRow(
+                        icon: Icons.receipt_long,
+                        title: "Transaction ID",
+                        value: "#${notification.transactionId}",
+                      ),
+
                     _DetailRow(
                       icon: notification.isRead
                           ? Icons.mark_email_read
@@ -233,14 +261,29 @@ class NotificationDetailsScreen extends StatelessWidget {
 
             const SizedBox(height: 30),
 
-            // ==================================================
-            // CLOSE BUTTON
-            // ==================================================
+            if (isPayment && notification.transactionId != null)
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: FilledButton.icon(
+                  onPressed: () {
+                    _openTransaction(context);
+                  },
+                  icon: const Icon(Icons.receipt_long),
+                  label: const Text(
+                    "View Transaction",
+                    style: TextStyle(fontSize: 16),
+                  ),
+                ),
+              ),
+
+            if (isPayment && notification.transactionId != null)
+              const SizedBox(height: 14),
+
             SizedBox(
               width: double.infinity,
               height: 55,
-
-              child: FilledButton(
+              child: OutlinedButton(
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -275,7 +318,6 @@ class _DetailRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
-
       child: Row(
         children: [
           Icon(icon, size: 20, color: Colors.grey.shade600),
