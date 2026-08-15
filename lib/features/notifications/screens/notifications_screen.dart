@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../models/notification_model.dart';
-import '../services/notification_api_service.dart';
+import '../../bill_payments/models/bill_model.dart';
+import '../../bill_payments/screens/pay_bill_screen.dart';
+import '../../bill_payments/services/bill_service.dart';
 import '../../rewards/screens/rewards_screen.dart';
 import '../../wallet/screens/wallet_screen.dart';
+import '../models/notification_model.dart';
+import '../services/notification_api_service.dart';
 import 'notification_details_screen.dart';
 
 class NotificationsScreen extends StatefulWidget {
@@ -27,16 +30,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     _loadNotifications();
   }
 
-  // ============================================================
-  // LOAD NOTIFICATIONS
-  // ============================================================
-
   Future<void> _loadNotifications() async {
-    if (mounted) {
-      setState(() {
-        _isLoading = true;
-      });
-    }
+    setState(() {
+      _isLoading = true;
+    });
 
     try {
       final notifications = await _api.getNotifications();
@@ -57,10 +54,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       _showError(e);
     }
   }
-
-  // ============================================================
-  // REFRESH
-  // ============================================================
 
   Future<void> _refresh() async {
     try {
@@ -78,12 +71,10 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // MARK ALL AS READ
-  // ============================================================
-
   Future<void> _markAllAsRead() async {
-    final hasUnread = _notifications.any((item) => !item.isRead);
+    final hasUnread = _notifications.any(
+      (notification) => !notification.isRead,
+    );
 
     if (_isMarkingAllRead || !hasUnread) {
       return;
@@ -116,10 +107,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // MARK SINGLE AS READ
-  // ============================================================
-
   Future<void> _markAsRead(NotificationModel notification) async {
     if (notification.isRead) {
       return;
@@ -146,10 +133,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // OPEN NOTIFICATION
-  // ============================================================
-
   Future<void> _openNotification(NotificationModel notification) async {
     await _markAsRead(notification);
 
@@ -157,43 +140,34 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
     final updatedNotification = notification.copyWith(isRead: true);
 
-    final navigator = Navigator.of(context);
+    final type = notification.type.toUpperCase();
 
-    switch (notification.type.toUpperCase()) {
-      // ========================================================
-      // WALLET
-      // ========================================================
-
+    switch (type) {
       case "WALLET":
       case "MONEY_ADDED":
-        await navigator.push(
-          MaterialPageRoute(builder: (_) => const WalletScreen()),
-        );
+        await Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const WalletScreen()));
         return;
-
-      // ========================================================
-      // CASHBACK / REWARD
-      // ========================================================
 
       case "CASHBACK":
       case "REWARD":
-        await navigator.push(
-          MaterialPageRoute(builder: (_) => const RewardsScreen()),
-        );
+        await Navigator.of(
+          context,
+        ).push(MaterialPageRoute(builder: (_) => const RewardsScreen()));
         return;
 
-      // ========================================================
-      // PAYMENT / BILL / SECURITY / GENERAL
-      // ========================================================
+      case "BILL":
+        await _openBillNotification(updatedNotification);
+        return;
 
       case "PAYMENT":
       case "TRANSACTION":
       case "SUCCESS":
-      case "BILL":
       case "SECURITY":
       case "WARNING":
       default:
-        await navigator.push(
+        await Navigator.of(context).push(
           MaterialPageRoute(
             builder: (_) =>
                 NotificationDetailsScreen(notification: updatedNotification),
@@ -203,9 +177,32 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // DELETE NOTIFICATION
-  // ============================================================
+  Future<void> _openBillNotification(NotificationModel notification) async {
+    final billId = notification.billId;
+
+    if (billId == null) {
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) => NotificationDetailsScreen(notification: notification),
+        ),
+      );
+      return;
+    }
+
+    final BillModel? bill = BillService.instance.getBill(billId);
+
+    if (!mounted) return;
+
+    if (bill == null) {
+      _showError("Bill is no longer available.");
+
+      return;
+    }
+
+    await Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (_) => PayBillScreen(bill: bill)));
+  }
 
   Future<bool> _deleteNotification(NotificationModel notification) async {
     try {
@@ -213,11 +210,9 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
       if (!mounted) return false;
 
-      final messenger = ScaffoldMessenger.of(context);
-
-      messenger.showSnackBar(
-        const SnackBar(content: Text("Notification deleted.")),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Notification deleted.")));
 
       return true;
     } catch (e) {
@@ -228,23 +223,13 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // ERROR
-  // ============================================================
-
   void _showError(Object error) {
     if (!mounted) return;
 
-    final messenger = ScaffoldMessenger.of(context);
-
-    messenger.showSnackBar(
+    ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(error.toString().replaceFirst("Exception: ", ""))),
     );
   }
-
-  // ============================================================
-  // ICON
-  // ============================================================
 
   IconData _getIcon(String type) {
     switch (type.toUpperCase()) {
@@ -275,10 +260,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     }
   }
 
-  // ============================================================
-  // COLOR
-  // ============================================================
-
   Color _getColor(String type) {
     switch (type.toUpperCase()) {
       case "PAYMENT":
@@ -301,20 +282,15 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         return Colors.deepPurple;
 
       case "WARNING":
-        return Colors.amber.shade800;
+        return Colors.amber;
 
       default:
         return Colors.blue;
     }
   }
 
-  // ============================================================
-  // TIME
-  // ============================================================
-
   String _formatTime(DateTime dateTime) {
-    final now = DateTime.now();
-    final difference = now.difference(dateTime);
+    final difference = DateTime.now().difference(dateTime);
 
     if (difference.inSeconds < 60) {
       return "Just now";
@@ -342,35 +318,24 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         "${dateTime.year}";
   }
 
-  // ============================================================
-  // BUILD
-  // ============================================================
-
   @override
   Widget build(BuildContext context) {
     final unreadCount = _notifications.where((item) => !item.isRead).length;
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F7FB),
-
-      // ========================================================
-      // APP BAR
-      // ========================================================
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         elevation: 0,
-
         title: Row(
           children: [
             const Text(
               "Notifications",
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-
             if (unreadCount > 0) ...[
               const SizedBox(width: 10),
-
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(
@@ -389,7 +354,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ],
           ],
         ),
-
         actions: [
           if (_isMarkingAllRead)
             const Padding(
@@ -407,32 +371,22 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             ),
         ],
       ),
-
-      // ========================================================
-      // BODY
-      // ========================================================
       body: RefreshIndicator(
         onRefresh: _refresh,
-
         child: _isLoading
             ? const _NotificationLoading()
             : _notifications.isEmpty
             ? const _NotificationEmpty()
             : ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
-
                 padding: const EdgeInsets.fromLTRB(20, 8, 20, 30),
-
                 itemCount: _notifications.length,
-
                 itemBuilder: (context, index) {
                   final notification = _notifications[index];
 
                   return Dismissible(
                     key: ValueKey(notification.id),
-
                     direction: DismissDirection.endToStart,
-
                     background: Container(
                       margin: const EdgeInsets.only(bottom: 14),
                       padding: const EdgeInsets.only(right: 24),
@@ -447,9 +401,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         size: 28,
                       ),
                     ),
-
                     confirmDismiss: (_) => _deleteNotification(notification),
-
                     onDismissed: (_) {
                       setState(() {
                         _notifications.removeWhere(
@@ -457,7 +409,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                         );
                       });
                     },
-
                     child: _NotificationCard(
                       notification: notification,
                       icon: _getIcon(notification.type),
@@ -474,10 +425,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 }
-
-// ============================================================
-// NOTIFICATION CARD
-// ============================================================
 
 class _NotificationCard extends StatelessWidget {
   final NotificationModel notification;
@@ -496,19 +443,18 @@ class _NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isUnread = !notification.isRead;
+    final unread = !notification.isRead;
 
     return GestureDetector(
       onTap: onTap,
-
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         margin: const EdgeInsets.only(bottom: 14),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isUnread ? const Color(0xFFF0F6FF) : Colors.white,
+          color: unread ? const Color(0xFFF0F6FF) : Colors.white,
           borderRadius: BorderRadius.circular(18),
-          border: isUnread
+          border: unread
               ? Border.all(color: Colors.blue.withValues(alpha: 0.15))
               : null,
           boxShadow: const [
@@ -519,19 +465,15 @@ class _NotificationCard extends StatelessWidget {
             ),
           ],
         ),
-
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-
           children: [
             CircleAvatar(
               radius: 24,
               backgroundColor: color.withValues(alpha: 0.15),
               child: Icon(icon, color: color),
             ),
-
             const SizedBox(width: 14),
-
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -549,8 +491,7 @@ class _NotificationCard extends StatelessWidget {
                           ),
                         ),
                       ),
-
-                      if (isUnread)
+                      if (unread)
                         Container(
                           width: 8,
                           height: 8,
@@ -561,18 +502,14 @@ class _NotificationCard extends StatelessWidget {
                         ),
                     ],
                   ),
-
                   const SizedBox(height: 6),
-
                   Text(
                     notification.message,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(color: Colors.grey.shade700, height: 1.35),
                   ),
-
                   const SizedBox(height: 8),
-
                   Text(
                     time,
                     style: TextStyle(color: Colors.grey.shade500, fontSize: 12),
@@ -587,10 +524,6 @@ class _NotificationCard extends StatelessWidget {
   }
 }
 
-// ============================================================
-// LOADING SKELETON
-// ============================================================
-
 class _NotificationLoading extends StatelessWidget {
   const _NotificationLoading();
 
@@ -598,11 +531,8 @@ class _NotificationLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView.builder(
       physics: const AlwaysScrollableScrollPhysics(),
-
       padding: const EdgeInsets.all(20),
-
       itemCount: 6,
-
       itemBuilder: (_, index) {
         return Container(
           height: 110,
@@ -658,10 +588,6 @@ class _SkeletonLine extends StatelessWidget {
   }
 }
 
-// ============================================================
-// EMPTY STATE
-// ============================================================
-
 class _NotificationEmpty extends StatelessWidget {
   const _NotificationEmpty();
 
@@ -669,15 +595,12 @@ class _NotificationEmpty extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       physics: const AlwaysScrollableScrollPhysics(),
-
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.65,
-
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
-
               children: [
                 Container(
                   width: 90,
@@ -692,16 +615,12 @@ class _NotificationEmpty extends StatelessWidget {
                     color: Colors.blue,
                   ),
                 ),
-
                 const SizedBox(height: 20),
-
                 const Text(
                   "No Notifications",
                   style: TextStyle(fontSize: 21, fontWeight: FontWeight.bold),
                 ),
-
                 const SizedBox(height: 8),
-
                 Text(
                   "You're all caught up!",
                   style: TextStyle(color: Colors.grey.shade600, fontSize: 15),
