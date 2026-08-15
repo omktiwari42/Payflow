@@ -21,6 +21,10 @@ class NotificationCenterCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // ============================================================
+          // HEADER
+          // ============================================================
+
           Row(
             children: [
               Container(
@@ -50,12 +54,12 @@ class NotificationCenterCard extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     SizedBox(height: 4),
-
                     Text(
                       "Recent alerts and updates",
-                      style: TextStyle(color: Colors.grey),
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
                     ),
                   ],
                 ),
@@ -82,6 +86,10 @@ class NotificationCenterCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 28),
+
+          // ============================================================
+          // NOTIFICATIONS
+          // ============================================================
 
           const _NotificationTile(
             icon: Icons.check_circle,
@@ -120,7 +128,12 @@ class NotificationCenterCard extends StatelessWidget {
             subtitle: "Portfolio up 2.3% today",
             time: "Today",
           ),
+
           const SizedBox(height: 28),
+
+          // ============================================================
+          // AI ALERT
+          // ============================================================
 
           Container(
             padding: const EdgeInsets.all(18),
@@ -131,12 +144,21 @@ class NotificationCenterCard extends StatelessWidget {
             child: const Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Icon(Icons.auto_awesome, color: Color(0xff2563EB)),
+                Icon(
+                  Icons.auto_awesome,
+                  color: Color(0xff2563EB),
+                ),
+
                 SizedBox(width: 12),
+
                 Expanded(
                   child: Text(
-                    "AI Alert: Your food expenses are 9% lower than last week. Keep this trend to save an extra ₹2,000 this month.",
-                    style: TextStyle(fontSize: 14, height: 1.5),
+                    "AI Alert: Your food expenses are 9% lower than last week. "
+                        "Keep this trend to save an extra ₹2,000 this month.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      height: 1.5,
+                    ),
                   ),
                 ),
               ],
@@ -144,6 +166,10 @@ class NotificationCenterCard extends StatelessWidget {
           ),
 
           const SizedBox(height: 22),
+
+          // ============================================================
+          // MARK ALL READ
+          // ============================================================
 
           Align(
             alignment: Alignment.centerRight,
@@ -158,6 +184,10 @@ class NotificationCenterCard extends StatelessWidget {
     );
   }
 }
+
+// ============================================================
+// NOTIFICATION TILE
+// ============================================================
 
 class _NotificationTile extends StatelessWidget {
   final IconData icon;
@@ -184,13 +214,23 @@ class _NotificationTile extends StatelessWidget {
       ),
       child: Row(
         children: [
+          // ============================================================
+          // ICON + UNREAD DOT
+          // ============================================================
+
           Stack(
             children: [
               CircleAvatar(
                 radius: 24,
-                backgroundColor: iconColor.withValues(alpha: 0.12),
-                child: Icon(icon, color: iconColor),
+                backgroundColor: iconColor.withValues(
+                  alpha: 0.12,
+                ),
+                child: Icon(
+                  icon,
+                  color: iconColor,
+                ),
               ),
+
               Positioned(
                 right: 0,
                 top: 0,
@@ -208,9 +248,14 @@ class _NotificationTile extends StatelessWidget {
 
           const SizedBox(width: 16),
 
+          // ============================================================
+          // MESSAGE
+          // ============================================================
+
           Expanded(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment:
+              CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
@@ -222,19 +267,34 @@ class _NotificationTile extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                Text(subtitle, style: const TextStyle(color: Colors.grey)),
+                Text(
+                  subtitle,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                  ),
+                ),
               ],
             ),
           ),
 
+          // ============================================================
+          // TIME + STATUS
+          // ============================================================
+
           Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
+            crossAxisAlignment:
+            CrossAxisAlignment.end,
             children: [
               Text(
                 time,
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: const TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
               ),
+
               const SizedBox(height: 10),
+
               Container(
                 width: 8,
                 height: 8,
