@@ -6,8 +6,7 @@ import '../../../core/api/api_constants.dart';
 class TransactionApiService {
   TransactionApiService._();
 
-  static final TransactionApiService instance =
-  TransactionApiService._();
+  static final TransactionApiService instance = TransactionApiService._();
 
   // ============================================================
   // TRANSACTION HISTORY
@@ -15,25 +14,17 @@ class TransactionApiService {
 
   Future<List<Map<String, dynamic>>> getTransactions() async {
     try {
-      final Response response =
-      await ApiClient.dio.get(
+      final Response response = await ApiClient.dio.get(
         ApiConstants.transactionHistory,
       );
 
-      final data =
-      Map<String, dynamic>.from(
-        response.data,
-      );
+      final data = Map<String, dynamic>.from(response.data);
 
       if (data["success"] != true) {
-        throw Exception(
-          data["message"] ??
-              "Unable to load transactions.",
-        );
+        throw Exception(data["message"] ?? "Unable to load transactions.");
       }
 
-      final transactions =
-      data["transactions"];
+      final transactions = data["transactions"];
 
       if (transactions is! List) {
         return [];
@@ -41,17 +32,11 @@ class TransactionApiService {
 
       return transactions
           .whereType<Map>()
-          .map(
-            (item) =>
-        Map<String, dynamic>.from(
-          item,
-        ),
-      )
+          .map((item) => Map<String, dynamic>.from(item))
           .toList();
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data?["message"]
-            ?.toString() ??
+        e.response?.data?["message"]?.toString() ??
             "Unable to load transactions.",
       );
     }
@@ -61,41 +46,28 @@ class TransactionApiService {
   // TRANSACTION DETAILS
   // ============================================================
 
-  Future<Map<String, dynamic>> getTransaction(int id,) async {
+  Future<Map<String, dynamic>> getTransaction(int id) async {
     try {
-      final Response response =
-      await ApiClient.dio.get(
+      final Response response = await ApiClient.dio.get(
         "${ApiConstants.transactionDetails}/$id",
       );
 
-      final data =
-      Map<String, dynamic>.from(
-        response.data,
-      );
+      final data = Map<String, dynamic>.from(response.data);
 
       if (data["success"] != true) {
-        throw Exception(
-          data["message"] ??
-              "Unable to load transaction.",
-        );
+        throw Exception(data["message"] ?? "Unable to load transaction.");
       }
 
-      final transaction =
-      data["transaction"];
+      final transaction = data["transaction"];
 
       if (transaction is! Map) {
-        throw Exception(
-          "Transaction data is missing.",
-        );
+        throw Exception("Transaction data is missing.");
       }
 
-      return Map<String, dynamic>.from(
-        transaction,
-      );
+      return Map<String, dynamic>.from(transaction);
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data?["message"]
-            ?.toString() ??
+        e.response?.data?["message"]?.toString() ??
             "Unable to load transaction.",
       );
     }
@@ -111,34 +83,21 @@ class TransactionApiService {
     String note = "",
   }) async {
     try {
-      final Response response =
-      await ApiClient.dio.post(
+      final Response response = await ApiClient.dio.post(
         ApiConstants.sendMoney,
-        data: {
-          "phone": phone,
-          "amount": amount,
-          "note": note,
-        },
+        data: {"phone": phone, "amount": amount, "note": note},
       );
 
-      final data =
-      Map<String, dynamic>.from(
-        response.data,
-      );
+      final data = Map<String, dynamic>.from(response.data);
 
       if (data["success"] != true) {
-        throw Exception(
-          data["message"] ??
-              "Money transfer failed.",
-        );
+        throw Exception(data["message"] ?? "Money transfer failed.");
       }
 
       return data;
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data?["message"]
-            ?.toString() ??
-            "Money transfer failed.",
+        e.response?.data?["message"]?.toString() ?? "Money transfer failed.",
       );
     }
   }
@@ -153,8 +112,7 @@ class TransactionApiService {
     String? to,
   }) async {
     try {
-      final Response response =
-      await ApiClient.dio.get(
+      final Response response = await ApiClient.dio.get(
         "${ApiConstants.transactions}/filter",
         queryParameters: {
           if (type != null) "type": type,
@@ -163,13 +121,9 @@ class TransactionApiService {
         },
       );
 
-      final data =
-      Map<String, dynamic>.from(
-        response.data,
-      );
+      final data = Map<String, dynamic>.from(response.data);
 
-      final transactions =
-      data["transactions"];
+      final transactions = data["transactions"];
 
       if (transactions is! List) {
         return [];
@@ -177,17 +131,11 @@ class TransactionApiService {
 
       return transactions
           .whereType<Map>()
-          .map(
-            (item) =>
-        Map<String, dynamic>.from(
-          item,
-        ),
-      )
+          .map((item) => Map<String, dynamic>.from(item))
           .toList();
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data?["message"]
-            ?.toString() ??
+        e.response?.data?["message"]?.toString() ??
             "Unable to filter transactions.",
       );
     }
@@ -197,23 +145,18 @@ class TransactionApiService {
   // RECEIPT
   // ============================================================
 
-  Future<String?> receipt(int transactionId,) async {
+  Future<String?> receipt(int transactionId) async {
     try {
-      final Response response =
-      await ApiClient.dio.get(
+      final Response response = await ApiClient.dio.get(
         "${ApiConstants.transactions}/$transactionId/receipt",
       );
 
-      final data =
-      Map<String, dynamic>.from(
-        response.data,
-      );
+      final data = Map<String, dynamic>.from(response.data);
 
       return data["url"]?.toString();
     } on DioException catch (e) {
       throw Exception(
-        e.response?.data?["message"]
-            ?.toString() ??
+        e.response?.data?["message"]?.toString() ??
             "Unable to download receipt.",
       );
     }

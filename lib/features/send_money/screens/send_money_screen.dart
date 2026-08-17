@@ -25,6 +25,7 @@ class SendMoneyScreen extends StatefulWidget {
 
 class _SendMoneyScreenState extends State<SendMoneyScreen> {
   final TextEditingController _amountController = TextEditingController();
+
   final TextEditingController _noteController = TextEditingController();
 
   bool _isLoading = false;
@@ -33,8 +34,10 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
   void initState() {
     super.initState();
 
-    if (widget.amount != null && widget.amount! > 0) {
-      _amountController.text = widget.amount!.toStringAsFixed(2);
+    final initialAmount = widget.amount;
+
+    if (initialAmount != null && initialAmount > 0) {
+      _amountController.text = initialAmount.toStringAsFixed(2);
     }
   }
 
@@ -45,20 +48,22 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
     super.dispose();
   }
 
+  // ============================================================
+  // SEND MONEY
+  // ============================================================
+
   Future<void> _sendMoney() async {
-    final amount = double.tryParse(_amountController.text);
+    final amount = double.tryParse(_amountController.text.trim());
 
     if (amount == null || amount <= 0) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Enter a valid amount")));
+      _showMessage("Enter a valid amount.");
       return;
     }
 
-    if (widget.phone == null || widget.phone!.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Recipient phone not found.")),
-      );
+    final phone = widget.phone?.trim();
+
+    if (phone == null || phone.isEmpty) {
+      _showMessage("Recipient phone not found.");
       return;
     }
 
@@ -68,17 +73,17 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
 
     try {
       await SendMoneyApiService.instance.sendMoney(
-        phone: widget.phone!,
+        phone: phone,
         amount: amount,
         note: _noteController.text.trim(),
       );
 
       if (!mounted) return;
 
-      await showDialog(
+      await showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (_) {
+        builder: (dialogContext) {
           return AlertDialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
@@ -87,17 +92,17 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
               children: [
                 Icon(Icons.check_circle, color: Colors.green),
                 SizedBox(width: 10),
-                Text("Payment Successful"),
+                Expanded(child: Text("Payment Successful")),
               ],
             ),
             content: Text(
-              "₹${amount.toStringAsFixed(2)} has been sent successfully.",
+              "₹${amount.toStringAsFixed(2)} "
+              "has been sent successfully.",
             ),
             actions: [
               FilledButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context, true);
+                  Navigator.of(dialogContext).pop();
                 },
                 child: const Text("Done"),
               ),
@@ -105,20 +110,62 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
           );
         },
       );
+
+      if (!mounted) return;
+
+      Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString().replaceFirst("Exception: ", ""))),
-      );
+      _showMessage(e.toString().replaceFirst("Exception: ", ""));
     } finally {
-      if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
-      }
+      if (!mounted) return;
+
+      setState(() {
+        _isLoading = false;
+      });
     }
   }
+
+  // ============================================================
+  // CONTINUE TO REVIEW
+  // ============================================================
+
+  void _continueToReview() {
+    final amount = double.tryParse(_amountController.text.trim());
+
+    if (amount == null || amount <= 0) {
+      _showMessage("Enter a valid amount.");
+      return;
+    }
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => PaymentReviewScreen(
+          recipientName: widget.recipientName ?? "Unknown User",
+          phone: widget.phone ?? "",
+          amount: amount,
+          note: _noteController.text.trim(),
+        ),
+      ),
+    );
+  }
+
+  // ============================================================
+  // MESSAGE
+  // ============================================================
+
+  void _showMessage(String message) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  // ============================================================
+  // BUILD
+  // ============================================================
 
   @override
   Widget build(BuildContext context) {
@@ -129,99 +176,128 @@ class _SendMoneyScreenState extends State<SendMoneyScreen> {
         elevation: 0,
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        foregroundColor: Colors.black,
         title: const Text(
           "Send Money",
-          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
 
       body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 12),
-
-            AmountCard(
-              name: widget.recipientName ?? "Unknown User",
-              phone: widget.phone ?? widget.upiId ?? "",
-              amount: _amountController.text,
-            ),
-
-            const SizedBox(height: 20),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: TextField(
-                controller: _noteController,
-                decoration: InputDecoration(
-                  hintText: "Add a note (Optional)",
-                  prefixIcon: const Icon(Icons.edit_note_rounded),
-                  filled: true,
-                  fillColor: Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(18),
-                    borderSide: BorderSide.none,
-                  ),
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minHeight: constraints.maxHeight - 32,
                 ),
-              ),
-            ),
-
-            const Spacer(),
-
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: AbsorbPointer(
-                absorbing: _isLoading,
-                child: Stack(
-                  alignment: Alignment.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    AmountKeypad(
+                    const SizedBox(height: 8),
+
+                    // ==================================================
+                    // RECIPIENT / AMOUNT
+                    // ==================================================
+                    AmountCard(
+                      name: widget.recipientName ?? "Unknown User",
+                      phone: widget.phone ?? widget.upiId ?? "",
                       amount: _amountController.text,
-                      onChanged: (value) {
-                        setState(() {
-                          _amountController.text = value;
-                        });
-                      },
-                      onContinue: () {
-                        final amount = double.tryParse(_amountController.text);
-
-                        if (amount == null || amount <= 0) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Enter a valid amount"),
-                            ),
-                          );
-                          return;
-                        }
-
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => PaymentReviewScreen(
-                              recipientName:
-                                  widget.recipientName ?? "Unknown User",
-                              phone: widget.phone ?? "",
-                              amount: amount,
-                              note: _noteController.text.trim(),
-                            ),
-                          ),
-                        );
-                      },
                     ),
 
-                    if (_isLoading)
-                      Container(
-                        height: 330,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(24),
+                    const SizedBox(height: 16),
+
+                    // ==================================================
+                    // NOTE
+                    // ==================================================
+                    TextField(
+                      controller: _noteController,
+                      textInputAction: TextInputAction.done,
+                      maxLines: 1,
+                      decoration: InputDecoration(
+                        hintText: "Add a note (Optional)",
+                        prefixIcon: const Icon(Icons.edit_note_rounded),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 16,
                         ),
-                        child: const Center(child: CircularProgressIndicator()),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: BorderSide.none,
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(18),
+                          borderSide: const BorderSide(color: Colors.blue),
+                        ),
                       ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // ==================================================
+                    // KEYPAD
+                    // ==================================================
+                    AbsorbPointer(
+                      absorbing: _isLoading,
+                      child: Stack(
+                        children: [
+                          AmountKeypad(
+                            amount: _amountController.text,
+                            onChanged: (value) {
+                              setState(() {
+                                _amountController.text = value;
+
+                                _amountController.selection =
+                                    TextSelection.fromPosition(
+                                      TextPosition(offset: value.length),
+                                    );
+                              });
+                            },
+                            onContinue: _continueToReview,
+                          ),
+
+                          if (_isLoading)
+                            Positioned.fill(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.72),
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // ==================================================
+                    // DIRECT SEND
+                    // ==================================================
+                    SizedBox(
+                      height: 50,
+                      child: OutlinedButton.icon(
+                        onPressed: _isLoading ? null : _sendMoney,
+                        icon: const Icon(Icons.send_rounded),
+                        label: const Text("Send Directly"),
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-          ],
+            );
+          },
         ),
       ),
     );

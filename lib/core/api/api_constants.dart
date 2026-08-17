@@ -6,13 +6,16 @@ class ApiConstants {
   // ==========================
 
   // Android Emulator
-  static const String baseUrl = "http://10.0.2.2:5000/api";
+  // static const String baseUrl = "http://10.0.2.2:5000/api";
 
   // Linux / Windows Desktop
   // static const String baseUrl = "http://localhost:5000/api";
 
-  // Physical Device
-  // static const String baseUrl = "http://192.168.1.100:5000/api";
+  // Physical Device via USB + ADB reverse
+  static const String baseUrl = "http://127.0.0.1:5000/api";
+
+  // Physical Device via Wi-Fi
+  // static const String baseUrl = "http://172.22.19.38:5000/api";
 
   // Production
   // static const String baseUrl = "https://your-domain.com/api";
