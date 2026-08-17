@@ -12,54 +12,68 @@ class AmountKeypad extends StatelessWidget {
     required this.onContinue,
   });
 
+  // ============================================================
+  // PRESS KEY
+  // ============================================================
+
   void _press(String value) {
     if (value == "⌫") {
-      if (amount.isNotEmpty) {
-        onChanged(amount.substring(0, amount.length - 1));
-      }
+      if (amount.isEmpty) return;
+
+      onChanged(amount.substring(0, amount.length - 1));
       return;
     }
 
     if (value == ".") {
       if (amount.contains(".")) return;
 
-      if (amount.isEmpty) {
-        onChanged("0.");
-      } else {
-        onChanged("$amount.");
-      }
-
+      onChanged(amount.isEmpty ? "0." : "$amount.");
       return;
     }
 
     if (amount == "0") {
       onChanged(value);
-    } else {
-      onChanged(amount + value);
+      return;
     }
+
+    // Prevent unnecessarily long numeric values.
+    final parts = amount.split(".");
+
+    if (parts.length == 2 && parts[1].length >= 2) {
+      return;
+    }
+
+    onChanged("$amount$value");
   }
 
-  Widget _button(String value) {
-    final bool isBackspace = value == "⌫";
+  // ============================================================
+  // BUTTON
+  // ============================================================
+
+  Widget _button(String value, double height) {
+    final isBackspace = value == "⌫";
 
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(6),
+        padding: const EdgeInsets.all(4),
         child: Material(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(16),
           child: InkWell(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(16),
             onTap: () => _press(value),
             child: SizedBox(
-              height: 70,
+              height: height,
               child: Center(
                 child: isBackspace
-                    ? const Icon(Icons.backspace_outlined, size: 28)
+                    ? Icon(
+                        Icons.backspace_outlined,
+                        size: height < 56 ? 22 : 26,
+                      )
                     : Text(
                         value,
-                        style: const TextStyle(
-                          fontSize: 30,
+                        style: TextStyle(
+                          fontSize: height < 56 ? 23 : 28,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -73,35 +87,95 @@ class AmountKeypad extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(children: [_button("1"), _button("2"), _button("3")]),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final availableWidth = constraints.maxWidth;
 
-        Row(children: [_button("4"), _button("5"), _button("6")]),
+        final availableHeight = MediaQuery.sizeOf(context).height;
 
-        Row(children: [_button("7"), _button("8"), _button("9")]),
+        final isCompact = availableHeight < 760;
 
-        Row(children: [_button("."), _button("0"), _button("⌫")]),
+        final buttonHeight = isCompact ? 54.0 : 62.0;
 
-        const SizedBox(height: 20),
+        final gap = isCompact ? 12.0 : 16.0;
 
-        SizedBox(
-          width: double.infinity,
-          height: 56,
-          child: FilledButton(
-            onPressed: amount.isEmpty || amount == "0" ? null : onContinue,
-            style: FilledButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(18),
+        final continueHeight = isCompact ? 50.0 : 54.0;
+
+        return Column(
+          children: [
+            // ======================================================
+            // ROW 1
+            // ======================================================
+            Row(
+              children: [
+                _button("1", buttonHeight),
+                _button("2", buttonHeight),
+                _button("3", buttonHeight),
+              ],
+            ),
+
+            // ======================================================
+            // ROW 2
+            // ======================================================
+            Row(
+              children: [
+                _button("4", buttonHeight),
+                _button("5", buttonHeight),
+                _button("6", buttonHeight),
+              ],
+            ),
+
+            // ======================================================
+            // ROW 3
+            // ======================================================
+            Row(
+              children: [
+                _button("7", buttonHeight),
+                _button("8", buttonHeight),
+                _button("9", buttonHeight),
+              ],
+            ),
+
+            // ======================================================
+            // ROW 4
+            // ======================================================
+            Row(
+              children: [
+                _button(".", buttonHeight),
+                _button("0", buttonHeight),
+                _button("⌫", buttonHeight),
+              ],
+            ),
+
+            SizedBox(height: gap),
+
+            // ======================================================
+            // CONTINUE
+            // ======================================================
+            SizedBox(
+              width: double.infinity,
+              height: continueHeight,
+              child: FilledButton(
+                onPressed: amount.isEmpty || amount == "0" || amount == "0."
+                    ? null
+                    : onContinue,
+                style: FilledButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: Text(
+                  "Continue",
+                  style: TextStyle(
+                    fontSize: isCompact ? 16 : 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-            child: const Text(
-              "Continue",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-      ],
+          ],
+        );
+      },
     );
   }
 }
