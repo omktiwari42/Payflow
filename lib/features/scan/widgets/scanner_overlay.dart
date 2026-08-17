@@ -1,105 +1,332 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 
-class ScannerOverlay extends StatelessWidget {
+class ScannerOverlay extends StatefulWidget {
   const ScannerOverlay({super.key});
 
   @override
+  State<ScannerOverlay> createState() => _ScannerOverlayState();
+}
+
+class _ScannerOverlayState extends State<ScannerOverlay>
+    with TickerProviderStateMixin {
+  late final AnimationController _scanController;
+  late final AnimationController _pulseController;
+  late final AnimationController _dotController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Moving scan line.
+    _scanController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2200),
+    )..repeat(reverse: true);
+
+    // Frame breathing/pulse.
+    _pulseController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    )..repeat(reverse: true);
+
+    // Small animated dots below frame.
+    _dotController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _scanController.dispose();
+    _pulseController.dispose();
+    _dotController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 260,
-      height: 260,
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.25),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(20),
-            ),
-          ),
+    final size = MediaQuery.sizeOf(context);
 
-          const _Corner(top: 0, left: 0),
+    final frameSize = math.min(size.width * 0.72, 300.0);
 
-          const _Corner(top: 0, right: 0, rotate: 90),
+    return IgnorePointer(
+      child: AnimatedBuilder(
+        animation: Listenable.merge([
+          _scanController,
+          _pulseController,
+          _dotController,
+        ]),
+        builder: (context, child) {
+          final pulse = 0.95 + (_pulseController.value * 0.05);
 
-          const _Corner(bottom: 0, left: 0, rotate: -90),
+          final scanProgress = _scanController.value;
 
-          const _Corner(bottom: 0, right: 0, rotate: 180),
+          final scanY = frameSize * scanProgress;
 
-          Center(
-            child: Container(
-              width: 220,
-              height: 2,
-              decoration: BoxDecoration(
-                color: Colors.greenAccent,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.greenAccent.withValues(alpha: 0.7),
-                    blurRadius: 10,
+          final glow = 0.18 + (_pulseController.value * 0.15);
+
+          return Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Transform.scale(
+                  scale: pulse,
+                  child: SizedBox(
+                    width: frameSize,
+                    height: frameSize,
+                    child: Stack(
+                      clipBehavior: Clip.none,
+                      children: [
+                        // ==========================================
+                        // DARK TRANSPARENT FRAME
+                        // ==========================================
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.10),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // ==========================================
+                        // GLOW
+                        // ==========================================
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(28),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF2F80FF,
+                                  ).withValues(alpha: glow),
+                                  blurRadius: 35,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // ==========================================
+                        // CORNERS
+                        // ==========================================
+                        _Corner(alignment: Alignment.topLeft),
+
+                        _Corner(alignment: Alignment.topRight),
+
+                        _Corner(alignment: Alignment.bottomLeft),
+
+                        _Corner(alignment: Alignment.bottomRight),
+
+                        // ==========================================
+                        // MOVING SCAN LINE
+                        // ==========================================
+                        Positioned(
+                          left: 16,
+                          right: 16,
+                          top: math.max(14, math.min(scanY, frameSize - 18)),
+                          child: const _ScanLine(),
+                        ),
+
+                        // ==========================================
+                        // CENTER QR TARGET
+                        // ==========================================
+                        Center(
+                          child: Container(
+                            width: frameSize * 0.46,
+                            height: frameSize * 0.46,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(22),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.20),
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        // ==========================================
+                        // SMALL CENTER DOT
+                        // ==========================================
+                        Center(
+                          child: AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            width: 8 + (_pulseController.value * 5),
+                            height: 8 + (_pulseController.value * 5),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF4CA0FF),
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: const Color(
+                                    0xFF4CA0FF,
+                                  ).withValues(alpha: 0.70),
+                                  blurRadius: 14,
+                                  spreadRadius: 2,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        // ==========================================
+                        // SCAN TEXT
+                        // ==========================================
+                        Positioned(
+                          left: 0,
+                          right: 0,
+                          bottom: -52,
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Scan any UPI QR",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                "Align the QR code inside the frame",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                  color: Colors.white.withValues(alpha: 0.72),
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+
+                const SizedBox(height: 78),
+
+                // ================================================
+                // ANIMATED DOTS
+                // ================================================
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: List.generate(3, (index) {
+                    final phase = (_dotController.value + index * 0.20) % 1.0;
+
+                    final scale = phase < 0.5
+                        ? 1 + phase * 0.5
+                        : 1 + (1 - phase) * 0.5;
+
+                    return Transform.scale(
+                      scale: scale,
+                      child: Container(
+                        width: 6,
+                        height: 6,
+                        margin: const EdgeInsets.symmetric(horizontal: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.55),
+                          shape: BoxShape.circle,
+                        ),
+                      ),
+                    );
+                  }),
+                ),
+              ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }
 }
 
-class _Corner extends StatelessWidget {
-  final double? top;
-  final double? bottom;
-  final double? left;
-  final double? right;
-  final double rotate;
+// ============================================================
+// CORNER
+// ============================================================
 
-  const _Corner({
-    this.top,
-    this.bottom,
-    this.left,
-    this.right,
-    this.rotate = 0,
-  });
+class _Corner extends StatelessWidget {
+  final Alignment alignment;
+
+  const _Corner({required this.alignment});
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: top,
-      bottom: bottom,
-      left: left,
-      right: right,
-      child: Transform.rotate(
-        angle: rotate * 3.1415926535 / 180,
-        child: SizedBox(
-          width: 42,
-          height: 42,
-          child: CustomPaint(painter: _CornerPainter()),
+    final isLeft =
+        alignment == Alignment.topLeft || alignment == Alignment.bottomLeft;
+
+    final isTop =
+        alignment == Alignment.topLeft || alignment == Alignment.topRight;
+
+    return Align(
+      alignment: alignment,
+      child: Container(
+        width: 48,
+        height: 48,
+        decoration: BoxDecoration(
+          border: Border(
+            top: isTop
+                ? const BorderSide(color: Color(0xFF4CA0FF), width: 4)
+                : BorderSide.none,
+            bottom: !isTop
+                ? const BorderSide(color: Color(0xFF4CA0FF), width: 4)
+                : BorderSide.none,
+            left: isLeft
+                ? const BorderSide(color: Color(0xFF4CA0FF), width: 4)
+                : BorderSide.none,
+            right: !isLeft
+                ? const BorderSide(color: Color(0xFF4CA0FF), width: 4)
+                : BorderSide.none,
+          ),
+          borderRadius: BorderRadius.only(
+            topLeft: isTop && isLeft ? const Radius.circular(12) : Radius.zero,
+            topRight: isTop && !isLeft
+                ? const Radius.circular(12)
+                : Radius.zero,
+            bottomLeft: !isTop && isLeft
+                ? const Radius.circular(12)
+                : Radius.zero,
+            bottomRight: !isTop && !isLeft
+                ? const Radius.circular(12)
+                : Radius.zero,
+          ),
         ),
       ),
     );
   }
 }
 
-class _CornerPainter extends CustomPainter {
+// ============================================================
+// SCAN LINE
+// ============================================================
+
+class _ScanLine extends StatelessWidget {
+  const _ScanLine();
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = Colors.greenAccent
-      ..strokeWidth = 5
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round;
-
-    final path = Path()
-      ..moveTo(size.width, 0)
-      ..lineTo(0, 0)
-      ..lineTo(0, size.height);
-
-    canvas.drawPath(path, paint);
+  Widget build(BuildContext context) {
+    return Container(
+      height: 3,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        gradient: const LinearGradient(
+          colors: [Colors.transparent, Color(0xFF4CA0FF), Colors.transparent],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF4CA0FF).withValues(alpha: 0.80),
+            blurRadius: 12,
+            spreadRadius: 2,
+          ),
+        ],
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
